@@ -3,6 +3,24 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30114.105
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{778BA20A-056F-46DC-AB48-95259206D8BE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{0A7114DC-EDF4-4E51-A0B3-E34FE66A46F6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieSearch.Api", "src\MovieSearch.Api\MovieSearch.Api.csproj", "{B40C04AA-D156-4289-8D7F-9463925BC222}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieSearch.Application", "src\MovieSearch.Application\MovieSearch.Application.csproj", "{C0B80C21-9FA9-4C27-A9BB-92497A98307A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieSearch.Core", "src\MovieSearch.Core\MovieSearch.Core.csproj", "{F4F6EE60-D819-46E9-8CA2-69ECAEE04863}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieSearch.Infrastructure", "src\MovieSearch.Infrastructure\MovieSearch.Infrastructure.csproj", "{4E3C0119-A28C-4FAC-9A72-170BE69B8F95}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BuildingBlocks", "BuildingBlocks", "{55EED072-1C18-46DA-B491-6971715C3912}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MovieSerach", "MovieSerach", "{9F808F73-0D9D-4DC6-96CF-2CC9180ABF1E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildingBlocks", "src\BuildingBlocks\BuildingBlocks.csproj", "{FC9B226E-0E4B-42E0-8748-D104C58B7EA8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -10,5 +28,36 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{55EED072-1C18-46DA-B491-6971715C3912} = {778BA20A-056F-46DC-AB48-95259206D8BE}
+		{9F808F73-0D9D-4DC6-96CF-2CC9180ABF1E} = {778BA20A-056F-46DC-AB48-95259206D8BE}
+		{B40C04AA-D156-4289-8D7F-9463925BC222} = {9F808F73-0D9D-4DC6-96CF-2CC9180ABF1E}
+		{C0B80C21-9FA9-4C27-A9BB-92497A98307A} = {9F808F73-0D9D-4DC6-96CF-2CC9180ABF1E}
+		{F4F6EE60-D819-46E9-8CA2-69ECAEE04863} = {9F808F73-0D9D-4DC6-96CF-2CC9180ABF1E}
+		{4E3C0119-A28C-4FAC-9A72-170BE69B8F95} = {9F808F73-0D9D-4DC6-96CF-2CC9180ABF1E}
+		{FC9B226E-0E4B-42E0-8748-D104C58B7EA8} = {55EED072-1C18-46DA-B491-6971715C3912}
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B40C04AA-D156-4289-8D7F-9463925BC222}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B40C04AA-D156-4289-8D7F-9463925BC222}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B40C04AA-D156-4289-8D7F-9463925BC222}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B40C04AA-D156-4289-8D7F-9463925BC222}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C0B80C21-9FA9-4C27-A9BB-92497A98307A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C0B80C21-9FA9-4C27-A9BB-92497A98307A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C0B80C21-9FA9-4C27-A9BB-92497A98307A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C0B80C21-9FA9-4C27-A9BB-92497A98307A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F4F6EE60-D819-46E9-8CA2-69ECAEE04863}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F4F6EE60-D819-46E9-8CA2-69ECAEE04863}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F4F6EE60-D819-46E9-8CA2-69ECAEE04863}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F4F6EE60-D819-46E9-8CA2-69ECAEE04863}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4E3C0119-A28C-4FAC-9A72-170BE69B8F95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4E3C0119-A28C-4FAC-9A72-170BE69B8F95}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4E3C0119-A28C-4FAC-9A72-170BE69B8F95}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4E3C0119-A28C-4FAC-9A72-170BE69B8F95}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC9B226E-0E4B-42E0-8748-D104C58B7EA8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC9B226E-0E4B-42E0-8748-D104C58B7EA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC9B226E-0E4B-42E0-8748-D104C58B7EA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC9B226E-0E4B-42E0-8748-D104C58B7EA8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

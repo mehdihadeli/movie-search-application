@@ -1,8 +1,7 @@
-﻿using System;
-
 namespace MovieSearch.Infrastructure
 {
-    public class Class1
+    public class InfrastructureRoot
     {
+        
     }
 }
