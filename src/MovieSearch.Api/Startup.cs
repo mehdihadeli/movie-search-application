@@ -42,7 +42,7 @@ namespace MovieSearch.Api
             var movieDbOptions = Configuration.GetSection(AppOptionsSectionName).Get<MovieDBOptions>();
 
 
-            services.AddHttpClient(nameof(MovieDBServiceClient), config =>
+            services.AddHttpClient(nameof(MovieDbServiceClient), config =>
             {
                 config.BaseAddress = new Uri(movieDbOptions.BaseApiAddress);
                 config.Timeout = new TimeSpan(0, 0, 30);
@@ -80,6 +80,7 @@ namespace MovieSearch.Api
             }
 
             app.UseHttpsRedirection();
+
             app.UseInfrastructure(env);
 
             app.UseCors("api");

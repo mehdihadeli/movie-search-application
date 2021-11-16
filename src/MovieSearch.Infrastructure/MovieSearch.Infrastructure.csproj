@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BuildingBlocks\BuildingBlocks.csproj" />
+    <ProjectReference Include="..\BuildingBlocks\BulidingBlocks\BuildingBlocks.csproj" />
     <ProjectReference Include="..\MovieSearch.Application\MovieSearch.Application.csproj" />
     <ProjectReference Include="..\MovieSearch.Core\MovieSearch.Core.csproj" />
   </ItemGroup>

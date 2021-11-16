@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.Serialization;
+using MovieSearch.Core.Generals;
 
 namespace MovieSearch.Core
 {

@@ -16,6 +16,7 @@ using MovieSearch.Application;
 using MovieSearch.Infrastructure.Services.Clients;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Http;
+using MovieSearch.Application.Services.Clients;
 
 namespace MovieSearch.Infrastructure
 {
@@ -24,11 +25,11 @@ namespace MovieSearch.Infrastructure
         public static IServiceCollection AddInfrastructure(this IServiceCollection services,
             IConfiguration configuration)
         {
-            services.AddSingleton<IMovieDBServiceClient, MovieDBServiceClient>();
+            services.AddSingleton<IMovieDbServiceClient, MovieDbServiceClient>();
 
             services.AddCustomValidators(typeof(ApplicationRoot).Assembly);
 
-            services.AddAutoMapper(typeof(ApplicationRoot).Assembly);
+            services.AddAutoMapper(typeof(ApplicationRoot).Assembly, typeof(InfrastructureRoot).Assembly);
 
             services.AddMediatR(typeof(ApplicationRoot).Assembly);
 

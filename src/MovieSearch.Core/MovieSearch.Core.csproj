@@ -5,11 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BuildingBlocks\BuildingBlocks.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Aggregates\People" />
+    <ProjectReference Include="..\BuildingBlocks\BulidingBlocks\BuildingBlocks.csproj" />
   </ItemGroup>
 
 </Project>
