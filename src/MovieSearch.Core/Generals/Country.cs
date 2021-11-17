@@ -7,12 +7,6 @@ namespace MovieSearch.Core.Generals
         public string Iso3166Code { get; init; }
         public string Name { get; init; }
 
-        public Country( string iso3166Code, string name )
-        {
-            Iso3166Code = iso3166Code;
-            Name = name;
-        }
-
         public override bool Equals( object obj )
         {
             if( obj is not Country country )

@@ -25,6 +25,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildingBlocks.IntegrationT
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieSearch.IntegrationTests", "tests\MovieSearch.IntegrationTests\MovieSearch.IntegrationTests.csproj", "{B19EA418-80E2-42F8-8FB8-AB5277BB9E70}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieSearch.UnitTests", "tests\MovieSearch.UnitTests\MovieSearch.UnitTests.csproj", "{A389E4BB-9E51-4124-8A22-691B12B66C73}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,6 +45,7 @@ Global
 		{7BC58153-8348-480E-B8BE-4ABFECE38309} = {55EED072-1C18-46DA-B491-6971715C3912}
 		{10EA36EB-5832-4C67-86BC-54CEF4AE5DD0} = {55EED072-1C18-46DA-B491-6971715C3912}
 		{B19EA418-80E2-42F8-8FB8-AB5277BB9E70} = {0A7114DC-EDF4-4E51-A0B3-E34FE66A46F6}
+		{A389E4BB-9E51-4124-8A22-691B12B66C73} = {0A7114DC-EDF4-4E51-A0B3-E34FE66A46F6}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{B40C04AA-D156-4289-8D7F-9463925BC222}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -73,5 +76,9 @@ Global
 		{B19EA418-80E2-42F8-8FB8-AB5277BB9E70}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B19EA418-80E2-42F8-8FB8-AB5277BB9E70}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B19EA418-80E2-42F8-8FB8-AB5277BB9E70}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A389E4BB-9E51-4124-8A22-691B12B66C73}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A389E4BB-9E51-4124-8A22-691B12B66C73}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A389E4BB-9E51-4124-8A22-691B12B66C73}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A389E4BB-9E51-4124-8A22-691B12B66C73}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

@@ -3,7 +3,7 @@ using MovieSearch.Core.Generals;
 
 namespace MovieSearch.Core.Companies
 {
-    public class CompanyInfo : MultiInfo, IEqualityComparer<CompanyInfo>
+    public class CompanyInfo : IEqualityComparer<CompanyInfo>
     {
         public int Id { get; init; }
         public string Name { get; init; }

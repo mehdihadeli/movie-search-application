@@ -1,6 +1,6 @@
 namespace MovieSearch.Core
 {
-    public class MovieDBOptions
+    public class TMDBOptions
     {
         public string BaseApiAddress { get; set; }
         public string ApiKey { get; set; }

@@ -3,40 +3,36 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using BuildingBlocks.Domain;
+using BuildingBlocks.Resiliency.Configs;
 using BuildingBlocks.Test.Fixtures;
-using BuildingBlocks.Utils;
 using DM.MovieApi.IntegrationTests;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MovieSearch.Api;
 using MovieSearch.Core;
-using MovieSearch.Core.Companies;
-using MovieSearch.Core.Generals;
 using MovieSearch.Core.Genres;
 using MovieSearch.Core.Movies;
 using MovieSearch.Core.Review;
 using MovieSearch.Core.TV;
-using MovieSearch.Infrastructure.Services.Clients;
+using MovieSearch.Infrastructure.Services.Clients.MovieDb;
 using MovieSearch.IntegrationTests.Mocks;
 using Xunit;
-using Assert = Xunit.Assert;
-using Movie = TMDbLib.Objects.Movies.Movie;
 
-namespace MovieSearch.IntegrationTests.Infrastructure.Services.Clients
+namespace MovieSearch.IntegrationTests.Infrastructure.Services.Clients.MovieDb
 {
-    public class MovieDbServiceClientTests : IntegrationTestFixture<Startup>
+    public class TMDBServiceClientTests : IntegrationTestFixture<Startup>
     {
-        private readonly MovieDbServiceClient _sut;
+        private readonly TMDBServiceClient _sut;
 
-        public MovieDbServiceClientTests()
+        public TMDBServiceClientTests()
         {
             //setup the swaps for our tests
             RegisterTestServices(services => { });
 
-            _sut = new MovieDbServiceClient(ServiceProvider.GetRequiredService<IOptions<MovieDBOptions>>(),
-                ServiceProvider.GetRequiredService<IMapper>());
+            _sut = new TMDBServiceClient(ServiceProvider.GetRequiredService<IOptions<TMDBOptions>>(),
+                ServiceProvider.GetRequiredService<IMapper>(),
+                ServiceProvider.GetRequiredService<IOptions<PolicyConfig>>());
         }
 
         [Fact]
@@ -384,7 +380,7 @@ namespace MovieSearch.IntegrationTests.Infrastructure.Services.Clients
             // Assert
             videos.Should().NotBeNull();
             videos.Videos.Should().NotBeNull();
-            videos.Videos.Should().BeOfType<List<Video>>();
+            videos.Videos.Should().BeOfType<List<Core.Generals.Video>>();
             videos.Videos.Count.Should().BeGreaterThan(0);
             videos.MovieId.Should().Be(MovieMocks.Data.Id);
         }
@@ -398,7 +394,7 @@ namespace MovieSearch.IntegrationTests.Infrastructure.Services.Clients
             // Assert
             videos.Should().NotBeNull();
             videos.Videos.Should().NotBeNull();
-            videos.Videos.Should().BeOfType<List<Video>>();
+            videos.Videos.Should().BeOfType<List<Core.Generals.Video>>();
             videos.Videos.Count.Should().BeGreaterThan(0);
             videos.TvShowId.Should().Be(TvShowMock.Data.Id);
         }
@@ -408,11 +404,100 @@ namespace MovieSearch.IntegrationTests.Infrastructure.Services.Clients
         {
             // Act
             var person = await _sut.GetPersonDetailAsync(PersonMock.Data.Id);
-            
+
             // Assert
             person.Should().NotBeNull();
             person.Id.Should().Be(PersonMock.Data.Id);
         }
 
+        [Fact]
+        public async Task get_tv_show_on_the_air_should_returns_valid_data()
+        {
+            // Act
+            var result = await _sut.GetTvShowOnTheAirAsync();
+
+            // Assert
+            result.Should().NotBeNull();
+            result.Items.Should().NotBeNull();
+            result.Items.Should().BeOfType<List<TVShowInfo>>();
+            result.Items.Any().Should().BeTrue();
+            result.Items.Count.Should().Be(result.PageSize);
+            result.Page.Should().Be(1);
+        }
+
+        [Fact]
+        public async Task get_tv_show_airing_today_should_returns_valid_data()
+        {
+            // Act
+            var result = await _sut.GetTvShowAiringTodayAsync();
+
+            // Assert
+            result.Should().NotBeNull();
+            result.Items.Should().NotBeNull();
+            result.Items.Should().BeOfType<List<TVShowInfo>>();
+            result.Items.Any().Should().BeTrue();
+            result.Items.Count.Should().Be(result.PageSize);
+            result.Page.Should().Be(1);
+        }
+
+        [Fact]
+        public async Task get_popular_tv_show_should_returns_valid_data()
+        {
+            // Act
+            var result = await _sut.GetPopularTvShowAsync();
+
+            // Assert
+            result.Should().NotBeNull();
+            result.Items.Should().NotBeNull();
+            result.Items.Should().BeOfType<List<TVShowInfo>>();
+            result.Items.Any().Should().BeTrue();
+            result.Items.Count.Should().Be(result.PageSize);
+            result.Page.Should().Be(1);
+        }
+
+        [Fact]
+        public async Task get_tv_show_top_rated_should_returns_valid_data()
+        {
+            // Act
+            var result = await _sut.GetTvShowTopRatedAsync();
+
+            // Assert
+            result.Should().NotBeNull();
+            result.Items.Should().NotBeNull();
+            result.Items.Should().BeOfType<List<TVShowInfo>>();
+            result.Items.Any().Should().BeTrue();
+            result.Items.Count.Should().Be(result.PageSize);
+            result.Page.Should().Be(1);
+        }
+
+        [Fact]
+        public async Task search_tv_shows_should_returns_valid_data()
+        {
+            // Act
+            var result = await _sut.SearchTvShowsByTitleAsync(TvShowMock.Data.Name);
+
+            // Assert
+            result.Should().NotBeNull();
+            result.Items.Should().NotBeNull();
+            result.Items.Should().BeOfType<List<TVShowInfo>>();
+            result.Items.Any().Should().BeTrue();
+            result.Items.Count.Should().Be(result.PageSize);
+            result.Page.Should().Be(1);
+        }
+
+        [Fact]
+        public async Task search_multi_should_returns_valid_data()
+        {
+            // Act
+            var result = await _sut.SearchMultiAsync(TvShowMock.Data.Name);
+
+            // Assert
+            result.Should().NotBeNull();
+            result.Items.Should().NotBeNull();
+            result.Items.Should().BeOfType<List<dynamic>>();
+            result.Items.Any().Should().BeTrue();
+            result.Items.Count.Should().Be(result.PageSize);
+            result.Page.Should().Be(1);
+        }
     }
 }

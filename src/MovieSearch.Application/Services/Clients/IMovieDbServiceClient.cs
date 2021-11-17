@@ -11,6 +11,14 @@ using MovieSearch.Core.TV;
 
 namespace MovieSearch.Application.Services.Clients
 {
+    //https://deviq.com/domain-driven-design/anti-corruption-layer
+    //https://docs.microsoft.com/en-us/azure/architecture/patterns/anti-corruption-layer
+    //https://www.markhneedham.com/blog/2009/07/07/domain-driven-design-anti-corruption-layer/
+    //https://dev.to/asarnaout/the-anti-corruption-layer-pattern-pcd
+
+    /// <summary>
+    /// Anti-Corruption Layer: A highly defensive strategy to isolate our model from corruption by legacy models or external model.
+    /// </summary>
     public interface IMovieDbServiceClient
     {
         /// <summary>
@@ -215,7 +223,7 @@ namespace MovieSearch.Application.Services.Clients
         /// <param name="movieId"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task<(List<Video> Videos,int MovieId)> GetMovieVideosAsync(int movieId,
+        Task<(List<Video> Videos, int MovieId)> GetMovieVideosAsync(int movieId,
             CancellationToken cancellationToken = default);
 
         /// <summary>
@@ -296,7 +304,7 @@ namespace MovieSearch.Application.Services.Clients
         /// <param name="page"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task<ListResultModel<TVShowInfo>> GetPopularTvShow(int page = 1,
+        Task<ListResultModel<TVShowInfo>> GetPopularTvShowAsync(int page = 1,
             CancellationToken cancellationToken = default);
 
         /// <summary>
@@ -319,7 +327,7 @@ namespace MovieSearch.Application.Services.Clients
         /// <param name="firstAirDateYear"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task<ListResultModel<TVShowInfo>> SearchTvShowsAsync(string keyword,
+        Task<ListResultModel<TVShowInfo>> SearchTvShowsByTitleAsync(string keyword,
             int page = 1,
             bool includeAdult = false,
             int firstAirDateYear = 0,
@@ -335,7 +343,7 @@ namespace MovieSearch.Application.Services.Clients
         /// <param name="year"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task<ListResultModel<MultiInfo>> SearchMultiAsync(string keyword, int page = 1,
+        Task<ListResultModel<dynamic>> SearchMultiAsync(string keyword, int page = 1,
             bool includeAdult = false,
             int year = 0,
             CancellationToken cancellationToken = default);

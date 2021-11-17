@@ -29,9 +29,9 @@ using Video = TMDbLib.Objects.General.Video;
 
 namespace MovieSearch.Infrastructure
 {
-    public class Mapper : Profile
+    public class InfrastructureMappings : Profile
     {
-        public Mapper()
+        public InfrastructureMappings()
         {
             CreateMap(typeof(SearchContainerWithDates<>), typeof(ListResultModel<>))
                 .ConvertUsing(typeof(SearchContainerWithDatesToListResultModelConverter<,>));
@@ -39,21 +39,27 @@ namespace MovieSearch.Infrastructure
                 .ConvertUsing(typeof(SearchContainerToListResultModelConverter<,>));
 
             CreateMap<SearchMovie, MovieInfo>();
+
             CreateMap<SearchTv, TVShowInfo>();
             CreateMap<SearchCompany, CompanyInfo>();
             CreateMap<Genre, Core.Genres.Genre>();
             CreateMap<ProductionCompany, MovieSearch.Core.Companies.ProductionCompany>();
             CreateMap<ProductionCountry, Country>()
-                .ConstructUsing(c => new Country(c.Iso_3166_1, c.Name));
+                .ForMember(x => x.Iso3166Code, opt => opt.MapFrom(s => s.Iso_3166_1));
             CreateMap<SpokenLanguage, Language>()
-                .ConstructUsing(l => new Language(l.Iso_639_1, l.Name));
+                .ForMember(x => x.Iso639Code, opt => opt.MapFrom(s => s.Iso_639_1))
+                .ForMember(x => x.EnglishName, opt => opt.Ignore());
+            CreateMap<TMDbLib.Objects.Languages.Language, Language>()
+                .ForMember(x => x.Iso639Code, opt => opt.MapFrom(s => s.Iso_639_1));
             CreateMap<SearchCollection, CollectionInfo>();
             CreateMap<Keyword, Core.Keywords.Keyword>();
             CreateMap<TMDbLib.Objects.Movies.Movie, Movie>()
                 .ForMember(x => x.MovieCollectionInfo, opt => opt.MapFrom(s => s.BelongsToCollection))
-                .ForMember(x => x.IsVideo, opt => opt.MapFrom(s => s.Video));
+                .ForMember(x => x.IsVideo, opt => opt.MapFrom(s => s.Video))
+                .ForMember(x => x.Keywords, opt => opt.Ignore());
 
-            CreateMap<TvShow, TVShow>();
+            CreateMap<TvShow, TVShow>()
+                .ForMember(x => x.Keywords, opt => opt.Ignore());
             CreateMap<SearchTvSeason, Season>();
             CreateMap<NetworkWithLogo, Network>();
             CreateMap<CreatedBy, TVShowCreator>();
@@ -71,7 +77,7 @@ namespace MovieSearch.Infrastructure
                 .ForMember(x => x.CrewMembers, opt => opt.MapFrom(s => s.Crew));
             CreateMap<TMDbLib.Objects.TvShows.Cast, TVShowCastMember>();
             CreateMap<TMDbLib.Objects.Movies.Cast, MovieCastMember>();
-            CreateMap<Crew, MovieCastMember>();
+            CreateMap<Crew, MovieCrewMember>();
             CreateMap<Crew, TVShowCrewMember>();
 
             CreateMap<MovieCredits, PersonMovieCredit>()
@@ -86,8 +92,14 @@ namespace MovieSearch.Infrastructure
 
             CreateMap<Video, Core.Generals.Video>();
             CreateMap<Person, Core.People.Person>();
+
+            CreateMap<SearchBase, MultiInfo>();
+            CreateMap<SearchMovie, MultiInfo>();
+            CreateMap<SearchTv, MultiInfo>();
+            CreateMap<SearchPerson, MultiInfo>();
         }
     }
+
     public class SearchContainerWithDatesToListResultModelConverter<TSource, TDestination> : ITypeConverter<
         SearchContainerWithDates<TSource>, ListResultModel<TDestination>>
     {

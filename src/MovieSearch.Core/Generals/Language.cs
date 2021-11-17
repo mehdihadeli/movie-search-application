@@ -7,11 +7,8 @@ namespace MovieSearch.Core.Generals
         public string Iso639Code { get; init; }
         public string Name { get; init; }
 
-        public Language( string iso639Code, string name )
-        {
-            Iso639Code = iso639Code;
-            Name = name;
-        }
+        public string EnglishName { get; init; }
+
 
         public override bool Equals( object obj )
         {

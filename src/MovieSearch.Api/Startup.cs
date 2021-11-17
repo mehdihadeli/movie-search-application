@@ -1,5 +1,8 @@
 using System;
+using System.Net;
+using System.Net.Http;
 using System.Reflection;
+using BuildingBlocks.Resiliency.Configs;
 using BuildingBlocks.Swagger;
 using BuildingBlocks.Web;
 using Microsoft.AspNetCore.Builder;
@@ -14,13 +17,16 @@ using MovieSearch.Application;
 using MovieSearch.Core;
 using MovieSearch.Infrastructure;
 using MovieSearch.Infrastructure.Services.Clients;
+using Polly;
 
 namespace MovieSearch.Api
 {
     public class Startup
     {
         private const string AppOptionsSectionName = "AppOptions";
-        private const string MoviesDbOptionsSectionName = "MoviesDBOptions";
+        private const string TMDBOptionsSectionName = "TMDBOptions";
+        private const string YoutubeVideoOptionsSectionName = "YoutubeVideoOptions";
+        private const string PolicyConfigSectionName = "PolicyConfig";
 
         public Startup(IConfiguration configuration)
         {
@@ -37,17 +43,15 @@ namespace MovieSearch.Api
             services.AddOptions<AppOptions>().Bind(Configuration.GetSection(AppOptionsSectionName))
                 .ValidateDataAnnotations();
 
-            services.AddOptions<MovieDBOptions>().Bind(Configuration.GetSection(MoviesDbOptionsSectionName))
+            services.AddOptions<TMDBOptions>().Bind(Configuration.GetSection(TMDBOptionsSectionName))
                 .ValidateDataAnnotations();
-            var movieDbOptions = Configuration.GetSection(AppOptionsSectionName).Get<MovieDBOptions>();
 
+            services.AddOptions<YoutubeVideoOptions>().Bind(Configuration.GetSection(YoutubeVideoOptionsSectionName))
+                .ValidateDataAnnotations();
 
-            services.AddHttpClient(nameof(MovieDbServiceClient), config =>
-            {
-                config.BaseAddress = new Uri(movieDbOptions.BaseApiAddress);
-                config.Timeout = new TimeSpan(0, 0, 30);
-                config.DefaultRequestHeaders.Clear();
-            });
+            services.AddOptions<PolicyConfig>().Bind(Configuration.GetSection(PolicyConfigSectionName))
+                .ValidateDataAnnotations();
+
 
             services.AddControllers(options =>
                 options.Conventions.Add(new RouteTokenTransformerConvention(new SlugifyParameterTransformer())));
@@ -59,12 +63,12 @@ namespace MovieSearch.Api
                 options.AddPolicy("api", policy => { policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod(); });
             });
 
-            services.AddCustomHealthCheck(healthBuilder => { });
-
-            services.AddAutoMapper(Assembly.GetExecutingAssembly());
+            services.AddCustomHttpClients(Configuration);
             services.AddCustomVersioning();
+            services.AddCustomHealthCheck(healthBuilder => { });
             services.AddCustomSwagger(Assembly.GetExecutingAssembly());
 
+            services.AddAutoMapper(Assembly.GetExecutingAssembly());
             services.AddApplication();
             services.AddInfrastructure(Configuration);
         }

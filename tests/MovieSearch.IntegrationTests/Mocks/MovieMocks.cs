@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using MovieSearch.Core.Companies;
 using MovieSearch.Core.Generals;
 using MovieSearch.Core.Genres;
-using MovieSearch.Core.Keywords;
 using MovieSearch.Core.Movies;
 
 namespace MovieSearch.IntegrationTests.Mocks
@@ -24,7 +23,15 @@ namespace MovieSearch.IntegrationTests.Mocks
             Budget = 245000000,
             Runtime = 136,
             ReleaseDate = new DateTime(2015, 12, 15),
-            SpokenLanguages = new List<Language> { new("en", "English") },
+            SpokenLanguages = new List<Language>
+            {
+                new()
+                {
+                    Name = "English",
+                    Iso639Code = "en",
+                    EnglishName = "English"
+                }
+            },
             ProductionCompanies = new List<ProductionCompany>
             {
                 new()
@@ -38,7 +45,11 @@ namespace MovieSearch.IntegrationTests.Mocks
             },
             ProductionCountries = new List<Country>
             {
-                new("US", "United States of America"),
+                new()
+                {
+                    Iso3166Code = "US",
+                    Name = "United States of America"
+                },
             },
             Genres = new List<Genre>
             {

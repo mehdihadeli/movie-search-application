@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
+    <PackageReference Include="Moq" Version="4.16.1" />
+    <PackageReference Include="NSubstitute" Version="4.2.2" />
+    <PackageReference Include="xunit" Version="2.4.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\BuildingBlocks\BulidingBlocks\BuildingBlocks.csproj" />
+    <ProjectReference Include="..\..\src\MovieSearch.Application\MovieSearch.Application.csproj" />
+    <ProjectReference Include="..\..\src\MovieSearch.Infrastructure\MovieSearch.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

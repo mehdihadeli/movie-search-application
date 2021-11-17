@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using BuildingBlocks.Caching;
@@ -13,10 +14,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MovieSearch.Application;
-using MovieSearch.Infrastructure.Services.Clients;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Http;
 using MovieSearch.Application.Services.Clients;
+using MovieSearch.Core;
+using BuildingBlocks.Resiliency;
+using MovieSearch.Infrastructure.Services.Clients.MovieDb;
 
 namespace MovieSearch.Infrastructure
 {
@@ -25,7 +28,7 @@ namespace MovieSearch.Infrastructure
         public static IServiceCollection AddInfrastructure(this IServiceCollection services,
             IConfiguration configuration)
         {
-            services.AddSingleton<IMovieDbServiceClient, MovieDbServiceClient>();
+            services.AddSingleton<IMovieDbServiceClient, TMDBServiceClient>();
 
             services.AddCustomValidators(typeof(ApplicationRoot).Assembly);
 
@@ -98,6 +101,22 @@ namespace MovieSearch.Infrastructure
         public static void UseInfrastructure(this IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseProblemDetails();
+        }
+
+        public static IServiceCollection AddCustomHttpClients(this IServiceCollection services,
+            IConfiguration configuration, string movieDbSectionName = "TMDBOptions",
+            string pollySectionName = "PolicyConfig")
+        {
+            var movieDbOptions = configuration.GetSection(movieDbSectionName).Get<TMDBOptions>();
+
+            services.AddHttpClient(nameof(TMDBServiceClient), config =>
+            {
+                config.BaseAddress = new Uri(movieDbOptions.BaseApiAddress);
+                config.Timeout = new TimeSpan(0, 0, 30);
+                config.DefaultRequestHeaders.Clear();
+            }).AddCustomPolicyHandlers(configuration, pollySectionName);
+
+            return services;
         }
     }
 }
