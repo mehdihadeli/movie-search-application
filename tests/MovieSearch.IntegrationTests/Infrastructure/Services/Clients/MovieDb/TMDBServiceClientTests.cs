@@ -50,17 +50,17 @@ namespace MovieSearch.IntegrationTests.Infrastructure.Services.Clients.MovieDb
         }
 
         [Fact]
-        public async Task search_by_title_movies_should_return_valid_data()
+        public async Task search_movie_by_title_should_return_valid_data()
         {
             //Act
-            var result = await _sut.SearchByTitleMoviesAsync("finding nemo");
+            var result = await _sut.SearchMovieAsync(MovieMocks.Data.Title);
 
             // Assert
             result.Should().NotBeNull();
             result.Should().BeOfType<ListResultModel<MovieInfo>>();
             result.Page.Should().Be(1);
             result.PageSize.Should().Be(result.Items.Count);
-            result.Items.Any(x => x.Title.ToLower().Trim().Contains("finding nemo")).Should().Be(true);
+            result.Items.Any().Should().BeTrue();
             TMDBTestUtil.AssertMovieInformationStructure(result.Items);
         }
 
@@ -76,6 +76,17 @@ namespace MovieSearch.IntegrationTests.Infrastructure.Services.Clients.MovieDb
             result.Page.Should().Be(1);
             result.PageSize.Should().Be(result.Items.Count);
             TMDBTestUtil.AssertMovieInformationStructure(result.Items);
+        }
+
+        [Fact]
+        public async Task get_latest_movie_should_returns_valid_data()
+        {
+            //Act
+            var result = await _sut.GetLatestMovieAsync();
+
+            // Assert
+            result.Should().NotBeNull();
+            result.Should().BeOfType<Movie>();
         }
 
         [Fact]
@@ -471,10 +482,10 @@ namespace MovieSearch.IntegrationTests.Infrastructure.Services.Clients.MovieDb
         }
 
         [Fact]
-        public async Task search_tv_shows_should_returns_valid_data()
+        public async Task search_tv_shows_by_title_should_returns_valid_data()
         {
             // Act
-            var result = await _sut.SearchTvShowsByTitleAsync(TvShowMock.Data.Name);
+            var result = await _sut.SearchTvShowAsync(TvShowMock.Data.Name);
 
             // Assert
             result.Should().NotBeNull();

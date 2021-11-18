@@ -42,8 +42,8 @@ namespace MovieSearch.Application.Services.Clients
         /// <param name="primaryReleaseYear"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task<ListResultModel<MovieInfo>> SearchByTitleMoviesAsync(string keyword,
-            int page = 0,
+        Task<ListResultModel<MovieInfo>> SearchMovieAsync(string keyword,
+            int page = 1,
             bool includeAdult = false,
             int year = 0,
             int primaryReleaseYear = 0,
@@ -58,6 +58,14 @@ namespace MovieSearch.Application.Services.Clients
         /// <returns></returns>
         Task<ListResultModel<MovieInfo>> GetPopularMoviesAsync(int page,
             CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Get the most newly created movie. This is a live response and will continuously change.
+        /// Ref: https://developers.themoviedb.org/3/movies/get-latest-movie
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        Task<Movie> GetLatestMovieAsync(CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Get a list of upcoming movies in theatres. This is a release type query that looks for all movies that have a release type of 2 or 3 within the specified date range.
@@ -88,10 +96,10 @@ namespace MovieSearch.Application.Services.Clients
         Task<IEnumerable<Genre>> GetMovieGenresAsync(CancellationToken cancellationToken = default);
 
         Task<ListResultModel<MovieInfo>> FindMoviesByGenreAsync(IReadOnlyList<int> genreIds,
-            int page = 0, CancellationToken cancellationToken = default);
+            int page = 1, CancellationToken cancellationToken = default);
 
         Task<ListResultModel<TVShowInfo>> FindTvShowsByGenreAsync(IReadOnlyList<int> genreIds,
-            int page = 0, CancellationToken cancellationToken = default);
+            int page = 1, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Get the list of official genres for TV shows.
@@ -327,7 +335,7 @@ namespace MovieSearch.Application.Services.Clients
         /// <param name="firstAirDateYear"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task<ListResultModel<TVShowInfo>> SearchTvShowsByTitleAsync(string keyword,
+        Task<ListResultModel<TVShowInfo>> SearchTvShowAsync(string keyword,
             int page = 1,
             bool includeAdult = false,
             int firstAirDateYear = 0,

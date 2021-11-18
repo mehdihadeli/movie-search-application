@@ -1,5 +1,8 @@
 using System;
 using System.Collections.Generic;
+using MovieSearch.Application.Companies.Dtos;
+using MovieSearch.Application.Generals.Dtos;
+using MovieSearch.Application.Genres.Dtos;
 using MovieSearch.Core.Collections;
 
 namespace MovieSearch.Application.Movies.Dtos

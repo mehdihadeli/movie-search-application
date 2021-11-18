@@ -82,7 +82,7 @@ namespace MovieSearch.Infrastructure.Services.Clients.MovieDb
         /// <param name="primaryReleaseYear"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public async Task<ListResultModel<MovieInfo>> SearchByTitleMoviesAsync(string keyword,
+        public async Task<ListResultModel<MovieInfo>> SearchMovieAsync(string keyword,
             int page = 1,
             bool includeAdult = false,
             int year = 0,
@@ -113,6 +113,20 @@ namespace MovieSearch.Infrastructure.Services.Clients.MovieDb
                 cancellationToken));
 
             return _mapper.Map<ListResultModel<MovieInfo>>(searchResult);
+        }
+
+        /// <summary>
+        /// Get the most newly created movie. This is a live response and will continuously change.
+        /// Ref: https://developers.themoviedb.org/3/movies/get-latest-movie
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public async Task<Movie> GetLatestMovieAsync(
+            CancellationToken cancellationToken = default)
+        {
+            var searchResult = await _retryPolicy.ExecuteAsync(() => _client.GetMovieLatestAsync(cancellationToken));
+
+            return _mapper.Map<Movie>(searchResult);
         }
 
         /// <summary>
@@ -579,7 +593,7 @@ namespace MovieSearch.Infrastructure.Services.Clients.MovieDb
         /// <param name="firstAirDateYear"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public async Task<ListResultModel<TVShowInfo>> SearchTvShowsByTitleAsync(string keyword,
+        public async Task<ListResultModel<TVShowInfo>> SearchTvShowAsync(string keyword,
             int page = 1,
             bool includeAdult = false,
             int firstAirDateYear = 0,

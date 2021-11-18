@@ -10,8 +10,4 @@
     <ProjectReference Include="..\MovieSearch.Infrastructure\MovieSearch.Infrastructure.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="TvShows" />
-  </ItemGroup>
-
 </Project>

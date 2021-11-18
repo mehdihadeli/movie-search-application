@@ -72,29 +72,17 @@ namespace BuildingBlocks.Domain
 
     public record FilterModel(string FieldName, string Comparision, string FieldValue);
 
-    public record ListResultModel<T, PType>(List<T> Items, long TotalItems, PType Page, int PageSize) where T : notnull
+    public record ListResultModel<T>(List<T> Items, long TotalItems, int Page, int PageSize) where T : notnull
     {
-        public static ListResultModel<T, PType> Create(List<T> items, long totalItems = 0, PType page = default,
+        public static ListResultModel<T> Create(List<T> items, long totalItems = 0, int page = default,
             int pageSize = 20)
         {
             return new(items, totalItems, page, pageSize);
         }
 
-        public ListResultModel<U, PType> Map<U>(Func<T, U> map) => ListResultModel<U, PType>.Create(
+        public ListResultModel<U> Map<U>(Func<T, U> map) => ListResultModel<U>.Create(
             Items.Select(map).ToList(), TotalItems, Page, PageSize);
 
-        public static ListResultModel<T, PType> Empty => new(Enumerable.Empty<T>().ToList(), 0, default(PType), 0);
-    }
-
-    public record ListResultModel<T>(List<T> Items, long TotalItems, int Page, int PageSize) : ListResultModel<T, int>(
-        Items, TotalItems, Page, PageSize)
-    {
-        public new static ListResultModel<T> Empty => new(Enumerable.Empty<T>().ToList(), 0, 0, 0);
-
-        public new static ListResultModel<T> Create(List<T> items, long totalItems = 0, int page = 1,
-            int pageSize = 20)
-        {
-            return new(items, totalItems, page, pageSize);
-        }
+        public static ListResultModel<T> Empty => new(Enumerable.Empty<T>().ToList(), 0, 0, 0);
     }
 }

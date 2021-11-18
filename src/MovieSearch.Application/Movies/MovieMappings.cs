@@ -1,8 +1,5 @@
 using AutoMapper;
 using MovieSearch.Application.Movies.Dtos;
-using MovieSearch.Core.Companies;
-using MovieSearch.Core.Generals;
-using MovieSearch.Core.Genres;
 using MovieSearch.Core.Movies;
 
 namespace MovieSearch.Application.Movies
@@ -12,10 +9,10 @@ namespace MovieSearch.Application.Movies
         public MovieMappings()
         {
             CreateMap<Movie, MovieDto>();
-            CreateMap<Genre, GenreDto>();
-            CreateMap<Language, LanguageDto>();
-            CreateMap<Country, CountryDto>();
-            CreateMap<ProductionCompany, ProductionCompanyDto>();
+            CreateMap<MovieInfo, MovieInfoDto>();
+            CreateMap<MovieCredit, MovieCreditDto>();
+            CreateMap<MovieCastMember, MovieCastMemberDto>();
+            CreateMap<MovieCrewMember, MovieCrewMemberDto>();
         }
     }
 }

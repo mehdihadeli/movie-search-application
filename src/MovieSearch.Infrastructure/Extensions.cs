@@ -93,6 +93,7 @@ namespace MovieSearch.Infrastructure
                     Detail = ex.Message,
                     Type = "https://somedomain/api-server-error",
                 });
+                x.MapToStatusCode<ArgumentNullException>(StatusCodes.Status400BadRequest);
             });
 
             return services;

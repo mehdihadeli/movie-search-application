@@ -10,7 +10,6 @@ namespace MovieSearch.Core.TV
     public class TVShow
     {
         public int Id { get; init; }
-
         public string BackdropPath { get; init; }
         public IReadOnlyList<TVShowCreator> CreatedBy { get; init; }
         public IReadOnlyList<int> EpisodeRunTime { get; init; }
