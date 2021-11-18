@@ -6,7 +6,6 @@ namespace MovieSearch.Core
     {
         public string ApiKey { get; set; }
         public string SearchPart { get; set; }
-        public int MaxResults { get; set; }
         public string SearchType { get; set; }
         public SearchResource.ListRequest.OrderEnum Order { get; set; }
     }

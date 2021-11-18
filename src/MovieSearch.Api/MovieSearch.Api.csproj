@@ -10,4 +10,8 @@
     <ProjectReference Include="..\MovieSearch.Infrastructure\MovieSearch.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Authentication" />
+  </ItemGroup>
+
 </Project>

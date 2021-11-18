@@ -5,6 +5,7 @@ namespace MovieSearch.Application.Services.Clients
 {
     public interface IVideoServiceClient
     {
-        Task<VideoListResultModel<string>> GetVideos(string movieName, string page = "");
+        Task<VideoListResultModel<MovieSearch.Core.Generals.Video>> GetVideos(string movieName, int pageSize = 20,
+            string page = "");
     }
 }

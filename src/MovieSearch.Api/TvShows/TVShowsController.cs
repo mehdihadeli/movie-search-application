@@ -4,7 +4,6 @@ using BuildingBlocks.Web;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MovieSearch.Api.TvShows.Model;
-using MovieSearch.Application.Movies.Features.SearchMovieByTitle;
 using MovieSearch.Application.TvShows.Features.FindTvShowById;
 using MovieSearch.Application.TvShows.Features.SearchTVShow;
 using MovieSearch.Application.TvShows.Features.SearchTVShowByTitle;

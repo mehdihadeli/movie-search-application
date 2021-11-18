@@ -20,6 +20,7 @@ using MovieSearch.Application.Services.Clients;
 using MovieSearch.Core;
 using BuildingBlocks.Resiliency;
 using MovieSearch.Infrastructure.Services.Clients.MovieDb;
+using MovieSearch.Infrastructure.Services.Clients.Video;
 
 namespace MovieSearch.Infrastructure
 {
@@ -29,6 +30,7 @@ namespace MovieSearch.Infrastructure
             IConfiguration configuration)
         {
             services.AddSingleton<IMovieDbServiceClient, TMDBServiceClient>();
+            services.AddSingleton<IVideoServiceClient, YoutubeVideoServiceClient>();
 
             services.AddCustomValidators(typeof(ApplicationRoot).Assembly);
 

@@ -1,9 +1,7 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using BuildingBlocks.Domain;
 using BuildingBlocks.Resiliency.Configs;
 using Google.Apis.Services;
 using Google.Apis.YouTube.v3;
@@ -30,7 +28,8 @@ namespace MovieSearch.Infrastructure.Services.Clients.Video
         private static AsyncCircuitBreakerPolicy _circuitBreakerPolicy;
         private static AsyncBulkheadPolicy _bulkheadPolicy;
 
-        public YoutubeVideoServiceClient(IOptions<YoutubeVideoOptions> options, IMapper mapper, IOptions<PolicyConfig> policyOptions)
+        public YoutubeVideoServiceClient(IOptions<YoutubeVideoOptions> options, IMapper mapper,
+            IOptions<PolicyConfig> policyOptions)
         {
             _mapper = mapper;
             _options = options.Value;
@@ -45,9 +44,10 @@ namespace MovieSearch.Infrastructure.Services.Clients.Video
         }
 
         //https://developers.google.com/youtube/v3/docs/search/list
-        public async Task<VideoListResultModel<string>> GetVideos(string movieName, string pageToken = "")
+        public async Task<VideoListResultModel<MovieSearch.Core.Generals.Video>> GetVideos(string movieName,
+            int pageSize = 20, string pageToken = "")
         {
-            YouTubeService youtubeService = new YouTubeService(new BaseClientService.Initializer()
+            YouTubeService youtubeService = new YouTubeService(new BaseClientService.Initializer
             {
                 ApiKey = _options.ApiKey,
                 ApplicationName = GetType().ToString()
@@ -57,18 +57,33 @@ namespace MovieSearch.Infrastructure.Services.Clients.Video
             searchListRequest.Q = movieName;
             searchListRequest.Order =
                 _options.Order; //our default config: Relevance - Resources are sorted based on their relevance to the search query.
-            searchListRequest.MaxResults = _options.MaxResults;
+            searchListRequest.MaxResults = pageSize;
             searchListRequest.PageToken = pageToken;
             searchListRequest.Type = _options.SearchType;
             searchListRequest.VideoEmbeddable = SearchResource.ListRequest.VideoEmbeddableEnum.True__;
 
             var searchListResponse = await _retryPolicy.ExecuteAsync(() => searchListRequest.ExecuteAsync());
 
-            return new VideoListResultModel<string>(items: searchListResponse.Items.Select(x => x.Id.VideoId).ToList(),
+            var result = new VideoListResultModel<MovieSearch.Core.Generals.Video>(items: searchListResponse.Items
+                    .Select(x =>
+                        new MovieSearch.Core.Generals.Video
+                        {
+                            Iso_639_1 = "en",
+                            Iso_3166_1 = "US",
+                            Id = x.Id.VideoId,
+                            Name = x.Snippet.Title,
+                            Size = 1080,
+                            Site = "YouTube",
+                            Key = x.Id.VideoId,
+                            PublishedAt = x.Snippet.PublishedAt,
+                            Type = "Trailer"
+                        }).ToList(),
                 totalItems: searchListResponse.PageInfo.TotalResults ?? 0, pageToken: pageToken,
                 nextPageToken: searchListResponse.NextPageToken,
                 previousPageToken: searchListResponse.PrevPageToken,
                 pageSize: searchListResponse.PageInfo.ResultsPerPage ?? 0);
+
+            return result;
         }
     }
 }

@@ -43,7 +43,7 @@ namespace MovieSearch.IntegrationTests.Infrastructure.Services.Clients.Video
         public async Task get_videos_by_next_page_should_return_correct_data()
         {
             var result = await _sut.GetVideos("finding nemo");
-            var result2 = await _sut.GetVideos("finding nemo", result.NextPageToken);
+            var result2 = await _sut.GetVideos("finding nemo", 20, result.NextPageToken);
 
             result2.Should().NotBeNull();
             result2.Items.Should().NotBeNull();
