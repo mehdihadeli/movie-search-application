@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using BuildingBlocks.Security.ApiKey;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
@@ -50,6 +51,15 @@ namespace BuildingBlocks.Swagger
                         Type = SecuritySchemeType.ApiKey,
                         Scheme = "Bearer"
                     });
+
+                    options.AddSecurityDefinition(ApiKeyConstants.HeaderName, new OpenApiSecurityScheme
+                    {
+                        Description = "Api key needed to access the endpoints. X-Api-Key: My_API_Key",
+                        In = ParameterLocation.Header,
+                        Name = ApiKeyConstants.HeaderName,
+                        Type = SecuritySchemeType.ApiKey
+                    });
+
                     options.AddSecurityRequirement(new OpenApiSecurityRequirement()
                     {
                         {
@@ -65,6 +75,17 @@ namespace BuildingBlocks.Swagger
                                 In = ParameterLocation.Header,
                             },
                             new List<string>()
+                        },
+                        {
+                            new OpenApiSecurityScheme
+                            {
+                                Name = ApiKeyConstants.HeaderName,
+                                Type = SecuritySchemeType.ApiKey,
+                                In = ParameterLocation.Header,
+                                Reference = new OpenApiReference
+                                    { Type = ReferenceType.SecurityScheme, Id = ApiKeyConstants.HeaderName },
+                            },
+                            new string[] { }
                         }
                     });
                 });

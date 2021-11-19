@@ -1,11 +1,14 @@
 using System.Threading;
 using System.Threading.Tasks;
 using BuildingBlocks.Web;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MovieSearch.Application.Movies.Features.FindById;
 using MovieSearch.Application.Movies.Features.FindMovieByImdbId;
 using MovieSearch.Application.Movies.Features.FindMovieCredits;
+using MovieSearch.Application.Movies.Features.FindMovieWithTrailersById;
+using MovieSearch.Application.Movies.Features.FindMovieWithTrailersByImdbId;
 using MovieSearch.Application.Movies.Features.FindPopularMovies;
 using MovieSearch.Application.Movies.Features.FindUpcomingMovies;
 using MovieSearch.Application.Movies.Features.SearchMovie;
@@ -17,6 +20,7 @@ namespace MovieSearch.Api.Movies
 {
     [ApiVersion("1.0")]
     [Route(BaseApiPath + "/[controller]")]
+    [Authorize]
     public class MoviesController : BaseController
     {
         /// <summary>
@@ -33,7 +37,7 @@ namespace MovieSearch.Api.Movies
         public async Task<ActionResult> GetByIdAsync([FromRoute] int id, CancellationToken cancellationToken)
         {
             var query = new FindMovieByIdQuery { Id = id };
-            FindMovieByIdQueryResult result = await Mediator.Send(query, cancellationToken);
+            var result = await Mediator.Send(query, cancellationToken);
 
             return Ok(result);
         }
@@ -44,7 +48,7 @@ namespace MovieSearch.Api.Movies
         /// <param name="imdbId"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        [HttpGet("{imdbId}", Name = "GetByImdbIdAsync")]
+        [HttpGet("{imdbId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -52,6 +56,50 @@ namespace MovieSearch.Api.Movies
         public async Task<ActionResult> GetByImdbIdAsync([FromRoute] string imdbId, CancellationToken cancellationToken)
         {
             var query = new FindMovieByImdbIdQuery { ImdbId = imdbId };
+            var result = await Mediator.Send(query, cancellationToken);
+
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// Get specific movie by id and its trailers
+        /// </summary>
+        /// <param name="trailersCount"></param>
+        /// <param name="cancellationToken"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("{id:int}/with-trailers")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [SwaggerOperation(Summary = "Get specific movie by id with its trailers",
+            Description = "Get specific movie by id with its trailers")]
+        public async Task<ActionResult> GetWithTrailersById([FromRoute] int id, [FromQuery] int trailersCount = 20,
+            CancellationToken cancellationToken = default)
+        {
+            var query = new FindMovieWithTrailersByIdQuery(id, trailersCount);
+            var result = await Mediator.Send(query, cancellationToken);
+
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// Get specific movie by imdbId with its trailers.
+        /// </summary>
+        /// <param name="imdbId"></param>
+        /// <param name="trailersCount"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        [HttpGet("{imdbId}/with-trailers")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [SwaggerOperation(Summary = "Get specific movie by imdbId with its trailers.",
+            Description = "Get specific movie by imdbId with its trailers.")]
+        public async Task<ActionResult> GetWithTrailersByImdbId([FromRoute] string imdbId,
+            [FromQuery] int trailersCount = 20, CancellationToken cancellationToken = default)
+        {
+            var query = new FindMovieWithTrailersByImdbIdQuery(imdbId, trailersCount);
             var result = await Mediator.Send(query, cancellationToken);
 
             return Ok(result);

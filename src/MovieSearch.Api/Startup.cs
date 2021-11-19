@@ -3,8 +3,11 @@ using System.Net;
 using System.Net.Http;
 using System.Reflection;
 using BuildingBlocks.Resiliency.Configs;
+using BuildingBlocks.Security.ApiKey;
+using BuildingBlocks.Security.ApiKey.Authorization;
 using BuildingBlocks.Swagger;
 using BuildingBlocks.Web;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -67,8 +70,10 @@ namespace MovieSearch.Api
             services.AddCustomVersioning();
             services.AddCustomHealthCheck(healthBuilder => { });
             services.AddCustomSwagger(Assembly.GetExecutingAssembly());
-
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
+
+            services.AddCustomApiKeyAuthentication();
+
             services.AddApplication();
             services.AddInfrastructure(Configuration);
         }
@@ -93,6 +98,7 @@ namespace MovieSearch.Api
 
             app.UseCustomHealthCheck();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

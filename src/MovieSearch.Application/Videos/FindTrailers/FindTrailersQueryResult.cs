@@ -1,9 +1,9 @@
 using MovieSearch.Application.Videos.Dtos;
 using MovieSearch.Core.Generals;
 
-namespace MovieSearch.Application.Videos.FindVideos
+namespace MovieSearch.Application.Videos.FindTrailers
 {
-    public class FindVideosQueryResult
+    public class FindTrailersQueryResult
     {
         public VideoListResultModel<VideoDto> VideoList { get; init; }
     }

@@ -4,7 +4,7 @@ using BuildingBlocks.Web;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MovieSearch.Api.Videos.Models;
-using MovieSearch.Application.Videos.FindVideos;
+using MovieSearch.Application.Videos.FindTrailers;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace MovieSearch.Api.Videos
@@ -14,19 +14,19 @@ namespace MovieSearch.Api.Videos
     public class VideosController : BaseController
     {
         /// <summary>
-        /// Get the videos by movie or tv-show name
+        /// Get the trailers by movie or tv-show name
         /// </summary>
         /// <param name="request"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        [HttpGet("search")]
+        [HttpGet("search-trailers")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [SwaggerOperation(Summary = "Get the videos by movie or tv-show name", Description = "Get the videos by movie or tv-show name")]
-        public async Task<ActionResult> GetVideosAsync([FromQuery] GetVideosRequest request,
+        [SwaggerOperation(Summary = "Get the trailers by movie or tv-show name", Description = "Get the trailers by movie or tv-show name")]
+        public async Task<ActionResult> GetTrailersAsync([FromQuery] GetTrailersRequest request,
             CancellationToken cancellationToken)
         {
-            var query = new FindVideosQuery
+            var query = new FindTrailersQuery
             {
                 MovieName = request.MovieName,
                 PageToken = request.PageToken

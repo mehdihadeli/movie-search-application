@@ -9,6 +9,7 @@ using Microsoft.Extensions.Options;
 using MovieSearch.Api;
 using MovieSearch.Core;
 using MovieSearch.Infrastructure.Services.Clients.Video;
+using MovieSearch.IntegrationTests.Mocks;
 using Xunit;
 
 namespace MovieSearch.IntegrationTests.Infrastructure.Services.Clients.Video
@@ -30,7 +31,7 @@ namespace MovieSearch.IntegrationTests.Infrastructure.Services.Clients.Video
         [Fact]
         public async Task get_videos_should_return_correct_data()
         {
-            var result = await _sut.GetVideos("finding nemo");
+            var result = await _sut.GetTrailers(MovieMocks.Data.Title);
 
             result.Should().NotBeNull();
             result.Items.Should().NotBeNull();
@@ -42,8 +43,8 @@ namespace MovieSearch.IntegrationTests.Infrastructure.Services.Clients.Video
         [Fact]
         public async Task get_videos_by_next_page_should_return_correct_data()
         {
-            var result = await _sut.GetVideos("finding nemo");
-            var result2 = await _sut.GetVideos("finding nemo", 20, result.NextPageToken);
+            var result = await _sut.GetTrailers(MovieMocks.Data.Title);
+            var result2 = await _sut.GetTrailers(MovieMocks.Data.Title, 20, result.NextPageToken);
 
             result2.Should().NotBeNull();
             result2.Items.Should().NotBeNull();

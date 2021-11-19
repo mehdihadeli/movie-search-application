@@ -5,6 +5,6 @@ namespace MovieSearch.Application.Movies.Features.SearchMovie
 {
     public class SearchMovieQueryResult
     {
-        public ListResultModel<MovieInfoDto> MovieList { get; set; }
+        public ListResultModel<MovieInfoDto> MovieList { get; init; }
     }
 }
