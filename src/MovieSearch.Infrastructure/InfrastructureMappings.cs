@@ -64,7 +64,6 @@ namespace MovieSearch.Infrastructure
             CreateMap<NetworkWithLogo, Network>();
             CreateMap<CreatedBy, TVShowCreator>();
             CreateMap<PersonGender, Gender>();
-
             CreateMap<ReviewBase, ReviewInfo>();
             CreateMap<Review, MovieSearch.Core.Review.Review>();
             CreateMap<TMDbLib.Objects.Movies.Credits, MovieCredit>()
@@ -86,6 +85,13 @@ namespace MovieSearch.Infrastructure
                 .ForMember(x => x.CrewRoles, opt => opt.MapFrom(s => s.Crew));
             CreateMap<MovieRole, PersonMovieCastMember>();
             CreateMap<MovieJob, PersonMovieCrewMember>();
+
+            CreateMap<TvCredits, PersonTVCredit>()
+                .ForMember(x => x.PersonId, opt => opt.MapFrom(s => s.Id))
+                .ForMember(x => x.CastRoles, opt => opt.MapFrom(s => s.Cast))
+                .ForMember(x => x.CrewRoles, opt => opt.MapFrom(s => s.Crew));
+            CreateMap<TvRole, PersonTVCastMember>();
+            CreateMap<TvJob, PersonTVCrewMember>();
 
             CreateMap<ImagesWithId, Images>();
             CreateMap<ImageData, Core.Generals.ImageData>();

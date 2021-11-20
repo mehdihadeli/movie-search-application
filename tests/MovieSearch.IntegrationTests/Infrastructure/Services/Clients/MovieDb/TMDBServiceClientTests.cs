@@ -344,6 +344,19 @@ namespace MovieSearch.IntegrationTests.Infrastructure.Services.Clients.MovieDb
         }
 
         [Fact]
+        public async Task get_person_tv_show_credits_should_returns_valid_data()
+        {
+            // Act
+            var credits = await _sut.GetPersonTvShowCreditsAsync(PersonMock.Data.Id);
+
+            // Assert
+            credits.Should().NotBeNull();
+            credits.CastRoles.Count.Should().BeGreaterThan(0);
+            credits.CrewRoles.Count.Should().Be(0);
+            credits.PersonId.Should().Be(PersonMock.Data.Id);
+        }
+
+        [Fact]
         public async Task get_tv_show_credits_should_returns_valid_data()
         {
             // Act

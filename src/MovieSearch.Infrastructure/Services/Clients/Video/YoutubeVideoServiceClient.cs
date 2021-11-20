@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using BuildingBlocks.Resiliency.Configs;
+using Google;
 using Google.Apis.Services;
 using Google.Apis.YouTube.v3;
 using Microsoft.Extensions.Options;
@@ -45,7 +46,7 @@ namespace MovieSearch.Infrastructure.Services.Clients.Video
 
         //https://developers.google.com/youtube/v3/docs/search/list
         public async Task<VideoListResultModel<MovieSearch.Core.Generals.Video>> GetTrailers(string movieName,
-            int pageSize = 20, string pageToken = "")
+            int pageSize = 20, string pageToken = "", DateTime? publishedAfter = null, DateTime? publishedBefore = null)
         {
             YouTubeService youtubeService = new YouTubeService(new BaseClientService.Initializer
             {
@@ -59,6 +60,8 @@ namespace MovieSearch.Infrastructure.Services.Clients.Video
                 ? $"{movieName.ToLower()} trailer"
                 : movieName.ToLower();
 
+            searchListRequest.PublishedAfter = publishedAfter;
+            searchListRequest.PublishedBefore = publishedBefore;
             searchListRequest.Q = searchTerm;
             searchListRequest.Order =
                 _options.Order; //our default config: Relevance - Resources are sorted based on their relevance to the search query.

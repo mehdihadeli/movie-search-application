@@ -4,6 +4,10 @@
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DocumentationFile>bin\Debug\MovieSearch.Api.xml</DocumentationFile>
+  </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\BuildingBlocks\BulidingBlocks\BuildingBlocks.csproj" />
     <ProjectReference Include="..\MovieSearch.Application\MovieSearch.Application.csproj" />

@@ -23,7 +23,8 @@ namespace MovieSearch.Application.Videos.FindTrailers
         {
             Guard.Against.Null(query, nameof(FindTrailersQuery));
 
-            var videos = await _videoServiceClient.GetTrailers(query.MovieName, query.PageSize, query.PageToken);
+            var videos = await _videoServiceClient.GetTrailers(query.MovieName, query.PageSize, query.PageToken,
+                query.PublishedAfter, query.PublishedBefore);
 
             var result = videos.Map(x => _mapper.Map<VideoDto>(x));
 

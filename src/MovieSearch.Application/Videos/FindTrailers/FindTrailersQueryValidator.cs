@@ -8,6 +8,7 @@ namespace MovieSearch.Application.Videos.FindTrailers
         {
             RuleFor(query => query.MovieName).NotEmpty().NotNull()
                 .WithMessage("movieName should not be null or empty.");
+            RuleFor(query => query.PageSize).GreaterThan(0).WithMessage("page-size should be greater than zero.");
         }
     }
 }

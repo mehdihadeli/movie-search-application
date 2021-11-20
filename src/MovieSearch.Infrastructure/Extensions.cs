@@ -19,8 +19,10 @@ using Microsoft.AspNetCore.Http;
 using MovieSearch.Application.Services.Clients;
 using MovieSearch.Core;
 using BuildingBlocks.Resiliency;
+using BuildingBlocks.Security;
 using BuildingBlocks.Security.ApiKey;
 using BuildingBlocks.Security.ApiKey.Authorization;
+using Google;
 using Microsoft.AspNetCore.Authorization;
 using MovieSearch.Infrastructure.Services.Clients.MovieDb;
 using MovieSearch.Infrastructure.Services.Clients.Video;
@@ -99,6 +101,32 @@ namespace MovieSearch.Infrastructure
                     Type = "https://somedomain/api-server-error",
                 });
                 x.MapToStatusCode<ArgumentNullException>(StatusCodes.Status400BadRequest);
+                x.Map<GoogleApiException>(googleApiException =>
+                {
+                    if (googleApiException.Error.Code == StatusCodes.Status403Forbidden)
+                    {
+                        return new ProblemDetails
+                        {
+                            Title = "youtube api forbidden exception",
+                            Status = StatusCodes.Status403Forbidden,
+                            Detail = googleApiException.Error.Message,
+                            Type = "https://somedomain/forbiden",
+                        };
+                    }
+
+                    if (googleApiException.Error.Code == StatusCodes.Status400BadRequest)
+                    {
+                       return new ProblemDetails
+                        {
+                            Title = "youtube api bad request exception",
+                            Status = StatusCodes.Status400BadRequest,
+                            Detail = googleApiException.Error.Message,
+                            Type = "https://somedomain/bad-request-error",
+                        };
+                    }
+
+                    return new ProblemDetails();
+                });
             });
 
             return services;
@@ -149,7 +177,7 @@ namespace MovieSearch.Infrastructure
             services.AddSingleton<IAuthorizationHandler, OnlyThirdPartiesAuthorizationHandler>();
 
             services.AddSingleton<IGetApiKeyQuery, InMemoryGetApiKeyQuery>();
-            
+
             return services;
         }
     }

@@ -2,9 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BuildingBlocks.Security.ApiKey;
 using BuildingBlocks.Security.ApiKey.Authorization;
 
-namespace BuildingBlocks.Security.ApiKey
+namespace MovieSearch.Infrastructure
 {
     public class InMemoryGetApiKeyQuery : IGetApiKeyQuery
     {

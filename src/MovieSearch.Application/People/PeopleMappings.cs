@@ -12,6 +12,10 @@ namespace MovieSearch.Application.People
             CreateMap<PersonMovieCredit, PersonMovieCreditDto>();
             CreateMap<PersonMovieCastMember, PersonMovieCastMemberDto>();
             CreateMap<PersonMovieCrewMember, PersonMovieCrewMemberDto>();
+
+            CreateMap<PersonTVCredit, PersonTVShowCreditDto>();
+            CreateMap<PersonTVCastMember, PersonTVShowCastMemberDto>();
+            CreateMap<PersonTVCrewMember, PersonTVShowCrewMemberDto>();
         }
     }
 }

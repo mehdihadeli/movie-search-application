@@ -1,21 +1,16 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
-namespace MovieSearch.Core.People
+namespace MovieSearch.Application.People.Dtos
 {
-    public class PersonTVCredit
+    public class PersonTVShowCreditDto
     {
         public int PersonId { get; init; }
-        public IReadOnlyList<PersonTVCastMember> CastRoles { get; init; }
-        public IReadOnlyList<PersonTVCrewMember> CrewRoles { get; init; }
-        public PersonTVCredit()
-        {
-            CastRoles = Array.Empty<PersonTVCastMember>();
-            CrewRoles = Array.Empty<PersonTVCrewMember>();
-        }
+        public IReadOnlyList<PersonTVShowCastMemberDto> CastRoles { get; init; }
+        public IReadOnlyList<PersonTVShowCrewMemberDto> CrewRoles { get; init; }
     }
 
-    public class PersonTVCastMember
+    public class PersonTVShowCastMemberDto
     {
         public int Id { get; init; }
         public string Character { get; init; }
@@ -27,7 +22,7 @@ namespace MovieSearch.Core.People
         public string PosterPath { get; init; }
     }
 
-    public class PersonTVCrewMember
+    public class PersonTVShowCrewMemberDto
     {
         public int Id { get; init; }
         public string CreditId { get; init; }
