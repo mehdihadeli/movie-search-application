@@ -51,6 +51,7 @@ namespace MovieSearch.IntegrationTests.Infrastructure.Services.Clients.Video
             result2.Items.Any().Should().BeTrue();
             result2.PageSize.Should().Be(result2.Items.Count);
             result2.PageToken.Should().NotBeNull();
+            result2.PageToken.Should().Be(result.NextPageToken);
             result2.NextPageToken.Should().NotBeNull();
         }
     }

@@ -4,9 +4,9 @@ using BuildingBlocks.Web;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MovieSearch.Api.Videos.Models;
-using MovieSearch.Application.Videos.FindMovieTrailers;
-using MovieSearch.Application.Videos.FindTrailers;
-using MovieSearch.Application.Videos.FindTVShowTrailers;
+using MovieSearch.Application.Videos.Features.FindMovieTrailers;
+using MovieSearch.Application.Videos.Features.FindTrailers;
+using MovieSearch.Application.Videos.Features.FindTVShowTrailers;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace MovieSearch.Api.Videos

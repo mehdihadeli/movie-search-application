@@ -3,20 +3,21 @@ using System.IO;
 using System.Reflection;
 using BuildingBlocks.Security.ApiKey;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
-using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.PlatformAbstractions;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using IConfiguration = Microsoft.Extensions.Configuration.IConfiguration;
 
 namespace BuildingBlocks.Swagger
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddCustomSwagger(this IServiceCollection services, Assembly assembly)
+        public static IServiceCollection AddCustomSwagger(this IServiceCollection services,
+            IConfiguration configuration,
+            Assembly assembly, string swaggerSectionName = "SwaggerOptions")
         {
             services.AddVersionedApiExplorer(options =>
             {
@@ -29,12 +30,15 @@ namespace BuildingBlocks.Swagger
             //https://jaliyaudagedara.blogspot.com/2021/07/net-6-preview-6-introducing-openapi.html
             //services.AddEndpointsApiExplorer();
 
+            services.AddOptions<SwaggerOptions>().Bind(configuration.GetSection(swaggerSectionName))
+                .ValidateDataAnnotations();
+
             services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
+
             services.AddSwaggerGen(
                 options =>
                 {
                     options.OperationFilter<SwaggerDefaultValues>();
-
                     var xmlFile = XmlCommentsFilePath(assembly);
                     if (File.Exists(xmlFile))
                     {

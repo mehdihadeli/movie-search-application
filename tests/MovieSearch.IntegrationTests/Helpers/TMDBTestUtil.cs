@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using MovieSearch.Application.Movies.Dtos;
+using MovieSearch.Application.TvShows.Dtos;
 using MovieSearch.Core.Companies;
 using MovieSearch.Core.Generals;
 using MovieSearch.Core.Genres;
@@ -123,7 +125,26 @@ namespace DM.MovieApi.IntegrationTests
             }
         }
 
+        public static void AssertMovieInformationDtoStructure(IEnumerable<MovieInfoDto> movies)
+        {
+            var movieInfos = movies.ToList();
+            Assert.IsTrue(movieInfos.Any());
+
+            foreach (MovieInfoDto movie in movieInfos)
+            {
+                AssertMovieInformationDtoStructure(movie);
+            }
+        }
+
         public static void AssertMovieInformationStructure(MovieInfo movie)
+        {
+            Assert.IsFalse(string.IsNullOrWhiteSpace(movie.Title));
+            Assert.IsTrue(movie.Id > 0);
+
+            AssertGenres(movie.GenreIds);
+        }
+
+        public static void AssertMovieInformationDtoStructure(MovieInfoDto movie)
         {
             Assert.IsFalse(string.IsNullOrWhiteSpace(movie.Title));
             Assert.IsTrue(movie.Id > 0);
@@ -133,14 +154,30 @@ namespace DM.MovieApi.IntegrationTests
 
         public static void AssertTvShowInformationStructure(IEnumerable<TVShowInfo> tvShows)
         {
-            // ReSharper disable once PossibleMultipleEnumeration
             Assert.IsTrue(tvShows.Any());
 
-            // ReSharper disable once PossibleMultipleEnumeration
             foreach (TVShowInfo tvShow in tvShows)
             {
                 AssertTvShowInformationStructure(tvShow);
             }
+        }
+
+        public static void AssertTvShowInformationDtoStructure(IEnumerable<TVShowInfoDto> tvShows)
+        {
+            Assert.IsTrue(tvShows.Any());
+
+            foreach (TVShowInfoDto tvShow in tvShows)
+            {
+                AssertTvShowInformationDtoStructure(tvShow);
+            }
+        }
+
+        public static void AssertTvShowInformationDtoStructure(TVShowInfoDto tvShow)
+        {
+            Assert.IsTrue(tvShow.Id > 0);
+            Assert.IsFalse(string.IsNullOrEmpty(tvShow.Name));
+
+            AssertGenres(tvShow.GenreIds);
         }
 
         public static void AssertTvShowInformationStructure(TVShowInfo tvShow)

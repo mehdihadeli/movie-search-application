@@ -43,8 +43,11 @@ namespace MovieSearch.Application.TvShows.Features.FindTVShowWithTrailersById
 
             return new FindTVShowWithTrailersByIdQueryResult
             {
-                TVShow = tvShowDto,
-                Trailers = trailersDto
+                TVShowWithTrailers = new TVShowWithTrailersDto()
+                {
+                    TVShow = tvShowDto,
+                    Trailers = trailersDto
+                }
             };
         }
     }

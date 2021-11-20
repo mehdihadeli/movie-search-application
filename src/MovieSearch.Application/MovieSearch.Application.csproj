@@ -15,4 +15,9 @@
     <ProjectReference Include="..\MovieSearch.Core\MovieSearch.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Generals\Multi\Features" />
+    <Folder Include="Videos\Features" />
+  </ItemGroup>
+
 </Project>

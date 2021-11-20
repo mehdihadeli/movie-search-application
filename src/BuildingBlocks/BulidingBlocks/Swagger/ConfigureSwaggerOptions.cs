@@ -10,8 +10,13 @@ namespace BuildingBlocks.Swagger
     public class ConfigureSwaggerOptions : IConfigureOptions<SwaggerGenOptions>
     {
         private readonly IApiVersionDescriptionProvider _provider;
+        private readonly SwaggerOptions _options;
 
-        public ConfigureSwaggerOptions(IApiVersionDescriptionProvider provider) => _provider = provider;
+        public ConfigureSwaggerOptions(IApiVersionDescriptionProvider provider, IOptions<SwaggerOptions> options)
+        {
+            _provider = provider;
+            _options = options.Value;
+        }
 
         public void Configure(SwaggerGenOptions options)
         {
@@ -21,15 +26,15 @@ namespace BuildingBlocks.Swagger
             }
         }
 
-        private static OpenApiInfo CreateInfoForApiVersion(ApiVersionDescription description)
+        private OpenApiInfo CreateInfoForApiVersion(ApiVersionDescription description)
         {
             var info = new OpenApiInfo
             {
-                Title = "APIs",
-                Version = description.ApiVersion.ToString(),
+                Title = _options.Title ?? "APIs",
+                Version =_options.Version ?? description.ApiVersion.ToString(),
                 Description = "An application with Swagger, Swashbuckle, and API versioning.",
-                Contact = new OpenApiContact {Name = "", Email = ""},
-                License = new OpenApiLicense {Name = "MIT", Url = new Uri("https://opensource.org/licenses/MIT")}
+                Contact = new OpenApiContact { Name = "", Email = "" },
+                License = new OpenApiLicense { Name = "MIT", Url = new Uri("https://opensource.org/licenses/MIT") }
             };
 
             if (description.IsDeprecated)

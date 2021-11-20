@@ -17,7 +17,7 @@ using Xunit.Abstractions;
 
 namespace BuildingBlocks.Test.Fixtures
 {
-    public class IntegrationTestFixture<TEntryPoint, TDbContext> : IntegrationTestFixture<TEntryPoint>, IAsyncLifetime
+    public class IntegrationTestFixture<TEntryPoint, TDbContext> : IntegrationTestFixture<TEntryPoint>
         where TEntryPoint : class
         where TDbContext : class, IMongoDbContext
     {

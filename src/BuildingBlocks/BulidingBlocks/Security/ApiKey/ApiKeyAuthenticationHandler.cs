@@ -42,7 +42,7 @@ namespace BuildingBlocks.Security.ApiKey
 
             var providedApiKey = apiKeyHeaderValues.FirstOrDefault() ?? apiKeyQueryValues.FirstOrDefault();
 
-            if ((apiKeyHeaderValues.Count == 0 || apiKeyQueryValues.Count == 0) || string.IsNullOrWhiteSpace
+            if ((apiKeyHeaderValues.Count == 0 && apiKeyQueryValues.Count == 0) || string.IsNullOrWhiteSpace
                 (providedApiKey))
             {
                 return AuthenticateResult.NoResult();

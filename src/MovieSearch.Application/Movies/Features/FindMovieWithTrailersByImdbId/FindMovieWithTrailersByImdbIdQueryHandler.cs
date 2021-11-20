@@ -44,8 +44,11 @@ namespace MovieSearch.Application.Movies.Features.FindMovieWithTrailersByImdbId
 
             return new FindMovieWithTrailersByImdbIdQueryResult
             {
-                Movie = movieDto,
-                Trailers = trailersDto
+                MovieWithTrailers = new MovieWithTrailersDto
+                {
+                    Movie = movieDto,
+                    Trailers = trailersDto
+                }
             };
         }
     }

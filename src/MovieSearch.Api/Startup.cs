@@ -69,7 +69,7 @@ namespace MovieSearch.Api
             services.AddCustomHttpClients(Configuration);
             services.AddCustomVersioning();
             services.AddCustomHealthCheck(healthBuilder => { });
-            services.AddCustomSwagger(Assembly.GetExecutingAssembly());
+            services.AddCustomSwagger(Configuration, Assembly.GetExecutingAssembly());
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
             services.AddCustomApiKeyAuthentication();
@@ -87,8 +87,6 @@ namespace MovieSearch.Api
                 var provider = app.ApplicationServices.GetService<IApiVersionDescriptionProvider>();
                 app.UseCustomSwagger(provider);
             }
-
-            app.UseHttpsRedirection();
 
             app.UseInfrastructure(env);
 

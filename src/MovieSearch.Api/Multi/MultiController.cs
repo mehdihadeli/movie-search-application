@@ -4,7 +4,7 @@ using BuildingBlocks.Web;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MovieSearch.Api.Multi.Models;
-using MovieSearch.Application.Generals.Multi.SearchMultipleModel;
+using MovieSearch.Application.Generals.Multi.Features.SearchMultipleModel;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace MovieSearch.Api.Multi

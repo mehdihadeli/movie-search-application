@@ -6,7 +6,6 @@ namespace MovieSearch.Application.Movies.Features.FindMovieWithTrailersByImdbId
 {
     public class FindMovieWithTrailersByImdbIdQueryResult
     {
-        public MovieDto Movie { get; init; }
-        public IEnumerable<VideoDto> Trailers { get; init; }
+        public MovieWithTrailersDto MovieWithTrailers { get; init; }
     }
 }

@@ -24,6 +24,7 @@ using BuildingBlocks.Security.ApiKey;
 using BuildingBlocks.Security.ApiKey.Authorization;
 using Google;
 using Microsoft.AspNetCore.Authorization;
+using MovieSearch.Infrastructure.Security;
 using MovieSearch.Infrastructure.Services.Clients.MovieDb;
 using MovieSearch.Infrastructure.Services.Clients.Video;
 

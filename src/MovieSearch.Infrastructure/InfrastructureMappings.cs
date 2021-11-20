@@ -96,7 +96,8 @@ namespace MovieSearch.Infrastructure
             CreateMap<ImagesWithId, Images>();
             CreateMap<ImageData, Core.Generals.ImageData>();
 
-            CreateMap<Video, Core.Generals.Video>();
+            CreateMap<Video, Core.Generals.Video>()
+                .ForMember(x=>x.PublishedAt,opt=>opt.Ignore());
             CreateMap<Person, Core.People.Person>();
 
             CreateMap<SearchBase, MultiInfo>();
