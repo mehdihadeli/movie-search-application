@@ -117,7 +117,7 @@ namespace MovieSearch.Infrastructure
 
                     if (googleApiException.Error.Code == StatusCodes.Status400BadRequest)
                     {
-                       return new ProblemDetails
+                        return new ProblemDetails
                         {
                             Title = "youtube api bad request exception",
                             Status = StatusCodes.Status400BadRequest,

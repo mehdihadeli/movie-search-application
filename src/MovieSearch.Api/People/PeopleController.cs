@@ -1,6 +1,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using BuildingBlocks.Web;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MovieSearch.Application.People.Features.FindPersonById;
@@ -12,6 +13,7 @@ namespace MovieSearch.Api.People
 {
     [ApiVersion("1.0")]
     [Route(BaseApiPath + "/[controller]")]
+    [Authorize]
     public class PeopleController : BaseController
     {
         /// <summary>

@@ -1,6 +1,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using BuildingBlocks.Web;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MovieSearch.Api.Multi.Models;
@@ -11,6 +12,7 @@ namespace MovieSearch.Api.Multi
 {
     [ApiVersion("1.0")]
     [Route(BaseApiPath + "/[controller]")]
+    [Authorize]
     public class MultiController : BaseController
     {
         /// <summary>
