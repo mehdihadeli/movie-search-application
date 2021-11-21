@@ -28,7 +28,8 @@ using Review = MovieSearch.Core.Review.Review;
 namespace MovieSearch.Infrastructure.Services.Clients.MovieDb
 {
     // https://www.themoviedb.org/
-    //
+    // https://medium.com/@emanuele.bucarelli/improve-resilience-in-the-net-application-80adda2c7710
+    // https://procodeguide.com/programming/polly-in-aspnet-core
     public class TMDBServiceClient : IMovieDbServiceClient
     {
         private readonly IMapper _mapper;
