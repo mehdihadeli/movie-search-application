@@ -77,7 +77,7 @@ services.AddProblemDetails(x =>
 
 In this Project I covered most of important tests like `Unit Testing`, `Integration Testing` and `End To End` testing. For naming tests, I used [vladimir khorikov](https://enterprisecraftsmanship.com/posts/you-naming-tests-wrong/) naming convention in his article and it makes our tests more readable like a documentation for our developers.
 
-In this app for increase performance we could use caching mechanism simply with implementing a interface `ICachePolicy<,>` and our object for caching, this will handle with a chancing pipeline on mediateR as cross cutting concern with name of `CachingBehavior`. For example for caching our `FindMovieByIdQuery` query we could use bellow code:
+In this app for increasing performance we could use caching mechanism simply with implementing a interface `ICachePolicy<,>` and our object for caching, this will handle with a chancing pipeline on mediateR as cross cutting concern with name of `CachingBehavior`. For example for caching our `FindMovieByIdQuery` query we could use bellow code:
 
 ``` csharp
 public class FindMovieByIdQuery : IQuery<FindMovieByIdQueryResult>
