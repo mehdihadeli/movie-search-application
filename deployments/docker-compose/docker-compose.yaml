@@ -1,0 +1,11 @@
+version: '3'
+services: 
+  movie.api:
+    container_name: movie.api
+    ports:
+        - '5000:5000'
+    restart: on-failure
+    image: movie.api:latest
+    build: 
+      context: ../../src
+      dockerfile: Api.Dockerfile

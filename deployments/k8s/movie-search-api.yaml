@@ -1,0 +1,43 @@
+# https://kubernetes.io/docs/concepts/workloads/controllers/deployment/
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: movie-api-dpl 
+  labels:
+    app: movie-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: movie-api
+  template:
+    metadata:
+      labels:
+        app: movie-api
+        version: v1
+    spec:
+      containers:
+      - name: movie-api
+        image: mehdihadeli/movie.api:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 5000
+---
+# https://kubernetes.io/docs/concepts/services-networking/service/
+apiVersion: v1
+kind: Service
+metadata:
+  name: movie-api-svc-v1
+  labels:
+    app: movie-api
+spec:
+  type: NodePort
+  selector:
+    app: movie-api
+  ports:
+  - port: 80
+    targetPort: 5000
+    nodePort: 30080
+    protocol: TCP
+    name: http
+---
