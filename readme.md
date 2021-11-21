@@ -27,6 +27,54 @@ With this approach, each of our vertical slices can decide for itself how to bes
 
 With using CQRS pattern, we cut each business functionality into some vertical slices, and inner each of this slices we have [technical folders structure](http://www.kamilgrzybek.com/design/feature-folders/) specific to that feature (command, handlers, infrastructure, repository, controllers, ...). In Our CQRS pattern each command/query handler is a separate slice. This is where you can reduce coupling between layers. Each handler can be a separated code unit, even copy/pasted. Thanks to that, we can tune down the specific method to not follow general conventions (e.g. use custom SQL query or even different storage). In a traditional layered architecture, when we change the core generic mechanism in one layer, it can impact all methods. 
 
+For checking `validation rules` we use two type of validation: [Data Validation](http://www.kamilgrzybek.com/design/rest-api-data-validation/) and [Business Rules validation](http://www.kamilgrzybek.com/design/domain-model-validation/). Data validation verify data items which are coming to our application from external sources and check if theirs values are acceptable but Business rules validation is a more broad concept and more close to how business works and behaves. So it is mainly focused on behavior
+For implementing data validation I used [FluentValidation](https://github.com/FluentValidation/FluentValidation) library for cleaner validation also better separation of concern in my handlers for preventing mixing validation logic with orchestration logic in my handlers.
+
+Examples of `data validation`:
+
+In this validator for our query as request we check that Id is greater than zero
+
+``` csharp
+public class FindMovieByIdQueryValidator : AbstractValidator<FindMovieByIdQuery>
+{
+    public FindMovieByIdQueryValidator()
+    {
+        RuleFor(query => query.Id).GreaterThan(0).WithMessage("id should be greater than zero.");
+    }
+}
+```
+Also for handling exception and correct status code for our web api response I Used [Hellang.Middleware.ProblemDetails](https://www.nuget.org/packages/Hellang.Middleware.ProblemDetails/) package and I config and map all our needed exceptions and their corresponding status code in our Infrastructure layer and [AddInfrastructure](./src/MovieSearch.Infrastructure/Extensions.cs) method.
+
+``` csharp
+services.AddProblemDetails(x =>
+    {
+        // Control when an exception is included
+        x.IncludeExceptionDetails = (ctx, _) =>
+        {
+            // Fetch services from HttpContext.RequestServices
+            var env = ctx.RequestServices.GetRequiredService<IHostEnvironment>();
+            return env.IsDevelopment() || env.IsStaging();
+        };
+        x.Map<AppException>(ex => new ProblemDetails
+        {
+            Title = "Application rule broken",
+            Status = StatusCodes.Status409Conflict,
+            Detail = ex.Message,
+            Type = "https://somedomain/application-rule-validation-error",
+        });
+        // Exception will produce and returns from our FluentValidation RequestValidationBehavior
+        x.Map<ValidationException>(ex => new ProblemDetails
+        {
+            Title = "input validation rules broken",
+            Status = StatusCodes.Status400BadRequest,
+            Detail = JsonConvert.SerializeObject(ex.ValidationResultModel.Errors),
+            Type = "https://somedomain/input-validation-rules-error",
+        });
+        ////
+        ////
+    });
+```
+
 In this Project I covered most of important tests like `Unit Testing`, `Integration Testing` and `End To End` testing. For naming tests, I used [vladimir khorikov](https://enterprisecraftsmanship.com/posts/you-naming-tests-wrong/) naming convention in his article and it makes our tests more readable like a documentation for our developers.
 
 In this app for increase performance we could use caching mechanism simply with implementing a interface `ICachePolicy<,>` and our object for caching, this will handle with a chancing pipeline on mediateR as cross cutting concern with name of `CachingBehavior`. For example for caching our `FindMovieByIdQuery` query we could use bellow code:
@@ -108,7 +156,7 @@ http://localhost:5000/api/v1/movies/150/with-trailers?trailersCount=10&X-Api-Key
 For setup valid api key there is a class with name [InMemoryGetApiKeyQuery](./src/MovieSearch.Infrastructure/Security/InMemoryGetApiKeyQuery.cs), that this class is a in-memory registry for all valid Api Key. this class implemented `IGetApiKeyQuery` class. you can implement this interface and store your keys in your favorite provider like EF Core Sql Server or a Json file, ...
 Some of valid keys for test are:
 
-``` json
+``` bash
 C5BFF7F0-B4DF-475E-A331-F737424F013C
 5908D47C-85D3-4024-8C2B-6EC9464398AD
 06795D9D-A770-44B9-9B27-03C6ABDB1BAE
@@ -118,4 +166,33 @@ Also our swagger is fully compatible with this Api key and you can authenticate 
 ![](./assets/API-Key-Auth.png)
 
 
+## How to Run
 
+### CMD
+For running our Apis we need to run bellow command in shell in root of the project.
+
+``` bash
+.\scripts\api.bat
+```
+Then after this,our application will be up and running. our API service will be host on http://localhost:5000.
+
+### Docker Compose 
+
+We can run this app on docker with this [docker-compose.yaml](./deployments/docker-compose/docker-compose.yaml) file with bellow command in root of application:
+
+``` bash
+docker-compose -f ./deployments/docker-compose/docker-compose.yaml up
+```
+Also docker image is available on the docker hub in this address: [https://hub.docker.com/r/mehdihadeli/movie.api](https://hub.docker.com/r/mehdihadeli/movie.api)
+
+
+### Kubernetes
+
+For setup your local environment for using kubernetes you can use different approuch but I personally perfer to use [K3s](https://k3s.io/) from rancher team.
+
+For running our app on kubernetes cluster we should apply [movie-search-api.yaml](./deployments/k8s/movie-search-api.yaml) file with using kubectl in root of the project.
+
+``` bashe
+kubectl apply -f ./deployments/k8s/movie-search-api.yaml
+```
+After that our app will up and running with `NodePort Service` of kubernetes and will available on `http://localhost:30080` address.

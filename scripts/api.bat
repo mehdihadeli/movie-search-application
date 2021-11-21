@@ -1,0 +1,1 @@
+dotnet run --project src/MovieSearch.Api/MovieSearch.Api.csproj
