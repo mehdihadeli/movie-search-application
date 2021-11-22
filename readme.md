@@ -11,17 +11,17 @@ To support [Single Responsibility Principle](https://en.wikipedia.org/wiki/Singl
 
 Also in this project I used [clean architecture](https://www.youtube.com/watch?v=dK4Yb6-LxAk) and [vertical slice architecture](https://jimmybogard.com/vertical-slice-architecture/) or [Restructuring to a Vertical Slice Architecture](https://www.youtube.com/watch?v=cVVMbuKmNes) also I used [feature folder structure](http://www.kamilgrzybek.com/design/feature-folders/) in this project.
 
+I treat each request as a distinct use case or slice, encapsulating and grouping all concerns from front-end to back.
+When adding or changing a feature in an application in n-tire architecture, we are typically touching many different "layers" in an application. we are changing the user interface, adding fields to models, modifying validation, and so on. Instead of coupling across a layer, we couple vertically along a slice. we `Minimize coupling` `between slices`, and `maximize coupling` `in a slice`.
+
+With this approach, each of our vertical slices can decide for itself how to best fulfill the request. New features only add code, we're not changing shared code and worrying about side effects. For implementing vertical slice architecture using cqrs pattern is a good match.
+
 Also here I used cqrs for decompose my features to very small parts that make our application
 
 - maximize performance, scalability and simplicity.
 - adding new feature to this mechanism is very easy without any breaking change in other part of our codes. New features only add code, we're not changing shared code and worrying about side effects.
-- easy to maintain and any changes only affect on one command or query and avoid any breaking changes on other parts
+- easy to maintain and any changes only affect on one command or query (or a slice) and avoid any breaking changes on other parts
 - it gives us better separation of concerns and cross cutting concern (with help of mediatr behavior pipelines) in our code instead of a big service class for doing a lot of things.  
-
-I treat each request as a distinct use case or slice, encapsulating and grouping all concerns from front-end to back.
-When adding or changing a feature in an application in n-tire architecture, we are typically touching many different "layers" in an application. we are changing the user interface, adding fields to models, modifying validation, and so on. Instead of coupling across a layer, we couple vertically along a slice. we `Minimize coupling` `between slices`, and `maximize coupling` `in a slice`.
-
-With this approach, each of our vertical slices can decide for itself how to best fulfill the request. New features only add code, we're not changing shared code and worrying about side effects.
 
 ![](./assets/Vertical-Slice-Architecture.jpg)
 
