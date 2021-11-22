@@ -16,6 +16,8 @@ When adding or changing a feature in an application in n-tire architecture, we a
 
 With this approach, each of our vertical slices can decide for itself how to best fulfill the request. New features only add code, we're not changing shared code and worrying about side effects. For implementing vertical slice architecture using cqrs pattern is a good match.
 
+![](./assets/Vertical-Slice-Architecture.jpg)
+
 Also here I used cqrs for decompose my features to very small parts that make our application
 
 - maximize performance, scalability and simplicity.
@@ -23,7 +25,6 @@ Also here I used cqrs for decompose my features to very small parts that make ou
 - easy to maintain and any changes only affect on one command or query (or a slice) and avoid any breaking changes on other parts
 - it gives us better separation of concerns and cross cutting concern (with help of mediatr behavior pipelines) in our code instead of a big service class for doing a lot of things.  
 
-![](./assets/Vertical-Slice-Architecture.jpg)
 
 With using CQRS pattern, we cut each business functionality into some vertical slices, and inner each of this slices we have [technical folders structure](http://www.kamilgrzybek.com/design/feature-folders/) specific to that feature (command, handlers, infrastructure, repository, controllers, ...). In Our CQRS pattern each command/query handler is a separate slice. This is where you can reduce coupling between layers. Each handler can be a separated code unit, even copy/pasted. Thanks to that, we can tune down the specific method to not follow general conventions (e.g. use custom SQL query or even different storage). In a traditional layered architecture, when we change the core generic mechanism in one layer, it can impact all methods. 
 

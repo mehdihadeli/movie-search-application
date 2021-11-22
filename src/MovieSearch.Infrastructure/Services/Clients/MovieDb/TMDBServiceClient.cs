@@ -51,6 +51,7 @@ namespace MovieSearch.Infrastructure.Services.Clients.MovieDb
             _timeoutPolicy = Policy.TimeoutAsync(policyOptions.Value.TimeOutDuration, TimeoutStrategy.Pessimistic);
             _circuitBreakerPolicy = Policy.Handle<Exception>().CircuitBreakerAsync(policyOptions.Value.RetryCount + 1,
                 TimeSpan.FromSeconds(policyOptions.Value.BreakDuration));
+			//at any given time there will 3 parallel requests execution for specific service call and another 6 requests for other services can be in the queue. So that if the response from customer service is delayed or blocked then we don’t use too many resources
             _bulkheadPolicy = Policy.BulkheadAsync(3, 6);
 
             _retryPolicy.WrapAsync(_circuitBreakerPolicy).WrapAsync(_timeoutPolicy);
