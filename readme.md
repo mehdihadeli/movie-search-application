@@ -59,7 +59,7 @@ if (movie is null)
     throw new MovieNotFoundException(query.Id);
 ```
 
-Also for handling exception and correct status code for our web api response I Used [Hellang.Middleware.ProblemDetails](https://www.nuget.org/packages/Hellang.Middleware.ProblemDetails/) package and I config and map all our needed exceptions and their corresponding status code in our Infrastructure layer and [AddInfrastructure](./src/MovieSearch.Infrastructure/Extensions.cs) method.
+Also for handling exceptions and correct status codes in our web api response, I Used [Hellang.Middleware.ProblemDetails](https://www.nuget.org/packages/Hellang.Middleware.ProblemDetails/) package and I config and map all our needed exceptions and their corresponding status code in our Infrastructure layer and [AddInfrastructure](./src/MovieSearch.Infrastructure/Extensions.cs) method.
 
 ``` csharp
 services.AddProblemDetails(x =>
