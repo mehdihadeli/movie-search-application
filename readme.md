@@ -32,9 +32,9 @@ For checking `validation rules` we use two type of validation:
 - [Data Validation](http://www.kamilgrzybek.com/design/rest-api-data-validation/): Data validation verify data items which are coming to our application from external sources and check if theirs values are acceptable but Business rules validation is a more broad concept and more close to how business works and behaves. So it is mainly focused on behavior For implementing data validation I used [FluentValidation](https://github.com/FluentValidation/FluentValidation) library for cleaner validation also better separation of concern in my handlers for preventing mixing validation logic with orchestration logic in my handlers.
 - [Business Rules validation](http://www.kamilgrzybek.com/design/domain-model-validation/): I explicitly check all of the our business rule, inner my handler and I will throw a customized exception based on the error that this errors should inherits from [AppException](./src/BuildingBlocks/BuildingBlocks/Exception/AppException.cs) class, because this exceptions occurs in application layer and we catch this exceptions in api layer with using [ProblemDetails](https://www.nuget.org/packages/Hellang.Middleware.ProblemDetails/) middleware for passing correct status code to client.
  
-Examples of `data validation`:
+Examples of `data validation` :
 
-1- Input Validation:
+1- Input Validation
 - We want to ensure our Id is greater than zero.
 
 In bellow validator for our query as request we check that Id is greater than zero
