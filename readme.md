@@ -50,7 +50,7 @@ public class FindMovieByIdQueryValidator : AbstractValidator<FindMovieByIdQuery>
 ```
 
 2- Business Rule Validation
-- We want to check our database contains a movie with specific Id and if there is no movie we throw a [MovieNotFoundException](./src/MovieSearch.Application/Movies/Exceptions/MovieNotFoundException.cs).
+- We want to check our database contains a movie with specific Id and if there is no movie with this Id, we throw a [MovieNotFoundException](./src/MovieSearch.Application/Movies/Exceptions/MovieNotFoundException.cs).
 
 ``` csharp
  var movie = await _movieDbServiceClient.GetMovieByIdAsync(query.Id, cancellationToken);
