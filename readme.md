@@ -159,8 +159,16 @@ For using this app we need a [YouTube ApiKey](https://developers.google.com/yout
     "SearchPart": "snippet",
     "SearchType": "video",
     "Order": 4
-  },
+  },  
 ```
+
+We could also set this YouTube ApiKey setting with using OS environments with using bellow command in cmd: 
+
+``` cmd
+`setx YoutubeVideoOptions__ApiKey "your youtube api key"`
+```
+It automatically will replace this env `APiKey` with our appsettings `APIKey`. 
+
 
 Also for security purpose of our Apis I used [API key Authentication](https://codingsonata.com/secure-asp-net-core-web-api-using-api-key-authentication/) and you have to pas a API key in header of request or in query string of your api url with this key name `X-Api-Key`.
 For example for url It will be like this:

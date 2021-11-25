@@ -1,13 +1,8 @@
-using System;
-using System.Net;
-using System.Net.Http;
 using System.Reflection;
+using Ben.Diagnostics;
 using BuildingBlocks.Resiliency.Configs;
-using BuildingBlocks.Security.ApiKey;
-using BuildingBlocks.Security.ApiKey.Authorization;
 using BuildingBlocks.Swagger;
 using BuildingBlocks.Web;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -19,8 +14,6 @@ using Microsoft.Extensions.Hosting;
 using MovieSearch.Application;
 using MovieSearch.Core;
 using MovieSearch.Infrastructure;
-using MovieSearch.Infrastructure.Services.Clients;
-using Polly;
 
 namespace MovieSearch.Api
 {
@@ -87,6 +80,8 @@ namespace MovieSearch.Api
                 var provider = app.ApplicationServices.GetService<IApiVersionDescriptionProvider>();
                 app.UseCustomSwagger(provider);
             }
+            //https://codeopinion.com/detecting-sync-over-async-code-in-asp-net-core/
+            app.UseBlockingDetection();
 
             app.UseInfrastructure(env);
 
