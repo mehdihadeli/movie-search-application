@@ -2,6 +2,9 @@
 
 [![Actions Status](https://github.com/mehdihadeli/movie-search-app/workflows/build-dot-net/badge.svg?branch=main)](https://github.com/mehdihadeli/movie-search-app/actions)
 
+Movies Search App is a search engine for searching movies and tv-shows with using tow popular apis [TMDB](https://developers.themoviedb.org/3) and [Youtube API](https://developers.google.com/youtube/v3) for get all information about the movies and its related trailers with some other features.
+
+This app is based on .Net core and vertical slices architecture and I wrote some level of test like unit testing, integration testing and end-to-end testing for this application.
 
 ## Application Structure
 
