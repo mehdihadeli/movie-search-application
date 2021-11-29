@@ -22,7 +22,7 @@ namespace MovieSearch.Application.TvShows.Features.SearchTVShow
 
         public class CachePolicy : ICachePolicy<SearchTVShowQuery, SearchTVShowQueryResult>
         {
-            public DateTimeOffset? AbsoluteExpirationRelativeToNow => DateTimeOffset.Now.AddMinutes(15);
+            public DateTime? AbsoluteExpirationRelativeToNow => DateTime.Now.AddMinutes(15);
 
             public string GetCacheKey(SearchTVShowQuery query)
             {

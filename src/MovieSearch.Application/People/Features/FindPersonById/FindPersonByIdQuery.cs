@@ -15,7 +15,7 @@ namespace MovieSearch.Application.People.Features.FindPersonById
 
         public class CachePolicy : ICachePolicy<FindPersonByIdQuery, FindPersonByIdQueryResult>
         {
-            public DateTimeOffset? AbsoluteExpirationRelativeToNow => DateTimeOffset.Now.AddMinutes(15);
+            public DateTime? AbsoluteExpirationRelativeToNow => DateTime.Now.AddMinutes(15);
 
             public string GetCacheKey(FindPersonByIdQuery query)
             {

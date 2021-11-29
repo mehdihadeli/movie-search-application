@@ -10,7 +10,7 @@ namespace MovieSearch.Application.Movies.Features.FindById
 
         public class CachePolicy : ICachePolicy<FindMovieByIdQuery, FindMovieByIdQueryResult>
         {
-            public DateTimeOffset? AbsoluteExpirationRelativeToNow => DateTimeOffset.Now.AddMinutes(15);
+            public DateTime? AbsoluteExpirationRelativeToNow => DateTime.Now.AddMinutes(15);
 
             public string GetCacheKey(FindMovieByIdQuery query)
             {

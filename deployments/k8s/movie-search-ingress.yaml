@@ -1,0 +1,21 @@
+# https://kubernetes.io/docs/concepts/services-networking/ingress/
+# https://doc.traefik.io/traefik/getting-started/install-traefik/
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: movie-api-ingress
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    
+spec:
+  rules:
+  - host: local-movieapi.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: movie-api-svc-v1
+            port:
+              number: 80

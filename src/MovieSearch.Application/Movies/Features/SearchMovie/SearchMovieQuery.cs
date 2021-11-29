@@ -25,7 +25,7 @@ namespace MovieSearch.Application.Movies.Features.SearchMovie
 
         public class CachePolicy : ICachePolicy<SearchMovieQuery, SearchMovieQueryResult>
         {
-            public DateTimeOffset? AbsoluteExpirationRelativeToNow => DateTimeOffset.Now.AddMinutes(15);
+            public DateTime? AbsoluteExpirationRelativeToNow => DateTime.Now.AddMinutes(15);
 
             public string GetCacheKey(SearchMovieQuery query)
             {

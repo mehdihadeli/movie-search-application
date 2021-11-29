@@ -17,7 +17,7 @@ namespace MovieSearch.Application.Movies.Features.FindMovieWithTrailersByImdbId
 
         public class CachePolicy : ICachePolicy<FindMovieWithTrailersByImdbIdQuery, FindMovieWithTrailersByImdbIdQueryResult>
         {
-            public DateTimeOffset? AbsoluteExpirationRelativeToNow => DateTimeOffset.Now.AddMinutes(15);
+            public DateTime? AbsoluteExpirationRelativeToNow => DateTime.Now.AddMinutes(15);
 
             public string GetCacheKey(FindMovieWithTrailersByImdbIdQuery query)
             {

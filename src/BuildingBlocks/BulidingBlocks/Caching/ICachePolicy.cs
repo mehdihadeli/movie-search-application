@@ -6,7 +6,7 @@ namespace BuildingBlocks.Caching
 {
     public interface ICachePolicy<in TRequest, TResponse> where TRequest : IRequest<TResponse>
     {
-        DateTimeOffset? AbsoluteExpirationRelativeToNow { get; }
+        DateTime? AbsoluteExpirationRelativeToNow { get; }
 
         string GetCacheKey(TRequest request)
         {

@@ -51,8 +51,8 @@ namespace BuildingBlocks.Caching
             var response = await next();
 
             var time = cachePolicy.AbsoluteExpirationRelativeToNow ??
-                       DateTimeOffset.Now.AddHours(defaultCacheExpirationInHours);
-            await _cachingProvider.SetAsync(cacheKey, response, time.Offset);
+                       DateTime.Now.AddHours(defaultCacheExpirationInHours);
+            await _cachingProvider.SetAsync(cacheKey, response, time.TimeOfDay);
 
             _logger.LogDebug("Caching response for {TRequest} with cache key: {CacheKey}", typeof(TRequest).FullName,
                 cacheKey);

@@ -14,7 +14,7 @@ namespace MovieSearch.Application.Videos.Features.FindTrailers
 
         public class CachePolicy : ICachePolicy<FindTrailersQuery, FindTrailersQueryResult>
         {
-            public DateTimeOffset? AbsoluteExpirationRelativeToNow => DateTimeOffset.Now.AddMinutes(15);
+            public DateTime? AbsoluteExpirationRelativeToNow => DateTime.Now.AddMinutes(15);
 
             public string GetCacheKey(FindTrailersQuery query)
             {
