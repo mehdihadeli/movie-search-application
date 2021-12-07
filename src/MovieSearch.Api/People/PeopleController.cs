@@ -13,6 +13,7 @@ namespace MovieSearch.Api.People
 {
     [ApiVersion("1.0")]
     [Route(BaseApiPath + "/[controller]")]
+    [ApiExplorerSettings(GroupName = "People Endpoints")]
     [Authorize]
     public class PeopleController : BaseController
     {

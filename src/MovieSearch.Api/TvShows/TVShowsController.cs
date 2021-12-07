@@ -15,6 +15,7 @@ namespace MovieSearch.Api.TvShows
 {
     [ApiVersion("1.0")]
     [Route(BaseApiPath + "/[controller]")]
+    [ApiExplorerSettings(GroupName = "TvShow Endpoints")]
     [Authorize]
     public class TVShowsController : BaseController
     {

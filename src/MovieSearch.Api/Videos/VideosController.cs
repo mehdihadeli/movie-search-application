@@ -12,6 +12,7 @@ using Swashbuckle.AspNetCore.Annotations;
 namespace MovieSearch.Api.Videos
 {
     [ApiVersion("1.0")]
+    [ApiExplorerSettings(GroupName = "Video Endpoints")]
     [Route(BaseApiPath + "/[controller]")]
     public class VideosController : BaseController
     {

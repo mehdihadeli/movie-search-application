@@ -20,6 +20,7 @@ namespace MovieSearch.Api.Movies
 {
     [ApiVersion("1.0")]
     [Route(BaseApiPath + "/[controller]")]
+    [ApiExplorerSettings(GroupName = "Movie Endpoints")]
     [Authorize]
     public class MoviesController : BaseController
     {

@@ -12,6 +12,7 @@ namespace MovieSearch.Api.Multi
 {
     [ApiVersion("1.0")]
     [Route(BaseApiPath + "/[controller]")]
+    [ApiExplorerSettings(GroupName = "Multi Endpoints")]
     [Authorize]
     public class MultiController : BaseController
     {
