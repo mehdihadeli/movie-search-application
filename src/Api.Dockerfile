@@ -3,7 +3,7 @@
 
 # the first, heavier image to build your code
 
-FROM mcr.microsoft.com/dotnet/sdk:5.0-focal AS builder
+FROM mcr.microsoft.com/dotnet/sdk:6.0-focal AS builder
 
 # Setup working directory for the project	 
 WORKDIR /app
@@ -36,7 +36,7 @@ RUN dotnet publish -c Release --no-build -o out
 
 
 # second, final, lighter image
-FROM mcr.microsoft.com/dotnet/aspnet:5.0-focal
+FROM mcr.microsoft.com/dotnet/aspnet:6.0-focal
 
 # Setup working directory for the project  
 WORKDIR /app
