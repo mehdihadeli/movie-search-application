@@ -53,9 +53,9 @@ namespace BuildingBlocks.Mongo
             GC.SuppressFinalize(this);
         }
 
-        public void BeginTransactionAsync()
+        public async Task BeginTransactionAsync()
         {
-            Session = MongoClient.StartSession();
+            Session = await MongoClient.StartSessionAsync();
             Session.StartTransaction();
         }
 
@@ -67,7 +67,7 @@ namespace BuildingBlocks.Mongo
             Session.Dispose();
         }
 
-        public async Task RollbackTransaction()
+        public async Task RollbackTransactionAsync()
         {
             await Session.AbortTransactionAsync();
         }

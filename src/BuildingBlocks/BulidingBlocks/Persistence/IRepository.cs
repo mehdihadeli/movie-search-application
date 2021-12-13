@@ -13,7 +13,7 @@ namespace BuildingBlocks.Persistence
         Task<TEntity> GetAsync(Guid id);
         Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> predicate);
         Task<IReadOnlyList<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate);
-        IAsyncEnumerable<TEntity> GetAll(Expression<Func<TEntity, bool>> predicate = null);
+        IAsyncEnumerable<TEntity> GetAllAsync(Expression<Func<TEntity, bool>> predicate = null);
 
         public Task<ListResultModel<TEntity>> BrowseAsync<TQuery>(Expression<Func<TEntity, bool>> predicate,
             TQuery query) where TQuery : IPageList;

@@ -41,7 +41,7 @@ namespace BuildingBlocks.Mongo
             try
             {
                 // Achieving atomicity
-                _dbContext.BeginTransactionAsync();
+                await _dbContext.BeginTransactionAsync();
 
                 var response = await next();
                 _logger.LogInformation("{Prefix} Executed the {MediatRRequest} request",
@@ -51,9 +51,9 @@ namespace BuildingBlocks.Mongo
 
                 return response;
             }
-            catch(System.Exception e)
+            catch(System.Exception)
             {
-                await _dbContext.RollbackTransaction();
+                await _dbContext.RollbackTransactionAsync();
                 throw;
             }
         }

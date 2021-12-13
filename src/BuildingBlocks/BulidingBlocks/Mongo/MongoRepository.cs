@@ -33,7 +33,7 @@ namespace BuildingBlocks.Mongo
         public async Task<IReadOnlyList<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate)
             => await DbSet.Find(predicate).ToListAsync();
 
-        public IAsyncEnumerable<TEntity> GetAll(Expression<Func<TEntity, bool>> predicate = null)
+        public IAsyncEnumerable<TEntity> GetAllAsync(Expression<Func<TEntity, bool>> predicate = null)
         {
             return DbSet.AsQueryable().ToAsyncEnumerable();
         }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
@@ -48,7 +49,7 @@ namespace BuildingBlocks.Security.ApiKey
                 return AuthenticateResult.NoResult();
             }
 
-            var existingApiKey = await _getApiKeyQuery.Execute(providedApiKey);
+            var existingApiKey = await _getApiKeyQuery.ExecuteAsync(providedApiKey);
 
             if (existingApiKey != null)
             {
@@ -93,7 +94,7 @@ namespace BuildingBlocks.Security.ApiKey
             public static JsonSerializerOptions Options => new JsonSerializerOptions
             {
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                IgnoreNullValues = true
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
             };
         }
     }

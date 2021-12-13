@@ -37,7 +37,7 @@ namespace MovieSearch.Infrastructure.Security
             _apiKeys = existingApiKeys.ToDictionary(x => x.Key, x => x);
         }
 
-        public Task<ApiKey> Execute(string providedApiKey)
+        public Task<ApiKey> ExecuteAsync(string providedApiKey)
         {
             _apiKeys.TryGetValue(providedApiKey, out var key);
             return Task.FromResult(key);

@@ -40,7 +40,7 @@ namespace BuildingBlocks.Validation
 
             _logger.LogDebug($"Handling {typeof(TRequest).FullName} with content {JsonSerializer.Serialize(request)}");
 
-            await _validator.HandleValidation(request);
+            await _validator.HandleValidationAsync(request);
 
             var response = await next();
 

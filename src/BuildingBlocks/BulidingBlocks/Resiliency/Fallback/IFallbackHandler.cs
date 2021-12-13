@@ -6,6 +6,6 @@ namespace BuildingBlocks.Resiliency.Fallback
 {
     public interface IFallbackHandler<TRequest, TResponse> where TRequest : IRequest<TResponse>
     {
-        Task<TResponse> HandleFallback(TRequest request, CancellationToken cancellationToken);
+        Task<TResponse> HandleFallbackAsync(TRequest request, CancellationToken cancellationToken);
     }
 }

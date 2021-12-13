@@ -4,6 +4,6 @@ namespace BuildingBlocks.Security.ApiKey
 {
     public interface IGetApiKeyQuery
     {
-        Task<ApiKey> Execute(string providedApiKey);
+        Task<ApiKey> ExecuteAsync(string providedApiKey);
     }
 }

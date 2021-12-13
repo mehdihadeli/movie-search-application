@@ -8,8 +8,8 @@ namespace BuildingBlocks.Mongo
     {
         IMongoDatabase Database { get; }
         IMongoClient MongoClient { get; }
-        void BeginTransactionAsync();
-        Task RollbackTransaction();
+        Task BeginTransactionAsync();
+        Task RollbackTransactionAsync();
         Task CommitTransactionAsync();
         IMongoCollection<T> GetCollection<T>();
     }

@@ -42,7 +42,7 @@ namespace BuildingBlocks.Resiliency.Fallback
                 {
                     _logger.LogDebug(
                         $"Initial handler failed. Falling back to `{fallbackHandler.GetType().FullName}@HandleFallback`");
-                    return await fallbackHandler.HandleFallback(request, cancellationToken)
+                    return await fallbackHandler.HandleFallbackAsync(request, cancellationToken)
                         .ConfigureAwait(false);
                 });
 
