@@ -4,7 +4,7 @@
 
 Movies Search Application is a search engine for searching movies and tv-shows with using two popular apis [TMDB](https://developers.themoviedb.org/3) and [Youtube API](https://developers.google.com/youtube/v3) for get all information about the movies and its related trailers with some other features.
 
-This app is based on .Net core and vertical slices architecture and I wrote some level of test like unit testing, integration testing and end-to-end testing for this application.
+This app is based on .Net core and vertical slices architecture and I wrote some level of tests like [Unit Testing](./tests/MovieSearch.UnitTests), [Integration Testing](./tests/MovieSearch.IntegrationTests) and [End-To-End Testing](./tests/MovieSearch.EndToEndTests) for this application.
 
 ## Application Structure
 
