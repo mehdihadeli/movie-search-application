@@ -19,11 +19,8 @@ namespace MovieSearch.Api
 {
     public class Startup
     {
-        private const string AppOptionsSectionName = "AppOptions";
-        private const string TMDBOptionsSectionName = "TMDBOptions";
-        private const string YoutubeVideoOptionsSectionName = "YoutubeVideoOptions";
-        private const string PolicyConfigSectionName = "PolicyConfig";
-
+        private const string ApiCorsPolicy = "api";
+        
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -36,18 +33,17 @@ namespace MovieSearch.Api
         public void ConfigureServices(IServiceCollection services)
         {
             AppOptions = Configuration.GetSection(AppOptionsSectionName).Get<AppOptions>();
-            services.AddOptions<AppOptions>().Bind(Configuration.GetSection(AppOptionsSectionName))
+            services.AddOptions<AppOptions>().Bind(Configuration.GetSection(nameof(AppOptions))))
                 .ValidateDataAnnotations();
 
-            services.AddOptions<TMDBOptions>().Bind(Configuration.GetSection(TMDBOptionsSectionName))
+            services.AddOptions<TMDBOptions>().Bind(Configuration.GetSection(nameof(TMDBOptions)))
                 .ValidateDataAnnotations();
 
-            services.AddOptions<YoutubeVideoOptions>().Bind(Configuration.GetSection(YoutubeVideoOptionsSectionName))
+            services.AddOptions<YoutubeVideoOptions>().Bind(Configuration.GetSection(nameof(YoutubeVideoOptions)))
                 .ValidateDataAnnotations();
 
-            services.AddOptions<PolicyConfig>().Bind(Configuration.GetSection(PolicyConfigSectionName))
+            services.AddOptions<PolicyConfig>().Bind(Configuration.GetSection(nameof(PolicyConfig)))
                 .ValidateDataAnnotations();
-
 
             services.AddControllers(options =>
                 options.Conventions.Add(new RouteTokenTransformerConvention(new SlugifyParameterTransformer())));
@@ -56,7 +52,7 @@ namespace MovieSearch.Api
 
             services.AddCors(options =>
             {
-                options.AddPolicy("api", policy => { policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod(); });
+                options.AddPolicy(ApiCorsPolicy, policy => { policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod(); });
             });
 
             services.AddCustomHttpClients(Configuration);
@@ -85,7 +81,7 @@ namespace MovieSearch.Api
 
             app.UseInfrastructure(env);
 
-            app.UseCors("api");
+            app.UseCors(ApiCorsPolicy);
 
             app.UseRouting();
 
