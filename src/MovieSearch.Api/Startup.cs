@@ -32,8 +32,8 @@ namespace MovieSearch.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            AppOptions = Configuration.GetSection(AppOptionsSectionName).Get<AppOptions>();
-            services.AddOptions<AppOptions>().Bind(Configuration.GetSection(nameof(AppOptions))))
+            AppOptions = Configuration.GetSection(nameof(Core.AppOptions)).Get<AppOptions>();
+            services.AddOptions<AppOptions>().Bind(Configuration.GetSection(nameof(Core.AppOptions)))
                 .ValidateDataAnnotations();
 
             services.AddOptions<TMDBOptions>().Bind(Configuration.GetSection(nameof(TMDBOptions)))
