@@ -21,7 +21,6 @@ namespace BuildingBlocks.Logging
         {
             return builder.UseSerilog((context, serviceProvider, loggerConfiguration) =>
             {
-                var httpContext = serviceProvider.GetService<IHttpContextAccessor>();
                 loggerConfiguration
                     .ReadFrom.Configuration(context.Configuration)
                     .ReadFrom.Services(serviceProvider)
