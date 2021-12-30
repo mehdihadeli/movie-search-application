@@ -53,8 +53,4 @@
 
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Resiliency\CircuitBreaker" />
-  </ItemGroup>
-
 </Project>

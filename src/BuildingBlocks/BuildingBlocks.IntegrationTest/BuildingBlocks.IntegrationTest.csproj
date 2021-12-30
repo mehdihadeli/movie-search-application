@@ -9,6 +9,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.VisualStudio.TestPlatform" Version="14.0.0" />
     <PackageReference Include="Mongo2Go" Version="3.1.3" />
+    <PackageReference Include="Respawn" Version="4.0.0" />
     <PackageReference Include="Squadron.Mongo" Version="0.13.0" />
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="FluentAssertions" Version="6.1.0" />
@@ -25,12 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\MovieSearch.Api\MovieSearch.Api.csproj" />
-    <ProjectReference Include="..\..\MovieSearch.Application\MovieSearch.Application.csproj" />
-    <ProjectReference Include="..\..\MovieSearch.Infrastructure\MovieSearch.Infrastructure.csproj" />
     <ProjectReference Include="..\BulidingBlocks\BuildingBlocks.csproj" />
   </ItemGroup>
-
-  
 
 </Project>

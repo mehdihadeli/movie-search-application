@@ -35,7 +35,7 @@ namespace BuildingBlocks.Swagger
             // swagger docs for route to code style --> works in .net 6
             //https://dotnetthoughts.net/openapi-support-for-aspnetcore-minimal-webapi/
             //https://jaliyaudagedara.blogspot.com/2021/07/net-6-preview-6-introducing-openapi.html
-            //services.AddEndpointsApiExplorer();
+            services.AddEndpointsApiExplorer();
 
             services.AddOptions<SwaggerOptions>().Bind(configuration.GetSection(swaggerSectionName))
                 .ValidateDataAnnotations();
