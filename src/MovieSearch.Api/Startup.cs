@@ -57,7 +57,7 @@ namespace MovieSearch.Api
 
             services.AddCustomHttpClients(Configuration);
             services.AddCustomVersioning();
-            //services.AddCustomHealthCheck(healthBuilder => { });
+            services.AddCustomHealthCheck(healthBuilder => { });
             services.AddCustomSwagger(Configuration, Assembly.GetExecutingAssembly());
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
@@ -85,7 +85,7 @@ namespace MovieSearch.Api
 
             app.UseRouting();
 
-            //app.UseCustomHealthCheck();
+            app.UseCustomHealthCheck();
 
             app.UseAuthentication();
             app.UseAuthorization();

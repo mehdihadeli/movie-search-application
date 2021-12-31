@@ -41,11 +41,12 @@ namespace BuildingBlocks.Web
             var healCheckBuilder = services.AddHealthChecks();
             configurator?.Invoke(healCheckBuilder);
 
-            services.AddHealthChecksUI(setup =>
-            {
-                setup.SetEvaluationTimeInSeconds(60); //time in seconds between check
-                setup.AddHealthCheckEndpoint("Basic Health Check", "/healthz");
-            }).AddInMemoryStorage();
+            //// Health Check UI does not work with .NET 6.0
+            // services.AddHealthChecksUI(setup =>
+            // {
+            //     setup.SetEvaluationTimeInSeconds(60); //time in seconds between check
+            //     setup.AddHealthCheckEndpoint("Basic Health Check", "/healthz");
+            // }).AddInMemoryStorage();
 
             return services;
         }
