@@ -223,3 +223,8 @@ For running our app on kubernetes cluster we should apply [movie-search-api.yaml
 kubectl apply -f ./deployments/k8s/movie-search-api.yaml
 ```
 After that our app will up and running with `NodePort Service` of kubernetes and will available on `http://localhost:30080` address.
+
+##  Project References
+- [https://github.com/jbogard/ContosoUniversityDotNetCore-Pages](https://github.com/jbogard/ContosoUniversityDotNetCore-Pages)
+- [https://github.com/jasontaylordev/CleanArchitecture](https://github.com/jasontaylordev/CleanArchitecture)
+
