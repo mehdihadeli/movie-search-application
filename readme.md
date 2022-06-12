@@ -1,4 +1,4 @@
-# Movie Search Application
+# 🎬 Movie Search Application
 
 [![Actions Status](https://github.com/mehdihadeli/movie-search-app/workflows/build-dot-net/badge.svg?branch=main)](https://github.com/mehdihadeli/movie-search-app/actions)
 
@@ -217,14 +217,4 @@ Also docker image is available on the docker hub in this address: [https://hub.d
 
 For setup your local environment for using kubernetes you can use different approuch but I personally perfer to use [K3s](https://k3s.io/) from rancher team.
 
-For running our app on kubernetes cluster we should apply [movie-search-api.yaml](./deployments/k8s/movie-search-api.yaml) file with using kubectl in root of the project.
-
-``` bashe
-kubectl apply -f ./deployments/k8s/movie-search-api.yaml
-```
-After that our app will up and running with `NodePort Service` of kubernetes and will available on `http://localhost:30080` address.
-
-##  Project References
-- [https://github.com/jbogard/ContosoUniversityDotNetCore-Pages](https://github.com/jbogard/ContosoUniversityDotNetCore-Pages)
-- [https://github.com/jasontaylordev/CleanArchitecture](https://github.com/jasontaylordev/CleanArchitecture)
-- [https://github.com/thangchung/clean-architecture-dotnet](https://github.com/thangchung/clean-architecture-dotnet)
+For running our app on kubernetes cluster we should apply [movie-search-api.yaml](./deployments/k8s/movie-search-api.yaml) file with 
