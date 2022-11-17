@@ -1,13 +1,16 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Text.Json;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.OpenApi.Models;
-using Newtonsoft.Json;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace BuildingBlocks.Swagger;
 
 public class SwaggerDefaultValues : IOperationFilter
 {
+    /// <inheritdoc />
     public void Apply(OpenApiOperation operation, OperationFilterContext context)
     {
         var apiDescription = context.ApiDescription;
@@ -22,11 +25,18 @@ public class SwaggerDefaultValues : IOperationFilter
             var response = operation.Responses[responseKey];
 
             foreach (var contentType in response.Content.Keys)
-                if (responseType.ApiResponseFormats.All(x => x.MediaType != contentType))
+            {
+                if (!responseType.ApiResponseFormats.Any(x => x.MediaType == contentType))
+                {
                     response.Content.Remove(contentType);
+                }
+            }
         }
 
-        if (operation.Parameters == null) return;
+        if (operation.Parameters == null)
+        {
+            return;
+        }
 
         // REF: https://github.com/domaindrivendev/Swashbuckle.AspNetCore/issues/412
         // REF: https://github.com/domaindrivendev/Swashbuckle.AspNetCore/pull/413
@@ -34,13 +44,18 @@ public class SwaggerDefaultValues : IOperationFilter
         {
             var description = apiDescription.ParameterDescriptions.First(p => p.Name == parameter.Name);
 
-            if (parameter.Description == null) parameter.Description = description.ModelMetadata?.Description;
+            if (parameter.Description == null)
+            {
+                parameter.Description = description.ModelMetadata?.Description;
+            }
 
-            if (parameter.Schema.Default == null && description.DefaultValue != null)
+            if (parameter.Schema.Default == null &&
+                description.DefaultValue != null &&
+                description.DefaultValue is not DBNull &&
+                description.ModelMetadata is ModelMetadata modelMetadata)
             {
                 // REF: https://github.com/Microsoft/aspnet-api-versioning/issues/429#issuecomment-605402330
-                var json = JsonConvert.SerializeObject(description.DefaultValue, description.ModelMetadata
-                    .ModelType, new JsonSerializerSettings {ReferenceLoopHandling = ReferenceLoopHandling.Ignore});
+                var json = JsonSerializer.Serialize(description.DefaultValue, modelMetadata.ModelType);
                 parameter.Schema.Default = OpenApiAnyFactory.CreateFromJson(json);
             }
 

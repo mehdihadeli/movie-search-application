@@ -1,12 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using System.IO;
+using System.Linq;
 using System.Reflection;
-using BuildingBlocks.Security.ApiKey;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using Microsoft.Extensions.PlatformAbstractions;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
@@ -19,78 +19,74 @@ public static class ServiceCollectionExtensions
         IConfiguration configuration,
         Assembly assembly)
     {
-        //https://dotnetthoughts.net/openapi-support-for-aspnetcore-minimal-webapi/
-        //https://jaliyaudagedara.blogspot.com/2021/07/net-6-preview-6-introducing-openapi.html
+        // https://learn.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis/openapi
         services.AddEndpointsApiExplorer();
 
+        services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
         services.AddOptions<SwaggerOptions>().Bind(configuration.GetSection(nameof(SwaggerOptions)))
             .ValidateDataAnnotations();
-
-        services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
 
         services.AddSwaggerGen(
             options =>
             {
                 options.OperationFilter<SwaggerDefaultValues>();
-                var xmlFile = XmlCommentsFilePath(assembly);
-                if (File.Exists(xmlFile))
-                    options.IncludeXmlComments(xmlFile);
+                //options.OperationFilter<ApiVersionOperationFilter>();
 
-                var bearerScheme = new OpenApiSecurityScheme
+                var xmlFile = XmlCommentsFilePath(assembly);
+                if (File.Exists(xmlFile)) options.IncludeXmlComments(xmlFile);
+
+                // https://github.com/domaindrivendev/Swashbuckle.AspNetCore#add-security-definitions-and-requirements
+                // https://swagger.io/docs/specification/authentication/
+                // https://medium.com/@niteshsinghal85/assign-specific-authorization-scheme-to-endpoint-in-swagger-ui-in-net-core-cd84d2a2ebd7
+                var bearerScheme = new OpenApiSecurityScheme()
                 {
-                    Description = @"JWT Authorization header using the Bearer scheme. \r\n\r\n
-                              Enter 'Bearer' [space] and then your token in the text input below.
-                              \r\n\r\nExample: 'Bearer 12345abcdef'",
-                    Name = "Bearer",
-                    In = ParameterLocation.Header,
                     Type = SecuritySchemeType.Http,
-                    Scheme = "Bearer",
-                    Reference = new OpenApiReference
+                    Name = JwtBearerDefaults.AuthenticationScheme,
+                    Scheme = JwtBearerDefaults.AuthenticationScheme,
+                    Reference = new()
                     {
-                        Type = ReferenceType.SecurityScheme,
-                        Id = "Bearer"
-                    },
+                        Type = ReferenceType.SecurityScheme, Id = JwtBearerDefaults.AuthenticationScheme
+                    }
                 };
 
                 var apiKeyScheme = new OpenApiSecurityScheme
                 {
                     Description = "Api key needed to access the endpoints. X-Api-Key: My_API_Key",
                     In = ParameterLocation.Header,
-                    Name = ApiKeyConstants.HeaderName,
+                    Name = "X-Api-Key",
+                    Scheme = "ApiKey",
                     Type = SecuritySchemeType.ApiKey,
-                    Reference = new OpenApiReference
-                        {Type = ReferenceType.SecurityScheme, Id = ApiKeyConstants.HeaderName}
+                    Reference = new()
+                    {
+                        Type = ReferenceType.SecurityScheme, Id = "X-Api-Key"
+                    }
                 };
 
-                options.AddSecurityDefinition("Bearer", bearerScheme);
-                options.AddSecurityDefinition(ApiKeyConstants.HeaderName, apiKeyScheme);
+                options.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme, bearerScheme);
+                options.AddSecurityDefinition("X-Api-Key", apiKeyScheme);
 
                 options.AddSecurityRequirement(new OpenApiSecurityRequirement
                 {
-                    {
-                        bearerScheme,
-                        new List<string>()
-                    },
-                    {
-                        apiKeyScheme,
-                        new string[] { }
-                    }
+                    {bearerScheme, Array.Empty<string>()}, {apiKeyScheme, Array.Empty<string>()}
                 });
 
+                options.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
+
+                // Enables Swagger annotations (SwaggerOperationAttribute, SwaggerParameterAttribute etc.)
                 options.EnableAnnotations();
             });
 
-        return services;
-
         static string XmlCommentsFilePath(Assembly assembly)
         {
-            var basePath = PlatformServices.Default.Application.ApplicationBasePath;
+            var basePath = Path.GetDirectoryName(assembly.Location);
             var fileName = assembly.GetName().Name + ".xml";
             return Path.Combine(basePath, fileName);
         }
+
+        return services;
     }
 
-    public static IApplicationBuilder UseCustomSwagger(this WebApplication app)
+    public static WebApplication UseCustomSwagger(this WebApplication app)
     {
         app.UseSwagger();
         app.UseSwaggerUI(
