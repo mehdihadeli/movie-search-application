@@ -10,39 +10,38 @@ using MovieSearch.Core.Generals;
 using MovieSearch.IntegrationTests.Mocks;
 using Xunit;
 
-namespace MovieSearch.IntegrationTests.Application.Videos.Features
+namespace MovieSearch.IntegrationTests.Application.Videos.Features;
+
+public class FindTVShowTrailersQueryHandlerTests : IntegrationTestFixture<Program>
 {
-    public class FindTVShowTrailersQueryHandlerTests: IntegrationTestFixture<Startup>
+    public FindTVShowTrailersQueryHandlerTests()
     {
-        public FindTVShowTrailersQueryHandlerTests()
+        //setup the swaps for our tests
+        RegisterTestServices(services => { });
+    }
+
+    [Fact]
+    public async Task find_tv_show_trailers_query_should_return_a_valid_video_dto_list()
+    {
+        // Arrange
+        var query = new FindTVShowTrailersQuery
         {
-            //setup the swaps for our tests
-            RegisterTestServices(services => { });
-        }
+            TVShowId = TvShowMock.Data.Id,
+            PageSize = 20
+        };
 
-        [Fact]
-        public async Task find_tv_show_trailers_query_should_return_a_valid_video_dto_list()
-        {
-            // Arrange
-            var query = new FindTVShowTrailersQuery
-            {
-                TVShowId = TvShowMock.Data.Id,
-                PageSize = 20
-            };
+        // Act
+        var listResult = (await QueryAsync(query, CancellationToken.None)).VideoList;
 
-            // Act
-            var listResult = (await QueryAsync(query, CancellationToken.None)).VideoList;
-
-            // Assert
-            listResult.Should().NotBeNull();
-            listResult.Items.Should().NotBeNull();
-            listResult.Should().BeOfType<VideoListResultModel<VideoDto>>();
-            listResult.Items.Any().Should().BeTrue();
-            listResult.PageSize.Should().Be(listResult.Items.Count);
-            listResult.PageSize.Should().Be(query.PageSize);
-            listResult.NextPageToken.Should().NotBeNull();
-            listResult.PageToken.Should().BeEmpty();
-            listResult.PreviousPageToken.Should().BeNullOrEmpty();
-        }
+        // Assert
+        listResult.Should().NotBeNull();
+        listResult.Items.Should().NotBeNull();
+        listResult.Should().BeOfType<VideoListResultModel<VideoDto>>();
+        listResult.Items.Any().Should().BeTrue();
+        listResult.PageSize.Should().Be(listResult.Items.Count);
+        listResult.PageSize.Should().Be(query.PageSize);
+        listResult.NextPageToken.Should().NotBeNull();
+        listResult.PageToken.Should().BeEmpty();
+        listResult.PreviousPageToken.Should().BeNullOrEmpty();
     }
 }

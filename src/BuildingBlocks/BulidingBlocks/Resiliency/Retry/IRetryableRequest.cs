@@ -1,12 +1,11 @@
 using MediatR;
 
-namespace BuildingBlocks.Resiliency
+namespace BuildingBlocks.Resiliency;
+
+public interface IRetryableRequest<TRequest, TResponse> where TRequest : IRequest<TResponse>
 {
-    public interface IRetryableRequest<TRequest, TResponse> where TRequest : IRequest<TResponse>
-    {
-        int RetryAttempts => 1;
-        int RetryDelay => 250;
-        bool RetryWithExponentialBackoff => false;
-        int ExceptionsAllowedBeforeCircuitTrip => 1;
-    }
+    int RetryAttempts => 1;
+    int RetryDelay => 250;
+    bool RetryWithExponentialBackoff => false;
+    int ExceptionsAllowedBeforeCircuitTrip => 1;
 }

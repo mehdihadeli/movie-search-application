@@ -1,9 +1,8 @@
 using MovieSearch.Application.Movies.Dtos;
 
-namespace MovieSearch.Application.Movies.Features.FindMovieByImdbId
+namespace MovieSearch.Application.Movies.Features.FindMovieByImdbId;
+
+public class FindByImdbIdQueryResult
 {
-    public class FindByImdbIdQueryResult
-    {
-        public MovieDto Movie { get; init; }
-    }
+    public MovieDto Movie { get; init; }
 }

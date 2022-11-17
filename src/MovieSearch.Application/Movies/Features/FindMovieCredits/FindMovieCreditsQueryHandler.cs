@@ -7,32 +7,31 @@ using MovieSearch.Application.Movies.Dtos;
 using MovieSearch.Application.Movies.Exceptions;
 using MovieSearch.Application.Services.Clients;
 
-namespace MovieSearch.Application.Movies.Features.FindMovieCredits
+namespace MovieSearch.Application.Movies.Features.FindMovieCredits;
+
+public class FindMovieCreditsQueryHandler : IRequestHandler<FindMovieCreditsQuery, FindMovieCreditsQueryResult>
 {
-    public class FindMovieCreditsQueryHandler : IRequestHandler<FindMovieCreditsQuery, FindMovieCreditsQueryResult>
+    private readonly IMapper _mapper;
+    private readonly IMovieDbServiceClient _movieDbServiceClient;
+
+    public FindMovieCreditsQueryHandler(IMovieDbServiceClient movieDbServiceClient, IMapper mapper)
     {
-        private readonly IMovieDbServiceClient _movieDbServiceClient;
-        private readonly IMapper _mapper;
+        _movieDbServiceClient = movieDbServiceClient;
+        _mapper = mapper;
+    }
 
-        public FindMovieCreditsQueryHandler(IMovieDbServiceClient movieDbServiceClient, IMapper mapper)
-        {
-            _movieDbServiceClient = movieDbServiceClient;
-            _mapper = mapper;
-        }
+    public async Task<FindMovieCreditsQueryResult> Handle(FindMovieCreditsQuery query,
+        CancellationToken cancellationToken)
+    {
+        Guard.Against.Null(query, nameof(FindMovieCreditsQuery));
 
-        public async Task<FindMovieCreditsQueryResult> Handle(FindMovieCreditsQuery query,
-            CancellationToken cancellationToken)
-        {
-            Guard.Against.Null(query, nameof(FindMovieCreditsQuery));
+        var movieCredit = await _movieDbServiceClient.GetMovieCreditsAsync(query.MovieId, cancellationToken);
 
-            var movieCredit = await _movieDbServiceClient.GetMovieCreditsAsync(query.MovieId, cancellationToken);
+        if (movieCredit is null)
+            throw new MovieCreditsNotFoundException(query.MovieId);
 
-            if (movieCredit is null)
-                throw new MovieCreditsNotFoundException(query.MovieId);
+        var result = _mapper.Map<MovieCreditDto>(movieCredit);
 
-            var result = _mapper.Map<MovieCreditDto>(movieCredit);
-
-            return new FindMovieCreditsQueryResult { MovieCredit = result };
-        }
+        return new FindMovieCreditsQueryResult {MovieCredit = result};
     }
 }

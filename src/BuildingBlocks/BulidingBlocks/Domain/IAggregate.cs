@@ -1,13 +1,10 @@
-using System;
+namespace BuildingBlocks.Domain;
 
-namespace BuildingBlocks.Domain
+public interface IAggregate : IAggregate<int>
 {
-    public interface IAggregate : IAggregate<int>
-    {
-    }
+}
 
-    public interface IAggregate<T>
-    {
-        public T Id { get; }
-    }
+public interface IAggregate<T>
+{
+    public T Id { get; }
 }

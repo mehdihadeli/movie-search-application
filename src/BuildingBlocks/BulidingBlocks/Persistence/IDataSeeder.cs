@@ -1,9 +1,8 @@
 using System.Threading.Tasks;
 
-namespace BuildingBlocks.Persistence
+namespace BuildingBlocks.Persistence;
+
+public interface IDataSeeder
 {
-    public interface IDataSeeder
-    {
-        Task SeedAllAsync();
-    }
+    Task SeedAllAsync();
 }

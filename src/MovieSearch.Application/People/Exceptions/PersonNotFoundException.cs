@@ -1,11 +1,10 @@
 using BuildingBlocks.Exception;
 
-namespace MovieSearch.Application.People.Exceptions
+namespace MovieSearch.Application.People.Exceptions;
+
+public class PersonNotFoundException : NotFoundException
 {
-    public class PersonNotFoundException : NotFoundException
+    public PersonNotFoundException(int id) : base($"can't find a person with id '{id}' in the database.")
     {
-        public PersonNotFoundException(int id) : base($"can't find a person with id '{id}' in the database.")
-        {
-        }
     }
 }

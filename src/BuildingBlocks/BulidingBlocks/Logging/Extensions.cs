@@ -1,85 +1,69 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Events;
-using Serilog.Filters;
+using Serilog.Exceptions;
+using Serilog.Sinks.SpectreConsole;
 
-namespace BuildingBlocks.Logging
+namespace BuildingBlocks.Logging;
+
+public static class Extensions
 {
-    public static class Extensions
+    public static WebApplicationBuilder AddCustomSerilog(
+        this WebApplicationBuilder builder,
+        Action<LoggerConfiguration>? extraConfigure = null)
     {
-        private const string LoggerSectionName = "Logging";
-
-        public static IHostBuilder UseCustomSerilog(this IHostBuilder builder,
-            Action<LoggerConfiguration> extraConfigure = null,
-            string loggerSectionName = LoggerSectionName)
+        builder.Host.UseSerilog((context, serviceProvider, loggerConfiguration) =>
         {
-            return builder.UseSerilog((context, serviceProvider, loggerConfiguration) =>
-            {
-                loggerConfiguration
-                    .ReadFrom.Configuration(context.Configuration)
-                    .ReadFrom.Services(serviceProvider)
-                    .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
-                    .Enrich.FromLogContext();
+            var loggerOptions = context.Configuration.GetSection(nameof(LoggerOptions)).Get<LoggerOptions>();
 
-                var loggerOptions = context.Configuration.GetSection(loggerSectionName).Get<LoggerOptions>();
-                if (loggerOptions is { })
-                    MapOptions(loggerOptions, loggerConfiguration, context);
-
-                extraConfigure?.Invoke(loggerConfiguration);
-            });
-        }
-
-        private static void MapOptions(LoggerOptions loggerOptions,
-            LoggerConfiguration loggerConfiguration, HostBuilderContext hostBuilderContext)
-        {
-            var level = GetLogEventLevel(loggerOptions.Level);
+            extraConfigure?.Invoke(loggerConfiguration);
 
             loggerConfiguration
-                .MinimumLevel.Is(level)
-                .Enrich.WithProperty("Environment", hostBuilderContext.HostingEnvironment.EnvironmentName);
+                .ReadFrom.Configuration(context.Configuration)
+                .ReadFrom.Services(serviceProvider)
+                .Enrich.WithExceptionDetails()
+                .Enrich.WithCorrelationId()
+                .Enrich.FromLogContext();
 
+            var level = Enum.TryParse<LogEventLevel>(loggerOptions?.Level, true, out var logLevel)
+                ? logLevel
+                : LogEventLevel.Information;
 
-            if (hostBuilderContext.HostingEnvironment.IsDevelopment())
+            // https://andrewlock.net/using-serilog-aspnetcore-in-asp-net-core-3-reducing-log-verbosity/
+            loggerConfiguration.MinimumLevel.Is(level)
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+                .MinimumLevel
+                // Filter out ASP.NET Core infrastructure logs that are Information and below
+                .Override("Microsoft.AspNetCore", LogEventLevel.Warning);
+
+            if (context.HostingEnvironment.IsDevelopment())
             {
-                loggerConfiguration.WriteTo.Console();
+                loggerConfiguration.WriteTo.Async(writeTo => writeTo.SpectreConsole(
+                    loggerOptions?.LogTemplate ??
+                    "{Timestamp:HH:mm:ss} [{Level:u4}] {Message:lj}{NewLine}{Exception}",
+                    level));
             }
             else
             {
-                if (loggerOptions.UseElasticSearch)
-                    loggerConfiguration.WriteTo.Elasticsearch(loggerOptions.ElasticSearchLoggingOptions?.Url);
-                if (loggerOptions.UseSeq)
-                    loggerConfiguration.WriteTo.Seq(Environment.GetEnvironmentVariable("SEQ_URL") ??
-                                                    loggerOptions.SeqOptions.Url);
-                loggerConfiguration.WriteTo.Console();
+                if (!string.IsNullOrEmpty(loggerOptions?.ElasticSearchUrl))
+                    loggerConfiguration.WriteTo.Async(writeTo => writeTo.Elasticsearch(loggerOptions.ElasticSearchUrl));
+
+                if (!string.IsNullOrEmpty(loggerOptions?.SeqUrl))
+                    loggerConfiguration.WriteTo.Async(writeTo => writeTo.Seq(loggerOptions.SeqUrl));
             }
 
-            foreach (var (key, value) in loggerOptions.Tags ?? new Dictionary<string, object>())
-                loggerConfiguration.Enrich.WithProperty(key, value);
+            if (!string.IsNullOrEmpty(loggerOptions?.LogPath))
+                loggerConfiguration.WriteTo.File(
+                    loggerOptions.LogPath,
+                    outputTemplate: loggerOptions.LogTemplate ??
+                                    "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} {Level} - {Message:lj}{NewLine}{Exception}",
+                    rollingInterval: RollingInterval.Day,
+                    rollOnFileSizeLimit: true);
+        });
 
-            foreach (var (key, value) in loggerOptions.MinimumLevelOverrides ?? new Dictionary<string, string>())
-            {
-                var logLevel = GetLogEventLevel(value);
-                loggerConfiguration.MinimumLevel.Override(key, logLevel);
-            }
-
-            loggerOptions.ExcludePaths?.ToList().ForEach(p => loggerConfiguration.Filter
-                .ByExcluding(Matching.WithProperty<string>("RequestPath", n => n.EndsWith(p))));
-
-            loggerOptions.ExcludeProperties?.ToList().ForEach(p => loggerConfiguration.Filter
-                .ByExcluding(Matching.WithProperty(p)));
-        }
-
-        private static LogEventLevel GetLogEventLevel(string level)
-        {
-            return Enum.TryParse<LogEventLevel>(level, true, out var logLevel)
-                ? logLevel
-                : LogEventLevel.Information;
-        }
+        return builder;
     }
 }

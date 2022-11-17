@@ -11,32 +11,31 @@ using MovieSearch.Application.TvShows.Features.SearchTVShow;
 using MovieSearch.IntegrationTests.Mocks;
 using Xunit;
 
-namespace MovieSearch.IntegrationTests.Application.TvShows.Features
+namespace MovieSearch.IntegrationTests.Application.TvShows.Features;
+
+public class SearchTVShowQueryHandlerTests : IntegrationTestFixture<Program>
 {
-    public class SearchTVShowQueryHandlerTests : IntegrationTestFixture<Startup>
+    public SearchTVShowQueryHandlerTests()
     {
-        public SearchTVShowQueryHandlerTests()
-        {
-            //setup the swaps for our tests
-            RegisterTestServices(services => { });
-        }
+        //setup the swaps for our tests
+        RegisterTestServices(services => { });
+    }
 
-        [Fact]
-        public async Task search_tv_show_query_should_return_a_valid_tv_show_info_list_dto()
-        {
-            // Arrange
-            var query = new SearchTVShowQuery(TvShowMock.Data.Name, 1, includeAdult: true);
+    [Fact]
+    public async Task search_tv_show_query_should_return_a_valid_tv_show_info_list_dto()
+    {
+        // Arrange
+        var query = new SearchTVShowQuery(TvShowMock.Data.Name, 1, includeAdult: true);
 
-            // Act
-            var listResult = (await QueryAsync(query, CancellationToken.None)).TVShowList;
+        // Act
+        var listResult = (await QueryAsync(query, CancellationToken.None)).TVShowList;
 
-            // Assert
-            listResult.Should().NotBeNull();
-            listResult.Should().BeOfType<ListResultModel<TVShowInfoDto>>();
-            listResult.Page.Should().Be(1);
-            listResult.PageSize.Should().Be(listResult.Items.Count);
-            listResult.Items.Any().Should().BeTrue();
-            TMDBTestUtil.AssertTvShowInformationDtoStructure(listResult.Items);
-        }
+        // Assert
+        listResult.Should().NotBeNull();
+        listResult.Should().BeOfType<ListResultModel<TVShowInfoDto>>();
+        listResult.Page.Should().Be(1);
+        listResult.PageSize.Should().Be(listResult.Items.Count);
+        listResult.Items.Any().Should().BeTrue();
+        TMDBTestUtil.AssertTvShowInformationDtoStructure(listResult.Items);
     }
 }

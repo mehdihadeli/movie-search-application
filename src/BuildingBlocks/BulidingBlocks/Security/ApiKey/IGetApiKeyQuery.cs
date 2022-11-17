@@ -1,9 +1,8 @@
 using System.Threading.Tasks;
 
-namespace BuildingBlocks.Security.ApiKey
+namespace BuildingBlocks.Security.ApiKey;
+
+public interface IGetApiKeyQuery
 {
-    public interface IGetApiKeyQuery
-    {
-        Task<ApiKey> ExecuteAsync(string providedApiKey);
-    }
+    Task<ApiKey> ExecuteAsync(string providedApiKey);
 }

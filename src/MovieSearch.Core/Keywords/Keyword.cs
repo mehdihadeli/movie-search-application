@@ -1,53 +1,55 @@
 ﻿using System.Collections.Generic;
 
-namespace MovieSearch.Core.Keywords
+namespace MovieSearch.Core.Keywords;
+
+public class Keyword : IEqualityComparer<Keyword>
 {
-    public class Keyword : IEqualityComparer<Keyword>
+    public Keyword(int id, string name)
     {
-        /// <summary>
-        /// The keyword Id as identified by theMovieDB.org.
-        /// </summary>
-        public int Id { get; init; }
+        Id = id;
+        Name = name;
+    }
 
-        /// <summary>
-        /// The keyword.
-        /// </summary>
-        public string Name { get; init; }
+    /// <summary>
+    ///     The keyword Id as identified by theMovieDB.org.
+    /// </summary>
+    public int Id { get; init; }
 
-        public Keyword( int id, string name )
+    /// <summary>
+    ///     The keyword.
+    /// </summary>
+    public string Name { get; init; }
+
+    public bool Equals(Keyword x, Keyword y)
+    {
+        return x != null && y != null && x.Id == y.Id && x.Name == y.Name;
+    }
+
+    public int GetHashCode(Keyword obj)
+    {
+        unchecked // Overflow is fine, just wrap
         {
-            Id = id;
-            Name = name;
+            var hash = 17;
+            hash = hash * 23 + obj.Id.GetHashCode();
+            hash = hash * 23 + obj.Name.GetHashCode();
+            return hash;
         }
+    }
 
-        public override bool Equals( object obj )
-        {
-            if( obj is not Keyword genre )
-            {
-                return false;
-            }
+    public override bool Equals(object obj)
+    {
+        if (obj is not Keyword genre) return false;
 
-            return Equals( this, genre );
-        }
+        return Equals(this, genre);
+    }
 
-        public bool Equals( Keyword x, Keyword y )
-            => x != null && y != null && x.Id == y.Id && x.Name == y.Name;
+    public override int GetHashCode()
+    {
+        return GetHashCode(this);
+    }
 
-        public override int GetHashCode()
-            => GetHashCode( this );
-
-        public int GetHashCode( Keyword obj )
-        {
-            unchecked // Overflow is fine, just wrap
-            {
-                int hash = 17;
-                hash = hash * 23 + obj.Id.GetHashCode();
-                hash = hash * 23 + obj.Name.GetHashCode();
-                return hash;
-            }
-        }
-
-        public override string ToString()
-            => $"{Name} ({Id})";
+    public override string ToString()
+    {
+        return $"{Name} ({Id})";
     }
 }

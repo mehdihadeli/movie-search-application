@@ -6,49 +6,46 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using Polly;
 
-namespace BuildingBlocks.Resiliency.Fallback
+namespace BuildingBlocks.Resiliency.Fallback;
+
+/// <summary>
+///     MediatR Fallback Pipeline Behavior
+/// </summary>
+/// <typeparam name="TRequest"></typeparam>
+/// <typeparam name="TResponse"></typeparam>
+public class FallbackBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+    where TRequest : IRequest<TResponse>
 {
-    /// <summary>
-    /// MediatR Fallback Pipeline Behavior
-    /// </summary>
-    /// <typeparam name="TRequest"></typeparam>
-    /// <typeparam name="TResponse"></typeparam>
-    public class FallbackBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
-        where TRequest : IRequest<TResponse>
+    private readonly IEnumerable<IFallbackHandler<TRequest, TResponse>> _fallbackHandlers;
+    private readonly ILogger<FallbackBehavior<TRequest, TResponse>> _logger;
+
+    public FallbackBehavior(IEnumerable<IFallbackHandler<TRequest, TResponse>> fallbackHandlers,
+        ILogger<FallbackBehavior<TRequest, TResponse>> logger)
     {
-        private readonly IEnumerable<IFallbackHandler<TRequest, TResponse>> _fallbackHandlers;
-        private readonly ILogger<FallbackBehavior<TRequest, TResponse>> _logger;
+        _fallbackHandlers = fallbackHandlers;
+        _logger = logger;
+    }
 
-        public FallbackBehavior(IEnumerable<IFallbackHandler<TRequest, TResponse>> fallbackHandlers,
-            ILogger<FallbackBehavior<TRequest, TResponse>> logger)
-        {
-            _fallbackHandlers = fallbackHandlers;
-            _logger = logger;
-        }
+    public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken
+        cancellationToken)
+    {
+        var fallbackHandler = _fallbackHandlers.FirstOrDefault();
+        if (fallbackHandler == null)
+            // No fallback handler found, continue through pipeline
+            return await next();
 
-        public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken,
-            RequestHandlerDelegate<TResponse> next)
-        {
-            var fallbackHandler = _fallbackHandlers.FirstOrDefault();
-            if (fallbackHandler == null)
+        var fallbackPolicy = Policy<TResponse>
+            .Handle<System.Exception>()
+            .FallbackAsync(async cancellationToken =>
             {
-                // No fallback handler found, continue through pipeline
-                return await next();
-            }
+                _logger.LogDebug("Initial handler failed. Falling back to `{FullName}@HandleFallback`",
+                    fallbackHandler.GetType().FullName);
+                return await fallbackHandler.HandleFallbackAsync(request, cancellationToken)
+                    .ConfigureAwait(false);
+            });
 
-            var fallbackPolicy = Policy<TResponse>
-                .Handle<System.Exception>()
-                .FallbackAsync(async (cancellationToken) =>
-                {
-                    _logger.LogDebug(
-                        $"Initial handler failed. Falling back to `{fallbackHandler.GetType().FullName}@HandleFallback`");
-                    return await fallbackHandler.HandleFallbackAsync(request, cancellationToken)
-                        .ConfigureAwait(false);
-                });
+        var response = await fallbackPolicy.ExecuteAsync(async () => await next());
 
-            var response = await fallbackPolicy.ExecuteAsync(async () => await next());
-
-            return response;
-        }
+        return response;
     }
 }

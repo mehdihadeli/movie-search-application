@@ -1,8 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 
-namespace BuildingBlocks.Security.ApiKey.Authorization
+namespace BuildingBlocks.Security.ApiKey.Authorization;
+
+public class OnlyThirdPartiesRequirement : IAuthorizationRequirement
 {
-    public class OnlyThirdPartiesRequirement : IAuthorizationRequirement
-    {
-    }
 }

@@ -1,10 +1,9 @@
-namespace MovieSearch.Application.Companies.Dtos
+namespace MovieSearch.Application.Companies.Dtos;
+
+public class ProductionCompanyDto
 {
-    public class ProductionCompanyDto
-    {
-        public int Id { get; init; }
-        public string Name { get; init; }
-        public string LogoPath { get; init; }
-        public string OriginCountry { get; init; }
-    }
+    public int Id { get; init; }
+    public string Name { get; init; }
+    public string LogoPath { get; init; }
+    public string OriginCountry { get; init; }
 }

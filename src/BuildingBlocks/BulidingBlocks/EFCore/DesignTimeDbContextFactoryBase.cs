@@ -4,59 +4,57 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 
-namespace BuildingBlocks.EFCore
+namespace BuildingBlocks.EFCore;
+
+public abstract class DesignTimeDbContextFactoryBase<TContext> : IDesignTimeDbContextFactory<TContext>
+    where TContext : DbContext
 {
-  public abstract class DesignTimeDbContextFactoryBase<TContext> : IDesignTimeDbContextFactory<TContext> where TContext : DbContext
+    public TContext CreateDbContext(string[] args)
     {
-        public TContext CreateDbContext(string[] args)
-        {
-            return Create(Directory.GetCurrentDirectory(), Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"));
-        }
+        return Create(Directory.GetCurrentDirectory(), Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"));
+    }
 
-        protected abstract TContext CreateNewInstance(DbContextOptions<TContext> options);
+    protected abstract TContext CreateNewInstance(DbContextOptions<TContext> options);
 
-        public TContext Create()
-        {
-            var environmentName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-            var basePath = AppContext.BaseDirectory;
-            return Create(basePath, environmentName);
-        }
+    public TContext Create()
+    {
+        var environmentName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+        var basePath = AppContext.BaseDirectory;
+        return Create(basePath, environmentName);
+    }
 
-        private TContext Create(string basePath, string environmentName)
-        {
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(basePath)
-                .AddJsonFile("appsettings.json")
-                .AddJsonFile($"appsettings.{environmentName}.json", true)
-                .AddEnvironmentVariables();
+    private TContext Create(string basePath, string environmentName)
+    {
+        var builder = new ConfigurationBuilder()
+            .SetBasePath(basePath)
+            .AddJsonFile("appsettings.json")
+            .AddJsonFile($"appsettings.{environmentName}.json", true)
+            .AddEnvironmentVariables();
 
-            var config = builder.Build();
+        var config = builder.Build();
 
-            var connstr = config.GetConnectionString("DefaultConnection");
+        var connstr = config.GetConnectionString("DefaultConnection");
 
-            if (string.IsNullOrWhiteSpace(connstr))
-            {
-                throw new InvalidOperationException(
-                    "Could not find a connection string named 'Default'.");
-            }
-            return Create(connstr);
-        }
+        if (string.IsNullOrWhiteSpace(connstr))
+            throw new InvalidOperationException(
+                "Could not find a connection string named 'Default'.");
+        return Create(connstr);
+    }
 
-        private TContext Create(string connectionString)
-        {
-            if (string.IsNullOrEmpty(connectionString))
-                throw new ArgumentException(
-             $"{nameof(connectionString)} is null or empty.",
-             nameof(connectionString));
+    private TContext Create(string connectionString)
+    {
+        if (string.IsNullOrEmpty(connectionString))
+            throw new ArgumentException(
+                $"{nameof(connectionString)} is null or empty.",
+                nameof(connectionString));
 
-            var optionsBuilder = new DbContextOptionsBuilder<TContext>();
+        var optionsBuilder = new DbContextOptionsBuilder<TContext>();
 
-            Console.WriteLine("DesignTimeDbContextFactory.Create(string): Connection string: {0}", connectionString);
+        Console.WriteLine("DesignTimeDbContextFactory.Create(string): Connection string: {0}", connectionString);
 
-            optionsBuilder.UseSqlServer(connectionString);
+        optionsBuilder.UseSqlServer(connectionString);
 
-            var options = optionsBuilder.Options;
-            return CreateNewInstance(options);
-        }
+        var options = optionsBuilder.Options;
+        return CreateNewInstance(options);
     }
 }

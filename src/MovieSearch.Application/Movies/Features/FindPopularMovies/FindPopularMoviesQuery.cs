@@ -1,9 +1,8 @@
 using BuildingBlocks.Domain;
 
-namespace MovieSearch.Application.Movies.Features.FindPopularMovies
+namespace MovieSearch.Application.Movies.Features.FindPopularMovies;
+
+public class FindPopularMoviesQuery : IQuery<FindPopularMoviesQueryResult>
 {
-    public class FindPopularMoviesQuery : IQuery<FindPopularMoviesQueryResult>
-    {
-        public int Page { get; init; } = 1;
-    }
+    public int Page { get; init; } = 1;
 }

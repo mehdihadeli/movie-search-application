@@ -1,25 +1,22 @@
-using System;
-using System.Collections.Generic;
 using AutoMapper;
 using Orders.UnitTests.Common;
 using Xunit;
 
-namespace MovieSearch.UnitTests.Application.People
+namespace MovieSearch.UnitTests.Application.People;
+
+public class PeopleMappingTests : IClassFixture<MappingFixture>
 {
-    public class PeopleMappingTests: IClassFixture<MappingFixture>
+    private readonly IMapper _mapper;
+
+    public PeopleMappingTests(MappingFixture fixture)
     {
-        private readonly IMapper _mapper;
+        _mapper = fixture.Mapper;
+    }
 
-        public PeopleMappingTests(MappingFixture fixture)
-        {
-            _mapper = fixture.Mapper;
-        }
-
-        [Fact]
-        public void ShouldHaveValidConfiguration()
-        {
-            _mapper.ConfigurationProvider
-                .AssertConfigurationIsValid();
-        }
+    [Fact]
+    public void ShouldHaveValidConfiguration()
+    {
+        _mapper.ConfigurationProvider
+            .AssertConfigurationIsValid();
     }
 }

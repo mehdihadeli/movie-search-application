@@ -2,13 +2,12 @@ using AutoMapper;
 using MovieSearch.Application.Genres.Dtos;
 using MovieSearch.Core.Genres;
 
-namespace MovieSearch.Application.Genres
+namespace MovieSearch.Application.Genres;
+
+public class GenreMappings : Profile
 {
-    public class GenreMappings: Profile
+    public GenreMappings()
     {
-        public GenreMappings()
-        {
-            CreateMap<Genre, GenreDto>();
-        }
+        CreateMap<Genre, GenreDto>();
     }
 }

@@ -2,13 +2,12 @@ using AutoMapper;
 using MovieSearch.Application.Videos.Dtos;
 using MovieSearch.Core.Generals;
 
-namespace MovieSearch.Application.Videos
+namespace MovieSearch.Application.Videos;
+
+public class VideoMappings : Profile
 {
-    public class VideoMappings : Profile
+    public VideoMappings()
     {
-        public VideoMappings()
-        {
-            CreateMap<Video, VideoDto>();
-        }
+        CreateMap<Video, VideoDto>();
     }
 }

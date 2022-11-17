@@ -1,10 +1,9 @@
 using System;
 using System.Threading.Tasks;
 
-namespace BuildingBlocks.Persistence
+namespace BuildingBlocks.Persistence;
+
+public interface IUnitOfWork : IDisposable
 {
-    public interface IUnitOfWork : IDisposable
-    {
-        Task<bool> CommitAsync();
-    }
+    Task<bool> CommitAsync();
 }

@@ -1,64 +1,58 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Polly;
 
-namespace BuildingBlocks.Resiliency
+namespace BuildingBlocks.Resiliency;
+
+public class RetryBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+    where TRequest : IRequest<TResponse>
 {
-    public class RetryBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : IRequest<TResponse>
+    private readonly ILogger<RetryBehavior<TRequest, TResponse>> _logger;
+    private readonly IEnumerable<IRetryableRequest<TRequest, TResponse>> _retryHandlers;
+
+    public RetryBehavior(IEnumerable<IRetryableRequest<TRequest, TResponse>> retryHandlers,
+        ILogger<RetryBehavior<TRequest, TResponse>> logger)
     {
-        private readonly IEnumerable<IRetryableRequest<TRequest, TResponse>> _retryHandlers;
-        private readonly ILogger<RetryBehavior<TRequest, TResponse>> _logger;
+        _retryHandlers = retryHandlers;
+        _logger = logger;
+    }
 
-        public RetryBehavior(IEnumerable<IRetryableRequest<TRequest, TResponse>> retryHandlers, ILogger<RetryBehavior<TRequest, TResponse>> logger)
-        {
-            _retryHandlers = retryHandlers;
-            _logger = logger;
-        }
+    public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken
+        cancellationToken)
+    {
+        var retryHandler = _retryHandlers.FirstOrDefault();
+        //var retryAttr = typeof(TRequest).GetCustomAttribute<RetryPolicyAttribute>();
 
-        public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
-        {
-            var retryHandler = _retryHandlers.FirstOrDefault();
-            //var retryAttr = typeof(TRequest).GetCustomAttribute<RetryPolicyAttribute>();
+        if (retryHandler == null)
+            // No retry handler found, continue through pipeline
+            return await next();
 
-            if (retryHandler == null)
+        var circuitBreaker = Policy<TResponse>
+            .Handle<System.Exception>()
+            .CircuitBreakerAsync(retryHandler.ExceptionsAllowedBeforeCircuitTrip, TimeSpan.FromMilliseconds(5000),
+                (exception, things) => { _logger.LogDebug("Circuit Tripped!"); },
+                () => { });
+
+        var retryPolicy = Policy<TResponse>
+            .Handle<System.Exception>()
+            .WaitAndRetryAsync(retryHandler.RetryAttempts, retryAttempt =>
             {
-                // No retry handler found, continue through pipeline
-                return await next();
-            }
+                var retryDelay = retryHandler.RetryWithExponentialBackoff
+                    ? TimeSpan.FromMilliseconds(Math.Pow(2, retryAttempt) * retryHandler.RetryDelay)
+                    : TimeSpan.FromMilliseconds(retryHandler.RetryDelay);
 
-            var circuitBreaker = Policy<TResponse>
-                .Handle<System.Exception>()
-                .CircuitBreakerAsync(retryHandler.ExceptionsAllowedBeforeCircuitTrip, TimeSpan.FromMilliseconds(5000),
-                    (exception, things) =>
-                    {
-                        _logger.LogDebug("Circuit Tripped!");
-                    },
-                    () =>
-                    {
-                    });
+                _logger.LogDebug("Retrying, waiting {RetryDelay}...", retryDelay);
 
-            var retryPolicy = Policy<TResponse>
-                .Handle<System.Exception>()
-                .WaitAndRetryAsync(retryHandler.RetryAttempts, retryAttempt =>
-                {
-                    var retryDelay = retryHandler.RetryWithExponentialBackoff
-                        ? TimeSpan.FromMilliseconds(Math.Pow(2, retryAttempt) * retryHandler.RetryDelay)
-                        : TimeSpan.FromMilliseconds(retryHandler.RetryDelay);
+                return retryDelay;
+            });
 
-                    _logger.LogDebug($"Retrying, waiting {retryDelay}...");
+        var response = await retryPolicy.ExecuteAsync(async () => await next());
 
-                    return retryDelay;
-                });
-
-            var response = await retryPolicy.ExecuteAsync(async () => await next());
-
-            return response;
-        }
+        return response;
     }
 }

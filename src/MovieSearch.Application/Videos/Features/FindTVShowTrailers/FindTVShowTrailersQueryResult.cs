@@ -1,10 +1,9 @@
 using MovieSearch.Application.Videos.Dtos;
 using MovieSearch.Core.Generals;
 
-namespace MovieSearch.Application.Videos.Features.FindTVShowTrailers
+namespace MovieSearch.Application.Videos.Features.FindTVShowTrailers;
+
+public class FindTVShowTrailersQueryResult
 {
-    public class FindTVShowTrailersQueryResult
-    {
-        public VideoListResultModel<VideoDto> VideoList { get; init; }
-    }
+    public VideoListResultModel<VideoDto> VideoList { get; init; }
 }

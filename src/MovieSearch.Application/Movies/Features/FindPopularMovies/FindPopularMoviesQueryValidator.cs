@@ -1,13 +1,12 @@
 using FluentValidation;
 using MovieSearch.Application.Movies.Features.FindPopularMovies;
 
-namespace MovieSearch.Application.Movies.Features.SearchMovie
+namespace MovieSearch.Application.Movies.Features.SearchMovie;
+
+public class FindPopularMoviesQueryValidator : AbstractValidator<FindPopularMoviesQuery>
 {
-    public class FindPopularMoviesQueryValidator : AbstractValidator<FindPopularMoviesQuery>
+    public FindPopularMoviesQueryValidator()
     {
-        public FindPopularMoviesQueryValidator()
-        {
-            RuleFor(query => query.Page).GreaterThan(0).WithMessage("page number should be greater than zero.");
-        }
+        RuleFor(query => query.Page).GreaterThan(0).WithMessage("page number should be greater than zero.");
     }
 }

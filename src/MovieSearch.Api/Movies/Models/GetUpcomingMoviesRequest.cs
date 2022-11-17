@@ -1,7 +1,6 @@
-namespace Thesaurus.Api.Words.ViewModels
+namespace Thesaurus.Api.Words.ViewModels;
+
+public class GetUpcomingMoviesRequest
 {
-    public class GetUpcomingMoviesRequest
-    {
-        public int Page { get; set; } = 1;
-    }
+    public int Page { get; set; } = 1;
 }

@@ -7,57 +7,53 @@ using EasyCaching.Core;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
-namespace BuildingBlocks.Caching
+namespace BuildingBlocks.Caching;
+
+public class CachingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+    where TRequest : notnull, IRequest<TResponse>
+    where TResponse : notnull
 {
-    public class CachingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
-        where TRequest : notnull, IRequest<TResponse>
-        where TResponse : notnull
+    private readonly IEnumerable<ICachePolicy<TRequest, TResponse>> _cachePolicies;
+    private readonly IEasyCachingProvider _cachingProvider;
+    private readonly ILogger<CachingBehavior<TRequest, TResponse>> _logger;
+    private readonly int defaultCacheExpirationInHours = 1;
+
+
+    public CachingBehavior(IEasyCachingProviderFactory cachingFactory,
+        ILogger<CachingBehavior<TRequest, TResponse>> logger,
+        IEnumerable<ICachePolicy<TRequest, TResponse>> cachePolicies)
     {
-        private readonly ILogger<CachingBehavior<TRequest, TResponse>> _logger;
-        private readonly IEasyCachingProvider _cachingProvider;
-        private readonly int defaultCacheExpirationInHours = 1;
-        private readonly IEnumerable<ICachePolicy<TRequest, TResponse>> _cachePolicies;
+        _logger = logger;
+        _cachingProvider = cachingFactory.GetCachingProvider("mem");
+        _cachePolicies = cachePolicies;
+    }
 
+    public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken
+        cancellationToken)
+    {
+        var cachePolicy = _cachePolicies.FirstOrDefault();
+        if (cachePolicy == null)
+            // No cache policy found, so just continue through the pipeline
+            return await next();
 
-        public CachingBehavior(IEasyCachingProviderFactory cachingFactory,
-            ILogger<CachingBehavior<TRequest, TResponse>> logger,
-            IEnumerable<ICachePolicy<TRequest, TResponse>> cachePolicies)
+        var cacheKey = cachePolicy.GetCacheKey(request);
+        var cachedResponse = await _cachingProvider.GetAsync<TResponse>(cacheKey);
+        if (cachedResponse.Value != null)
         {
-            _logger = logger;
-            _cachingProvider = cachingFactory.GetCachingProvider("mem");
-            _cachePolicies = cachePolicies;
+            _logger.LogDebug("Response retrieved {TRequest} from cache. CacheKey: {CacheKey}",
+                typeof(TRequest).FullName, cacheKey);
+            return cachedResponse.Value;
         }
 
+        var response = await next();
 
-        public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken,
-            RequestHandlerDelegate<TResponse> next)
-        {
-            var cachePolicy = _cachePolicies.FirstOrDefault();
-            if (cachePolicy == null)
-            {
-                // No cache policy found, so just continue through the pipeline
-                return await next();
-            }
+        var time = cachePolicy.AbsoluteExpirationRelativeToNow ??
+                   DateTime.Now.AddHours(defaultCacheExpirationInHours);
+        await _cachingProvider.SetAsync(cacheKey, response, time.TimeOfDay);
 
-            var cacheKey = cachePolicy.GetCacheKey(request);
-            var cachedResponse = await _cachingProvider.GetAsync<TResponse>(cacheKey);
-            if (cachedResponse.Value != null)
-            {
-                _logger.LogDebug("Response retrieved {TRequest} from cache. CacheKey: {CacheKey}",
-                    typeof(TRequest).FullName, cacheKey);
-                return cachedResponse.Value;
-            }
+        _logger.LogDebug("Caching response for {TRequest} with cache key: {CacheKey}", typeof(TRequest).FullName,
+            cacheKey);
 
-            var response = await next();
-
-            var time = cachePolicy.AbsoluteExpirationRelativeToNow ??
-                       DateTime.Now.AddHours(defaultCacheExpirationInHours);
-            await _cachingProvider.SetAsync(cacheKey, response, time.TimeOfDay);
-
-            _logger.LogDebug("Caching response for {TRequest} with cache key: {CacheKey}", typeof(TRequest).FullName,
-                cacheKey);
-
-            return response;
-        }
+        return response;
     }
 }

@@ -1,46 +1,48 @@
 ﻿using System.Collections.Generic;
 
-namespace MovieSearch.Core.TV
+namespace MovieSearch.Core.TV;
+
+public class Network : IEqualityComparer<Network>
 {
-    public class Network : IEqualityComparer<Network>
+    public Network(int id, string name)
     {
-        public int Id { get; init; }
-        public string Name { get; init; }
+        Id = id;
+        Name = name;
+    }
 
-        public Network( int id, string name )
+    public int Id { get; init; }
+    public string Name { get; init; }
+
+    public bool Equals(Network x, Network y)
+    {
+        return x != null && y != null && x.Id == y.Id && x.Name == y.Name;
+    }
+
+    public int GetHashCode(Network obj)
+    {
+        unchecked // Overflow is fine, just wrap
         {
-            Id = id;
-            Name = name;
+            var hash = 17;
+            hash = hash * 23 + obj.Id.GetHashCode();
+            hash = hash * 23 + obj.Name.GetHashCode();
+            return hash;
         }
+    }
 
-        public bool Equals( Network x, Network y )
-            => x != null && y != null && x.Id == y.Id && x.Name == y.Name;
+    public override bool Equals(object obj)
+    {
+        if (obj is not Network network) return false;
 
-        public int GetHashCode( Network obj )
-        {
-            unchecked // Overflow is fine, just wrap
-            {
-                int hash = 17;
-                hash = hash * 23 + obj.Id.GetHashCode();
-                hash = hash * 23 + obj.Name.GetHashCode();
-                return hash;
-            }
-        }
+        return Equals(this, network);
+    }
 
-        public override bool Equals( object obj )
-        {
-            if( obj is not Network network )
-            {
-                return false;
-            }
+    public override int GetHashCode()
+    {
+        return GetHashCode(this);
+    }
 
-            return Equals( this, network );
-        }
-
-        public override int GetHashCode()
-            => GetHashCode( this );
-
-        public override string ToString()
-            => $"{Name} ({Id})";
+    public override string ToString()
+    {
+        return $"{Name} ({Id})";
     }
 }

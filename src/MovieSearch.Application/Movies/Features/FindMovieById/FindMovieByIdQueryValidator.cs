@@ -1,13 +1,12 @@
 using FluentValidation;
 using MovieSearch.Application.Movies.Features.FindById;
 
-namespace Orders.Application.Orders.Features.GetOrderById
+namespace Orders.Application.Orders.Features.GetOrderById;
+
+public class FindMovieByIdQueryValidator : AbstractValidator<FindMovieByIdQuery>
 {
-    public class FindMovieByIdQueryValidator : AbstractValidator<FindMovieByIdQuery>
+    public FindMovieByIdQueryValidator()
     {
-        public FindMovieByIdQueryValidator()
-        {
-            RuleFor(query => query.Id).GreaterThan(0).WithMessage("id should be greater than zero.");
-        }
+        RuleFor(query => query.Id).GreaterThan(0).WithMessage("id should be greater than zero.");
     }
 }

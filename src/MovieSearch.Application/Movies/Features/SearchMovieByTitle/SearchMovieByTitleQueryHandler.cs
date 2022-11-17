@@ -2,36 +2,34 @@ using System.Threading;
 using System.Threading.Tasks;
 using Ardalis.GuardClauses;
 using AutoMapper;
-using BuildingBlocks.Domain;
 using MediatR;
 using MovieSearch.Application.Movies.Dtos;
 using MovieSearch.Application.Services.Clients;
 
-namespace MovieSearch.Application.Movies.Features.SearchMovieByTitle
+namespace MovieSearch.Application.Movies.Features.SearchMovieByTitle;
+
+public class
+    SearchMovieByTitleQueryHandler : IRequestHandler<SearchMovieByTitleQuery, SearchMovieByTitleQueryResult>
 {
-    public class
-        SearchMovieByTitleQueryHandler : IRequestHandler<SearchMovieByTitleQuery, SearchMovieByTitleQueryResult>
+    private readonly IMapper _mapper;
+    private readonly IMovieDbServiceClient _movieDbServiceClient;
+
+    public SearchMovieByTitleQueryHandler(IMovieDbServiceClient movieDbServiceClient, IMapper mapper)
     {
-        private readonly IMovieDbServiceClient _movieDbServiceClient;
-        private readonly IMapper _mapper;
+        _movieDbServiceClient = movieDbServiceClient;
+        _mapper = mapper;
+    }
 
-        public SearchMovieByTitleQueryHandler(IMovieDbServiceClient movieDbServiceClient, IMapper mapper)
-        {
-            _movieDbServiceClient = movieDbServiceClient;
-            _mapper = mapper;
-        }
+    public async Task<SearchMovieByTitleQueryResult> Handle(SearchMovieByTitleQuery query,
+        CancellationToken cancellationToken)
+    {
+        Guard.Against.Null(query, nameof(SearchMovieByTitleQuery));
 
-        public async Task<SearchMovieByTitleQueryResult> Handle(SearchMovieByTitleQuery query,
-            CancellationToken cancellationToken)
-        {
-            Guard.Against.Null(query, nameof(SearchMovieByTitleQuery));
+        var movies = await _movieDbServiceClient.SearchMovieAsync(query.SearchKeywords, query
+            .Page, cancellationToken: cancellationToken);
 
-            var movies = await _movieDbServiceClient.SearchMovieAsync(keyword: query.SearchKeywords, page: query
-                .Page, cancellationToken: cancellationToken);
+        var result = movies.Map(x => _mapper.Map<MovieInfoDto>(x));
 
-            var result = movies.Map(x => _mapper.Map<MovieInfoDto>(x));
-
-            return new SearchMovieByTitleQueryResult { MovieList = result };
-        }
+        return new SearchMovieByTitleQueryResult {MovieList = result};
     }
 }

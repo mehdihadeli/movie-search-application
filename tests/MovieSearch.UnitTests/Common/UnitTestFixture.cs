@@ -1,22 +1,21 @@
 ﻿using System;
 using AutoMapper;
 
-namespace Orders.UnitTests.Common
+namespace Orders.UnitTests.Common;
+
+public class UnitTestFixture : IDisposable
 {
-    public class UnitTestFixture : IDisposable
+    public UnitTestFixture()
     {
-        public UnitTestFixture()
-        {
-            Mapper = MapperFactory.Create();
-            //Context = DbContextFactory.Create().GetAwaiter().GetResult();
-        }
+        Mapper = MapperFactory.Create();
+        //Context = DbContextFactory.Create().GetAwaiter().GetResult();
+    }
 
-        public IMapper Mapper { get; }
-        // public ApplicationDbContext Context { get; }
+    public IMapper Mapper { get; }
+    // public ApplicationDbContext Context { get; }
 
-        public void Dispose()
-        {
-            //DbContextFactory.Destroy(Context).GetAwaiter().GetResult();
-        }
+    public void Dispose()
+    {
+        //DbContextFactory.Destroy(Context).GetAwaiter().GetResult();
     }
 }

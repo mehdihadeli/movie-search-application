@@ -1,7 +1,6 @@
-namespace Thesaurus.Api.Words.ViewModels
+namespace Thesaurus.Api.Words.ViewModels;
+
+public class GetPopularMoviesRequest
 {
-    public class GetPopularMoviesRequest
-    {
-        public int Page { get; set; } = 1;
-    }
+    public int Page { get; set; } = 1;
 }

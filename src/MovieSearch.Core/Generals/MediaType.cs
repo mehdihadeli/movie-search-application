@@ -1,10 +1,9 @@
-namespace MovieSearch.Core.Generals
+namespace MovieSearch.Core.Generals;
+
+public enum MediaType
 {
-    public enum MediaType
-    {
-        Unknown,
-        Movie = 1,
-        Tv = 2,
-        Person = 3
-    }
+    Unknown,
+    Movie = 1,
+    Tv = 2,
+    Person = 3
 }

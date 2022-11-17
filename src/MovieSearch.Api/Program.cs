@@ -1,49 +1,70 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Reflection;
+using Ben.Diagnostics;
 using BuildingBlocks.Logging;
-using Microsoft.AspNetCore.Hosting;
+using BuildingBlocks.Resiliency.Configs;
+using BuildingBlocks.Swagger;
+using BuildingBlocks.Web;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using MovieSearch.Application;
+using MovieSearch.Core;
+using MovieSearch.Infrastructure;
 using Serilog;
 
-namespace MovieSearch.Api
+
+// https://docs.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis
+// https://benfoster.io/blog/mvc-to-minimal-apis-aspnet-6/
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Host.UseDefaultServiceProvider((env, c) =>
 {
-    public class Program
-    {
-        public static async Task Main(string[] args)
-        {
-            Log.Logger = new LoggerConfiguration()
-                .WriteTo.Console()
-                .CreateBootstrapLogger();
+    // Handling Captive Dependency Problem
+    // https://ankitvijay.net/2020/03/17/net-core-and-di-beware-of-captive-dependency/
+    // https://levelup.gitconnected.com/top-misconceptions-about-dependency-injection-in-asp-net-core-c6a7afd14eb4
+    // https://blog.ploeh.dk/2014/06/02/captive-dependency/
+    if (env.HostingEnvironment.IsDevelopment() || env.HostingEnvironment.IsEnvironment("tests") ||
+        env.HostingEnvironment.IsStaging())
+        c.ValidateScopes = true;
+});
 
-            try
-            {
-                var host = CreateHostBuilder(args).Build();
-                await host.RunAsync();
-            }
-            catch (Exception ex)
-            {
-                Log.Fatal(ex, "Host terminated unexpectedly");
-            }
-            finally
-            {
-                Log.CloseAndFlush();
-            }
-        }
+builder.AddCustomSerilog();
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .UseCustomSerilog()
-                .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); })
-                .UseDefaultServiceProvider((env, c) =>
-                {
-                    if (env.HostingEnvironment.IsDevelopment() || env.HostingEnvironment.IsStaging())
-                    {
-                        c.ValidateScopes = true;
-                    }
-                });
-    }
+builder.Services.AddControllers(options =>
+    options.Conventions.Add(new RouteTokenTransformerConvention(new SlugifyParameterTransformer())));
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("api", policy => { policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod(); });
+});
+
+builder.Services.AddApplication();
+builder.AddInfrastructure();
+
+var app = builder.Build();
+
+app.UseInfrastructure(app.Environment);
+
+app.UseCors("api");
+
+//https://learn.microsoft.com/en-us/aspnet/core/fundamentals/routing?view=aspnetcore-7.0#routing-basics
+// app.UseRouting();
+
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.MapControllers();
+app.MapGet("/", context => context.Response.WriteAsync("Movie Search Api!"));
+
+if (app.Environment.IsDevelopment())
+    app.UseCustomSwagger();
+
+await app.RunAsync();
+
+public partial class Program
+{
 }

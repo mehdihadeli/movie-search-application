@@ -6,62 +6,62 @@ using MovieSearch.Core.TV;
 using Orders.UnitTests.Common;
 using Xunit;
 
-namespace MovieSearch.UnitTests.Application.TVShow
+namespace MovieSearch.UnitTests.Application.TVShow;
+
+public class TVShowMappingTests : IClassFixture<MappingFixture>
 {
-    public class TVShowMappingTests : IClassFixture<MappingFixture>
+    private readonly IMapper _mapper;
+
+    public TVShowMappingTests(MappingFixture fixture)
     {
-        private readonly IMapper _mapper;
+        _mapper = fixture.Mapper;
+    }
 
-        public TVShowMappingTests(MappingFixture fixture)
+    public static IEnumerable<object[]> Data
+    {
+        get
         {
-            _mapper = fixture.Mapper;
-        }
-
-        [Fact]
-        public void ShouldHaveValidConfiguration()
-        {
-            _mapper.ConfigurationProvider
-                .AssertConfigurationIsValid();
-        }
-
-        [Theory, MemberData(nameof(Data))]
-        public void ShouldSupportMappingFromSourceToDestination(Type source, Type destination,
-            params object[] parameters)
-        {
-            var instance = Activator.CreateInstance(source, parameters);
-
-            _mapper.Map(instance, source, destination);
-        }
-
-        public static IEnumerable<object[]> Data
-        {
-            get
+            yield return new object[]
             {
-                yield return new object[]
-                {
-                    typeof(Core.TV.TVShow), typeof(TVShowDto)
-                };
-                yield return new object[]
-                {
-                    typeof(TVShowInfo), typeof(TVShowInfoDto)
-                };
-                yield return new object[]
-                {
-                    typeof(TVShowCredit), typeof(TVShowCreditDto)
-                };
-                yield return new object[]
-                {
-                    typeof(TVShowCastMember), typeof(TVShowCastMemberDto)
-                };
-                yield return new object[]
-                {
-                    typeof(TVShowCrewMember), typeof(TVShowCrewMemberDto)
-                };
-                yield return new object[]
-                {
-                    typeof(TVShowCreator), typeof(TVShowCreatorDto)
-                };
-            }
+                typeof(Core.TV.TVShow), typeof(TVShowDto)
+            };
+            yield return new object[]
+            {
+                typeof(TVShowInfo), typeof(TVShowInfoDto)
+            };
+            yield return new object[]
+            {
+                typeof(TVShowCredit), typeof(TVShowCreditDto)
+            };
+            yield return new object[]
+            {
+                typeof(TVShowCastMember), typeof(TVShowCastMemberDto)
+            };
+            yield return new object[]
+            {
+                typeof(TVShowCrewMember), typeof(TVShowCrewMemberDto)
+            };
+            yield return new object[]
+            {
+                typeof(TVShowCreator), typeof(TVShowCreatorDto)
+            };
         }
+    }
+
+    [Fact]
+    public void ShouldHaveValidConfiguration()
+    {
+        _mapper.ConfigurationProvider
+            .AssertConfigurationIsValid();
+    }
+
+    [Theory]
+    [MemberData(nameof(Data))]
+    public void ShouldSupportMappingFromSourceToDestination(Type source, Type destination,
+        params object[] parameters)
+    {
+        var instance = Activator.CreateInstance(source, parameters);
+
+        _mapper.Map(instance, source, destination);
     }
 }

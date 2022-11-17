@@ -1,7 +1,6 @@
-namespace Thesaurus.Api.Words.ViewModels
+namespace Thesaurus.Api.Words.ViewModels;
+
+public class GetMovieCreditsRequest
 {
-    public class GetMovieCreditsRequest
-    {
-        public int MovieId { get; set; }
-    }
+    public int MovieId { get; set; }
 }

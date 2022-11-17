@@ -1,9 +1,8 @@
 using BuildingBlocks.Domain;
 
-namespace MovieSearch.Application.Generals.Multi.Features.SearchMultipleModel
+namespace MovieSearch.Application.Generals.Multi.Features.SearchMultipleModel;
+
+public class SearchMultipleModelQueryResult
 {
-    public class SearchMultipleModelQueryResult
-    {
-        public ListResultModel<dynamic> List { get; set; }
-    }
+    public ListResultModel<dynamic> List { get; set; }
 }

@@ -1,11 +1,11 @@
-namespace BuildingBlocks.Exception
+namespace BuildingBlocks.Exception;
+
+public class AppException : System.Exception
 {
-    public class AppException : System.Exception
+    public AppException(string message, string code = default!) : base(message)
     {
-        public virtual string Code { get; }
-        public AppException(string message, string code = default!) : base(message)
-        {
-            Code = code;
-        }
+        Code = code;
     }
+
+    public virtual string Code { get; }
 }

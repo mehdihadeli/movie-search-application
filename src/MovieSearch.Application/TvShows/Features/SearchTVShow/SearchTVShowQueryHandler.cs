@@ -6,30 +6,29 @@ using MediatR;
 using MovieSearch.Application.Services.Clients;
 using MovieSearch.Application.TvShows.Dtos;
 
-namespace MovieSearch.Application.TvShows.Features.SearchTVShow
+namespace MovieSearch.Application.TvShows.Features.SearchTVShow;
+
+public class SearchTVShowQueryHandler : IRequestHandler<SearchTVShowQuery, SearchTVShowQueryResult>
 {
-    public class SearchTVShowQueryHandler : IRequestHandler<SearchTVShowQuery, SearchTVShowQueryResult>
+    private readonly IMapper _mapper;
+    private readonly IMovieDbServiceClient _movieDbServiceClient;
+
+    public SearchTVShowQueryHandler(IMovieDbServiceClient movieDbServiceClient, IMapper mapper)
     {
-        private readonly IMovieDbServiceClient _movieDbServiceClient;
-        private readonly IMapper _mapper;
+        _movieDbServiceClient = movieDbServiceClient;
+        _mapper = mapper;
+    }
 
-        public SearchTVShowQueryHandler(IMovieDbServiceClient movieDbServiceClient, IMapper mapper)
-        {
-            _movieDbServiceClient = movieDbServiceClient;
-            _mapper = mapper;
-        }
+    public async Task<SearchTVShowQueryResult> Handle(SearchTVShowQuery query, CancellationToken cancellationToken)
+    {
+        Guard.Against.Null(query, nameof(SearchTVShowQuery));
 
-        public async Task<SearchTVShowQueryResult> Handle(SearchTVShowQuery query, CancellationToken cancellationToken)
-        {
-            Guard.Against.Null(query, nameof(SearchTVShowQuery));
+        var tvShows = await _movieDbServiceClient.SearchTvShowAsync(query.SearchKeywords,
+            query.Page, query.IncludeAdult, query.FirstAirDateYear,
+            cancellationToken);
 
-            var tvShows = await _movieDbServiceClient.SearchTvShowAsync(keyword: query.SearchKeywords,
-                page: query.Page, includeAdult: query.IncludeAdult, firstAirDateYear: query.FirstAirDateYear,
-                cancellationToken: cancellationToken);
+        var result = tvShows.Map(x => _mapper.Map<TVShowInfoDto>(x));
 
-            var result = tvShows.Map(x => _mapper.Map<TVShowInfoDto>(x));
-
-            return new SearchTVShowQueryResult { TVShowList = result };
-        }
+        return new SearchTVShowQueryResult {TVShowList = result};
     }
 }

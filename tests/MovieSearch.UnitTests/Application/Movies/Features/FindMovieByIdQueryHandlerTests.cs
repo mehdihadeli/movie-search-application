@@ -1,4 +1,3 @@
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -11,60 +10,58 @@ using NSubstitute;
 using Orders.UnitTests.Common;
 using Xunit;
 
-namespace MovieSearch.UnitTests.Application.Movies.Features
+namespace MovieSearch.UnitTests.Application.Movies.Features;
+
+public class FindMovieByIdQueryHandlerTests : UnitTestFixture
 {
-    public class FindMovieByIdQueryHandlerTests : UnitTestFixture
+    private readonly FindMovieByIdQueryHandler _handler;
+    private readonly IMovieDbServiceClient _movieDbServiceClient;
+
+    public FindMovieByIdQueryHandlerTests()
     {
-        private readonly IMovieDbServiceClient _movieDbServiceClient;
-        private readonly FindMovieByIdQueryHandler _handler;
+        // Arrange
+        _movieDbServiceClient = Substitute.For<IMovieDbServiceClient>();
+        _handler = new FindMovieByIdQueryHandler(_movieDbServiceClient, Mapper);
+    }
 
-        private Task<FindMovieByIdQueryResult> Act(FindMovieByIdQuery query, CancellationToken cancellationToken) =>
-            _handler.Handle(query, cancellationToken);
+    private Task<FindMovieByIdQueryResult> Act(FindMovieByIdQuery query, CancellationToken cancellationToken)
+    {
+        return _handler.Handle(query, cancellationToken);
+    }
 
-        public FindMovieByIdQueryHandlerTests()
+    [Fact]
+    public async Task handle_with_invalid_movie_by_id_query_should_throw_movie_not_found_exception()
+    {
+        var query = new FindMovieByIdQuery
         {
-            // Arrange
-            _movieDbServiceClient = Substitute.For<IMovieDbServiceClient>();
-            _handler = new FindMovieByIdQueryHandler(_movieDbServiceClient, Mapper);
-        }
+            Id = 1
+        };
 
-        [Fact]
-        public async Task handle_with_invalid_movie_by_id_query_should_throw_movie_not_found_exception()
+        //Act && Assert
+        var act = async () => { await Act(query, CancellationToken.None); };
+        await act.Should().ThrowAsync<MovieNotFoundException>();
+    }
+
+    [Fact]
+    public async Task handle_with_valid_movie_by_id_query_should_return_correct_movie_dto()
+    {
+        // Arrange
+        var query = new FindMovieByIdQuery
         {
-            var query = new FindMovieByIdQuery
-            {
-                Id = 1
-            };
+            Id = MovieMocks.Data.Id
+        };
 
-            //Act && Assert
-            Func<Task> act = async () =>
-            {
-                await Act(query, CancellationToken.None);
-            };
-            await act.Should().ThrowAsync<MovieNotFoundException>();
-        }
+        _movieDbServiceClient.GetMovieByIdAsync(Arg.Is(query.Id), Arg.Any<CancellationToken>())
+            .Returns(MovieMocks.Data);
 
-        [Fact]
-        public async Task handle_with_valid_movie_by_id_query_should_return_correct_movie_dto()
-        {
-            // Arrange
-            var query = new FindMovieByIdQuery
-            {
-                Id = MovieMocks.Data.Id,
-            };
+        // Act
+        var result = await Act(query, CancellationToken.None);
 
-            _movieDbServiceClient.GetMovieByIdAsync(Arg.Is(query.Id), Arg.Any<CancellationToken>())
-                .Returns(MovieMocks.Data);
-
-            // Act
-            var result = await Act(query, CancellationToken.None);
-
-            // Assert
-            result.Should().NotBeNull();
-            result.Movie.Should().NotBeNull();
-            result.Movie.Should().BeOfType<MovieDto>();
-            result.Movie.Id.Should().Be(query.Id);
-            result.Movie.Title.Should().Be(MovieMocks.Data.Title);
-        }
+        // Assert
+        result.Should().NotBeNull();
+        result.Movie.Should().NotBeNull();
+        result.Movie.Should().BeOfType<MovieDto>();
+        result.Movie.Id.Should().Be(query.Id);
+        result.Movie.Title.Should().Be(MovieMocks.Data.Title);
     }
 }

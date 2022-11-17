@@ -1,10 +1,9 @@
 using BuildingBlocks.Domain;
 using MovieSearch.Application.TvShows.Dtos;
 
-namespace MovieSearch.Application.TvShows.Features.SearchTVShow
+namespace MovieSearch.Application.TvShows.Features.SearchTVShow;
+
+public class SearchTVShowQueryResult
 {
-    public class SearchTVShowQueryResult
-    {
-        public ListResultModel<TVShowInfoDto> TVShowList { get; init; }
-    }
+    public ListResultModel<TVShowInfoDto> TVShowList { get; init; }
 }

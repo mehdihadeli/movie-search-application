@@ -1,9 +1,8 @@
-namespace MovieSearch.Api.Videos.Models
+namespace MovieSearch.Api.Videos.Models;
+
+public class GetTVShowTrailersRequest
 {
-    public class GetTVShowTrailersRequest
-    {
-        public string PageToken { get; set; } = "";
-        public int PageSize { get; set; } = 20;
-        public int TVShowId { get; set; }
-    }
+    public string PageToken { get; set; } = "";
+    public int PageSize { get; set; } = 20;
+    public int TVShowId { get; set; }
 }

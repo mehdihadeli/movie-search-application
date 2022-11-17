@@ -3,21 +3,20 @@ using System.Collections.Generic;
 using MovieSearch.Application.Generals.Dtos;
 using MovieSearch.Core.Generals;
 
-namespace MovieSearch.Application.TvShows.Dtos
+namespace MovieSearch.Application.TvShows.Dtos;
+
+public class TVShowInfoDto : MultiInfoDto
 {
-    public class TVShowInfoDto: MultiInfoDto
-    {
-        public string Name { get; init; }
-        public string OriginalName { get; init; }
-        public string PosterPath { get; init; }
-        public string BackdropPath { get; init; }
-        public double VoteAverage { get; init; }
-        public int VoteCount { get; init; }
-        public string Overview { get; init; }
-        public DateTime? FirstAirDate { get; init; }
-        public IReadOnlyList<string> OriginCountry { get; init; }
-        public IReadOnlyList<int> GenreIds { get; init; }
-        public string OriginalLanguage { get; init; }
-        public override MediaType MediaType { get; init; } = MediaType.Tv;
-    }
+    public string Name { get; init; }
+    public string OriginalName { get; init; }
+    public string PosterPath { get; init; }
+    public string BackdropPath { get; init; }
+    public double VoteAverage { get; init; }
+    public int VoteCount { get; init; }
+    public string Overview { get; init; }
+    public DateTime? FirstAirDate { get; init; }
+    public IReadOnlyList<string> OriginCountry { get; init; }
+    public IReadOnlyList<int> GenreIds { get; init; }
+    public string OriginalLanguage { get; init; }
+    public override MediaType MediaType { get; init; } = MediaType.Tv;
 }

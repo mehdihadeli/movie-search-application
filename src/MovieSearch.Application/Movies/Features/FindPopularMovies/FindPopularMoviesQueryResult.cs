@@ -1,10 +1,9 @@
 using BuildingBlocks.Domain;
 using MovieSearch.Application.Movies.Dtos;
 
-namespace MovieSearch.Application.Movies.Features.FindPopularMovies
+namespace MovieSearch.Application.Movies.Features.FindPopularMovies;
+
+public class FindPopularMoviesQueryResult
 {
-    public class FindPopularMoviesQueryResult
-    {
-        public ListResultModel<MovieInfoDto> MovieList { get; set; }
-    }
+    public ListResultModel<MovieInfoDto> MovieList { get; set; }
 }

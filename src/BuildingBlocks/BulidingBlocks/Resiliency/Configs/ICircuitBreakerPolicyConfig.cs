@@ -1,8 +1,7 @@
-namespace BuildingBlocks.Resiliency.Configs
+namespace BuildingBlocks.Resiliency.Configs;
+
+public interface ICircuitBreakerPolicyConfig
 {
-    public interface ICircuitBreakerPolicyConfig
-    {
-        int RetryCount { get; set; }
-        int BreakDuration { get; set; }
-    }
+    int RetryCount { get; set; }
+    int BreakDuration { get; set; }
 }

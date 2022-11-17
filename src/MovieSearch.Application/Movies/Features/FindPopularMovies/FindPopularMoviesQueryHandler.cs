@@ -6,29 +6,28 @@ using MediatR;
 using MovieSearch.Application.Movies.Dtos;
 using MovieSearch.Application.Services.Clients;
 
-namespace MovieSearch.Application.Movies.Features.FindPopularMovies
+namespace MovieSearch.Application.Movies.Features.FindPopularMovies;
+
+public class FindPopularMoviesQueryHandler : IRequestHandler<FindPopularMoviesQuery, FindPopularMoviesQueryResult>
 {
-    public class FindPopularMoviesQueryHandler : IRequestHandler<FindPopularMoviesQuery, FindPopularMoviesQueryResult>
+    private readonly IMapper _mapper;
+    private readonly IMovieDbServiceClient _movieDbServiceClient;
+
+    public FindPopularMoviesQueryHandler(IMovieDbServiceClient movieDbServiceClient, IMapper mapper)
     {
-        private readonly IMovieDbServiceClient _movieDbServiceClient;
-        private readonly IMapper _mapper;
+        _movieDbServiceClient = movieDbServiceClient;
+        _mapper = mapper;
+    }
 
-        public FindPopularMoviesQueryHandler(IMovieDbServiceClient movieDbServiceClient, IMapper mapper)
-        {
-            _movieDbServiceClient = movieDbServiceClient;
-            _mapper = mapper;
-        }
+    public async Task<FindPopularMoviesQueryResult> Handle(FindPopularMoviesQuery query,
+        CancellationToken cancellationToken)
+    {
+        Guard.Against.Null(query, nameof(FindPopularMoviesQuery));
 
-        public async Task<FindPopularMoviesQueryResult> Handle(FindPopularMoviesQuery query,
-            CancellationToken cancellationToken)
-        {
-            Guard.Against.Null(query, nameof(FindPopularMoviesQuery));
+        var movies = await _movieDbServiceClient.GetPopularMoviesAsync(query.Page, cancellationToken);
 
-            var movies = await _movieDbServiceClient.GetPopularMoviesAsync(query.Page, cancellationToken);
+        var result = movies.Map(x => _mapper.Map<MovieInfoDto>(x));
 
-            var result = movies.Map(x => _mapper.Map<MovieInfoDto>(x));
-
-            return new FindPopularMoviesQueryResult { MovieList = result };
-        }
+        return new FindPopularMoviesQueryResult {MovieList = result};
     }
 }

@@ -1,13 +1,12 @@
 using FluentValidation;
 using MovieSearch.Application.People.Features.FindPersonById;
 
-namespace Orders.Application.Orders.Features.GetOrderById
+namespace Orders.Application.Orders.Features.GetOrderById;
+
+public class FindPersonByIdQueryValidator : AbstractValidator<FindPersonByIdQuery>
 {
-    public class FindPersonByIdQueryValidator : AbstractValidator<FindPersonByIdQuery>
+    public FindPersonByIdQueryValidator()
     {
-        public FindPersonByIdQueryValidator()
-        {
-            RuleFor(query => query.PersonId).GreaterThan(0).WithMessage("personId should be greater than zero.");
-        }
+        RuleFor(query => query.PersonId).GreaterThan(0).WithMessage("personId should be greater than zero.");
     }
 }

@@ -11,32 +11,31 @@ using MovieSearch.Application.Movies.Features.SearchMovie;
 using MovieSearch.IntegrationTests.Mocks;
 using Xunit;
 
-namespace MovieSearch.IntegrationTests.Application.Movies.Features
+namespace MovieSearch.IntegrationTests.Application.Movies.Features;
+
+public class SearchMovieQueryHandlerTests : IntegrationTestFixture<Program>
 {
-    public class SearchMovieQueryHandlerTests : IntegrationTestFixture<Startup>
+    public SearchMovieQueryHandlerTests()
     {
-        public SearchMovieQueryHandlerTests()
-        {
-            //setup the swaps for our tests
-            RegisterTestServices(services => { });
-        }
+        //setup the swaps for our tests
+        RegisterTestServices(services => { });
+    }
 
-        [Fact]
-        public async Task search_movie_query_should_return_a_valid_movie_info_list_dto()
-        {
-            // Arrange
-            var query = new SearchMovieQuery(MovieMocks.Data.Title, 1, includeAdult: true);
+    [Fact]
+    public async Task search_movie_query_should_return_a_valid_movie_info_list_dto()
+    {
+        // Arrange
+        var query = new SearchMovieQuery(MovieMocks.Data.Title, 1, includeAdult: true);
 
-            // Act
-            var listResult = (await QueryAsync(query, CancellationToken.None)).MovieList;
+        // Act
+        var listResult = (await QueryAsync(query, CancellationToken.None)).MovieList;
 
-            // Assert
-            listResult.Should().NotBeNull();
-            listResult.Should().BeOfType<ListResultModel<MovieInfoDto>>();
-            listResult.Page.Should().Be(1);
-            listResult.PageSize.Should().Be(listResult.Items.Count);
-            listResult.Items.Any().Should().BeTrue();
-            TMDBTestUtil.AssertMovieInformationDtoStructure(listResult.Items);
-        }
+        // Assert
+        listResult.Should().NotBeNull();
+        listResult.Should().BeOfType<ListResultModel<MovieInfoDto>>();
+        listResult.Page.Should().Be(1);
+        listResult.PageSize.Should().Be(listResult.Items.Count);
+        listResult.Items.Any().Should().BeTrue();
+        TMDBTestUtil.AssertMovieInformationDtoStructure(listResult.Items);
     }
 }

@@ -2,20 +2,19 @@ using System;
 using BuildingBlocks.Caching;
 using BuildingBlocks.Domain;
 
-namespace MovieSearch.Application.Movies.Features.FindById
+namespace MovieSearch.Application.Movies.Features.FindById;
+
+public class FindMovieByIdQuery : IQuery<FindMovieByIdQueryResult>
 {
-    public class FindMovieByIdQuery : IQuery<FindMovieByIdQueryResult>
+    public int Id { get; init; }
+
+    public class CachePolicy : ICachePolicy<FindMovieByIdQuery, FindMovieByIdQueryResult>
     {
-        public int Id { get; init; }
+        public DateTime? AbsoluteExpirationRelativeToNow => DateTime.Now.AddMinutes(15);
 
-        public class CachePolicy : ICachePolicy<FindMovieByIdQuery, FindMovieByIdQueryResult>
+        public string GetCacheKey(FindMovieByIdQuery query)
         {
-            public DateTime? AbsoluteExpirationRelativeToNow => DateTime.Now.AddMinutes(15);
-
-            public string GetCacheKey(FindMovieByIdQuery query)
-            {
-                return CacheKey.With(query.GetType(), query.Id.ToString());
-            }
+            return CacheKey.With(query.GetType(), query.Id.ToString());
         }
     }
 }

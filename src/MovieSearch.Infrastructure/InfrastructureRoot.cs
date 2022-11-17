@@ -1,7 +1,5 @@
-namespace MovieSearch.Infrastructure
+namespace MovieSearch.Infrastructure;
+
+public class InfrastructureRoot
 {
-    public class InfrastructureRoot
-    {
-        
-    }
 }

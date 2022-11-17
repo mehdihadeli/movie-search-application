@@ -7,32 +7,31 @@ using MovieSearch.Application.Movies.Dtos;
 using MovieSearch.Application.Movies.Exceptions;
 using MovieSearch.Application.Services.Clients;
 
-namespace MovieSearch.Application.Movies.Features.FindMovieByImdbId
+namespace MovieSearch.Application.Movies.Features.FindMovieByImdbId;
+
+public class FindMovieByImdbIdQueryHandler : IRequestHandler<FindMovieByImdbIdQuery, FindByImdbIdQueryResult>
 {
-    public class FindMovieByImdbIdQueryHandler : IRequestHandler<FindMovieByImdbIdQuery, FindByImdbIdQueryResult>
+    private readonly IMapper _mapper;
+    private readonly IMovieDbServiceClient _movieDbServiceClient;
+
+    public FindMovieByImdbIdQueryHandler(IMovieDbServiceClient movieDbServiceClient, IMapper mapper)
     {
-        private readonly IMovieDbServiceClient _movieDbServiceClient;
-        private readonly IMapper _mapper;
+        _movieDbServiceClient = movieDbServiceClient;
+        _mapper = mapper;
+    }
 
-        public FindMovieByImdbIdQueryHandler(IMovieDbServiceClient movieDbServiceClient, IMapper mapper)
-        {
-            _movieDbServiceClient = movieDbServiceClient;
-            _mapper = mapper;
-        }
+    public async Task<FindByImdbIdQueryResult> Handle(FindMovieByImdbIdQuery query,
+        CancellationToken cancellationToken)
+    {
+        Guard.Against.Null(query, nameof(FindMovieByImdbIdQuery));
 
-        public async Task<FindByImdbIdQueryResult> Handle(FindMovieByImdbIdQuery query,
-            CancellationToken cancellationToken)
-        {
-            Guard.Against.Null(query, nameof(FindMovieByImdbIdQuery));
+        var movie = await _movieDbServiceClient.GetMovieByImdbIdAsync(query.ImdbId, cancellationToken);
 
-            var movie = await _movieDbServiceClient.GetMovieByImdbIdAsync(query.ImdbId, cancellationToken);
+        if (movie is null)
+            throw new MovieNotFoundException(query.ImdbId);
 
-            if (movie is null)
-                throw new MovieNotFoundException(query.ImdbId);
+        var result = _mapper.Map<MovieDto>(movie);
 
-            var result = _mapper.Map<MovieDto>(movie);
-
-            return new FindByImdbIdQueryResult { Movie = result };
-        }
+        return new FindByImdbIdQueryResult {Movie = result};
     }
 }

@@ -1,9 +1,8 @@
 using BuildingBlocks.Domain;
 
-namespace MovieSearch.Application.Movies.Features.FindUpcomingMovies
+namespace MovieSearch.Application.Movies.Features.FindUpcomingMovies;
+
+public class FindUpcomingMoviesQuery : IQuery<FindUpcomingMoviesQueryResult>
 {
-    public class FindUpcomingMoviesQuery : IQuery<FindUpcomingMoviesQueryResult>
-    {
-        public int Page { get; init; }
-    }
+    public int Page { get; init; }
 }

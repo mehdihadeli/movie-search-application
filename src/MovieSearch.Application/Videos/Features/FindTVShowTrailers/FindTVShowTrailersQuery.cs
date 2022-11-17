@@ -2,23 +2,22 @@ using System;
 using BuildingBlocks.Caching;
 using BuildingBlocks.Domain;
 
-namespace MovieSearch.Application.Videos.Features.FindTVShowTrailers
+namespace MovieSearch.Application.Videos.Features.FindTVShowTrailers;
+
+public class FindTVShowTrailersQuery : IQuery<FindTVShowTrailersQueryResult>
 {
-    public class FindTVShowTrailersQuery : IQuery<FindTVShowTrailersQueryResult>
+    public string PageToken { get; init; } = "";
+    public int PageSize { get; init; } = 20;
+    public int TVShowId { get; init; }
+
+    public class CachePolicy : ICachePolicy<FindTVShowTrailersQuery, FindTVShowTrailersQueryResult>
     {
-        public string PageToken { get; init; } = "";
-        public int PageSize { get; init; } = 20;
-        public int TVShowId { get; init; }
+        public DateTime? AbsoluteExpirationRelativeToNow => DateTime.Now.AddMinutes(15);
 
-        public class CachePolicy : ICachePolicy<FindTVShowTrailersQuery, FindTVShowTrailersQueryResult>
+        public string GetCacheKey(FindTVShowTrailersQuery query)
         {
-            public DateTime? AbsoluteExpirationRelativeToNow => DateTime.Now.AddMinutes(15);
-
-            public string GetCacheKey(FindTVShowTrailersQuery query)
-            {
-                return CacheKey.With(query.GetType(),
-                    $"{nameof(TVShowId)}_{query.TVShowId}_{nameof(PageSize)}_{query.PageSize}_{nameof(PageToken)}_{query.PageToken}");
-            }
+            return CacheKey.With(query.GetType(),
+                $"{nameof(TVShowId)}_{query.TVShowId}_{nameof(PageSize)}_{query.PageSize}_{nameof(PageToken)}_{query.PageToken}");
         }
     }
 }

@@ -7,32 +7,31 @@ using MovieSearch.Application.People.Dtos;
 using MovieSearch.Application.People.Exceptions;
 using MovieSearch.Application.Services.Clients;
 
-namespace MovieSearch.Application.People.Features.FindPersonById
+namespace MovieSearch.Application.People.Features.FindPersonById;
+
+public class FindPersonByIdQueryHandler : IRequestHandler<FindPersonByIdQuery, FindPersonByIdQueryResult>
 {
-    public class FindPersonByIdQueryHandler : IRequestHandler<FindPersonByIdQuery, FindPersonByIdQueryResult>
+    private readonly IMapper _mapper;
+    private readonly IMovieDbServiceClient _movieDbServiceClient;
+
+    public FindPersonByIdQueryHandler(IMovieDbServiceClient movieDbServiceClient, IMapper mapper)
     {
-        private readonly IMovieDbServiceClient _movieDbServiceClient;
-        private readonly IMapper _mapper;
+        _movieDbServiceClient = movieDbServiceClient;
+        _mapper = mapper;
+    }
 
-        public FindPersonByIdQueryHandler(IMovieDbServiceClient movieDbServiceClient, IMapper mapper)
-        {
-            _movieDbServiceClient = movieDbServiceClient;
-            _mapper = mapper;
-        }
+    public async Task<FindPersonByIdQueryResult> Handle(FindPersonByIdQuery query,
+        CancellationToken cancellationToken)
+    {
+        Guard.Against.Null(query, nameof(FindPersonByIdQuery));
 
-        public async Task<FindPersonByIdQueryResult> Handle(FindPersonByIdQuery query,
-            CancellationToken cancellationToken)
-        {
-            Guard.Against.Null(query, nameof(FindPersonByIdQuery));
+        var person = await _movieDbServiceClient.GetPersonDetailAsync(query.PersonId, cancellationToken);
 
-            var person = await _movieDbServiceClient.GetPersonDetailAsync(query.PersonId, cancellationToken);
+        if (person is null)
+            throw new PersonNotFoundException(query.PersonId);
 
-            if (person is null)
-                throw new PersonNotFoundException(query.PersonId);
+        var result = _mapper.Map<PersonDto>(person);
 
-            var result = _mapper.Map<PersonDto>(person);
-
-            return new FindPersonByIdQueryResult { Person = result };
-        }
+        return new FindPersonByIdQueryResult {Person = result};
     }
 }

@@ -1,7 +1,6 @@
-namespace BuildingBlocks.Security.ApiKey
+namespace BuildingBlocks.Security.ApiKey;
+
+public class ApiKeyConstants
 {
-    public class ApiKeyConstants
-    {
-        public const string HeaderName = "X-Api-Key";
-    }
+    public const string HeaderName = "X-Api-Key";
 }

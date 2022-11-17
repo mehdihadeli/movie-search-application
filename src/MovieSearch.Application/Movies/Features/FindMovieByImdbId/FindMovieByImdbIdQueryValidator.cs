@@ -1,13 +1,12 @@
 using FluentValidation;
 using MovieSearch.Application.Movies.Features.FindMovieByImdbId;
 
-namespace Orders.Application.Orders.Features.GetOrderById
+namespace Orders.Application.Orders.Features.GetOrderById;
+
+public class FindMovieByImdbIdQueryValidator : AbstractValidator<FindMovieByImdbIdQuery>
 {
-    public class FindMovieByImdbIdQueryValidator : AbstractValidator<FindMovieByImdbIdQuery>
+    public FindMovieByImdbIdQueryValidator()
     {
-        public FindMovieByImdbIdQueryValidator()
-        {
-            RuleFor(query => query.ImdbId).NotNull().NotEmpty().WithMessage("ImdbId should not be null or empty.");
-        }
+        RuleFor(query => query.ImdbId).NotNull().NotEmpty().WithMessage("ImdbId should not be null or empty.");
     }
 }

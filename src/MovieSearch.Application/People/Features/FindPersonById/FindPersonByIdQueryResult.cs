@@ -1,9 +1,8 @@
 using MovieSearch.Application.People.Dtos;
 
-namespace MovieSearch.Application.People.Features.FindPersonById
+namespace MovieSearch.Application.People.Features.FindPersonById;
+
+public class FindPersonByIdQueryResult
 {
-    public class FindPersonByIdQueryResult
-    {
-        public PersonDto Person { get; init; }
-    }
+    public PersonDto Person { get; init; }
 }

@@ -9,46 +9,45 @@ using MovieSearch.Application.TvShows.Dtos;
 using MovieSearch.Application.TvShows.Exceptions;
 using MovieSearch.Application.Videos.Dtos;
 
-namespace MovieSearch.Application.TvShows.Features.FindTVShowWithTrailersById
+namespace MovieSearch.Application.TvShows.Features.FindTVShowWithTrailersById;
+
+public class FindTVShowWithTrailersByIdQueryHandler : IRequestHandler<FindTVShowWithTrailersByIdQuery,
+    FindTVShowWithTrailersByIdQueryResult>
 {
-    public class FindTVShowWithTrailersByIdQueryHandler : IRequestHandler<FindTVShowWithTrailersByIdQuery,
-        FindTVShowWithTrailersByIdQueryResult>
+    private readonly IMapper _mapper;
+    private readonly IMovieDbServiceClient _movieDbServiceClient;
+    private readonly IVideoServiceClient _videoServiceClient;
+
+    public FindTVShowWithTrailersByIdQueryHandler(IMovieDbServiceClient movieDbServiceClient, IVideoServiceClient
+        videoServiceClient, IMapper mapper)
     {
-        private readonly IMovieDbServiceClient _movieDbServiceClient;
-        private readonly IVideoServiceClient _videoServiceClient;
-        private readonly IMapper _mapper;
+        _movieDbServiceClient = movieDbServiceClient;
+        _videoServiceClient = videoServiceClient;
+        _mapper = mapper;
+    }
 
-        public FindTVShowWithTrailersByIdQueryHandler(IMovieDbServiceClient movieDbServiceClient, IVideoServiceClient
-            videoServiceClient, IMapper mapper)
+    public async Task<FindTVShowWithTrailersByIdQueryResult> Handle(FindTVShowWithTrailersByIdQuery query,
+        CancellationToken cancellationToken)
+    {
+        Guard.Against.Null(query, nameof(FindTVShowWithTrailersByIdQuery));
+
+        var tvShow = await _movieDbServiceClient.GetTvShowByIdAsync(query.TvShowId, cancellationToken);
+
+        if (tvShow is null)
+            throw new TvShowNotFoundException(query.TvShowId);
+
+        var tvShowDto = _mapper.Map<TVShowDto>(tvShow);
+
+        var trailers = (await _videoServiceClient.GetTrailers(tvShowDto.Name, query.TrailersCount)).Items;
+        var trailersDto = _mapper.Map<List<VideoDto>>(trailers);
+
+        return new FindTVShowWithTrailersByIdQueryResult
         {
-            _movieDbServiceClient = movieDbServiceClient;
-            _videoServiceClient = videoServiceClient;
-            _mapper = mapper;
-        }
-
-        public async Task<FindTVShowWithTrailersByIdQueryResult> Handle(FindTVShowWithTrailersByIdQuery query,
-            CancellationToken cancellationToken)
-        {
-            Guard.Against.Null(query, nameof(FindTVShowWithTrailersByIdQuery));
-
-            var tvShow = await _movieDbServiceClient.GetTvShowByIdAsync(query.TvShowId, cancellationToken);
-
-            if (tvShow is null)
-                throw new TvShowNotFoundException(query.TvShowId);
-
-            var tvShowDto = _mapper.Map<TVShowDto>(tvShow);
-
-            var trailers = (await _videoServiceClient.GetTrailers(tvShowDto.Name, query.TrailersCount)).Items;
-            var trailersDto = _mapper.Map<List<VideoDto>>(trailers);
-
-            return new FindTVShowWithTrailersByIdQueryResult
+            TVShowWithTrailers = new TVShowWithTrailersDto
             {
-                TVShowWithTrailers = new TVShowWithTrailersDto()
-                {
-                    TVShow = tvShowDto,
-                    Trailers = trailersDto
-                }
-            };
-        }
+                TVShow = tvShowDto,
+                Trailers = trailersDto
+            }
+        };
     }
 }

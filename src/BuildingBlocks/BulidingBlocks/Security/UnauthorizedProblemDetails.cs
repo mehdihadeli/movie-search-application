@@ -1,15 +1,14 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace BuildingBlocks.Security
+namespace BuildingBlocks.Security;
+
+public class UnauthorizedProblemDetails : ProblemDetails
 {
-    public class UnauthorizedProblemDetails : ProblemDetails
+    public UnauthorizedProblemDetails(string details = null)
     {
-        public UnauthorizedProblemDetails(string details = null)
-        {
-            Title = "Unauthorized";
-            Detail = details;
-            Status = 401;
-            Type = "https://httpstatuses.com/401";
-        }
+        Title = "Unauthorized";
+        Detail = details;
+        Status = 401;
+        Type = "https://httpstatuses.com/401";
     }
 }

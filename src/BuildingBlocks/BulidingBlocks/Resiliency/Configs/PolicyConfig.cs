@@ -1,9 +1,8 @@
-namespace BuildingBlocks.Resiliency.Configs
+namespace BuildingBlocks.Resiliency.Configs;
+
+public class PolicyConfig : ICircuitBreakerPolicyConfig, IRetryPolicyConfig, ITimeoutPolicy
 {
-    public class PolicyConfig : ICircuitBreakerPolicyConfig, IRetryPolicyConfig,ITimeoutPolicy
-    {
-        public int RetryCount { get; set; }
-        public int BreakDuration { get; set; }
-        public int TimeOutDuration { get; set; }
-    }
+    public int RetryCount { get; set; }
+    public int BreakDuration { get; set; }
+    public int TimeOutDuration { get; set; }
 }

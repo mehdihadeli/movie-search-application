@@ -6,59 +6,59 @@ using MovieSearch.Core.Movies;
 using Orders.UnitTests.Common;
 using Xunit;
 
-namespace MovieSearch.UnitTests.Application.Movies
+namespace MovieSearch.UnitTests.Application.Movies;
+
+public class MoviesMappingTests : IClassFixture<MappingFixture>
 {
-    public class MoviesMappingTests : IClassFixture<MappingFixture>
+    private readonly IMapper _mapper;
+
+    public MoviesMappingTests(MappingFixture fixture)
     {
-        private readonly IMapper _mapper;
+        _mapper = fixture.Mapper;
+    }
 
-        public MoviesMappingTests(MappingFixture fixture)
+    public static IEnumerable<object[]> Data
+    {
+        get
         {
-            _mapper = fixture.Mapper;
-        }
-
-        [Fact]
-        public void ShouldHaveValidConfiguration()
-        {
-            _mapper.ConfigurationProvider
-                .AssertConfigurationIsValid();
-        }
-
-        [Theory, MemberData(nameof(Data))]
-        public void ShouldSupportMappingFromSourceToDestination(Type source, Type destination,
-            params object[] parameters)
-        {
-            var instance = Activator.CreateInstance(source, parameters);
-
-            _mapper.Map(instance, source, destination);
-        }
-
-        public static IEnumerable<object[]> Data
-        {
-            get
+            yield return new object[]
             {
-                yield return new object[]
-                {
-                    // these types will instantiate with reflection in the future
-                    typeof(Movie), typeof(MovieDto)
-                };
-                yield return new object[]
-                {
-                    typeof(MovieInfo), typeof(MovieInfoDto)
-                };
-                yield return new object[]
-                {
-                    typeof(MovieCredit), typeof(MovieCreditDto)
-                };
-                yield return new object[]
-                {
-                    typeof(MovieCastMember), typeof(MovieCastMemberDto)
-                };
-                yield return new object[]
-                {
-                    typeof(MovieCrewMember), typeof(MovieCrewMemberDto)
-                };
-            }
+                // these types will instantiate with reflection in the future
+                typeof(Movie), typeof(MovieDto)
+            };
+            yield return new object[]
+            {
+                typeof(MovieInfo), typeof(MovieInfoDto)
+            };
+            yield return new object[]
+            {
+                typeof(MovieCredit), typeof(MovieCreditDto)
+            };
+            yield return new object[]
+            {
+                typeof(MovieCastMember), typeof(MovieCastMemberDto)
+            };
+            yield return new object[]
+            {
+                typeof(MovieCrewMember), typeof(MovieCrewMemberDto)
+            };
         }
+    }
+
+    [Fact]
+    public void ShouldHaveValidConfiguration()
+    {
+        _mapper.ConfigurationProvider
+            .AssertConfigurationIsValid();
+    }
+
+    [Theory]
+    [MemberData(nameof(Data))]
+    public void ShouldSupportMappingFromSourceToDestination(Type source, Type destination,
+        params object[] parameters)
+    {
+        var instance = Activator.CreateInstance(source, parameters);
+
+        _mapper.Map(instance, source, destination);
     }
 }
