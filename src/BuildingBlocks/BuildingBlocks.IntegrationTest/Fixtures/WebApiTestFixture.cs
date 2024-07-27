@@ -13,12 +13,13 @@ public abstract class WebApiTestFixture<TEntryPoint, TDbContext> : IntegrationTe
     where TEntryPoint : class
     where TDbContext : class, IMongoDbContext
 {
-    private static readonly JsonSerializerOptions SerializerOptions = new()
-    {
-        PropertyNameCaseInsensitive = true,
-        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-        Converters = {new JsonStringEnumConverter()}
-    };
+    private static readonly JsonSerializerOptions SerializerOptions =
+        new()
+        {
+            PropertyNameCaseInsensitive = true,
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            Converters = { new JsonStringEnumConverter() }
+        };
 
     private string _route;
 
@@ -30,9 +31,11 @@ public abstract class WebApiTestFixture<TEntryPoint, TDbContext> : IntegrationTe
             return;
         }
 
-        if (route.StartsWith("/")) route = route.Substring(1, route.Length - 1);
+        if (route.StartsWith("/"))
+            route = route.Substring(1, route.Length - 1);
 
-        if (route.EndsWith("/")) route = route.Substring(0, route.Length - 1);
+        if (route.EndsWith("/"))
+            route = route.Substring(0, route.Length - 1);
 
         _route = $"{route}/";
     }
@@ -104,19 +107,19 @@ public abstract class WebApiTestFixture<TEntryPoint, TDbContext> : IntegrationTe
         return JsonSerializer.Deserialize<T>(await response.Content.ReadAsStringAsync(), SerializerOptions);
     }
 
-    protected virtual void ConfigureServices(IServiceCollection services)
-    {
-    }
+    protected virtual void ConfigureServices(IServiceCollection services) { }
 }
 
-public abstract class WebApiTestFixture<TEntryPoint> : IntegrationTestFixture<TEntryPoint> where TEntryPoint : class
+public abstract class WebApiTestFixture<TEntryPoint> : IntegrationTestFixture<TEntryPoint>
+    where TEntryPoint : class
 {
-    private static readonly JsonSerializerOptions SerializerOptions = new()
-    {
-        PropertyNameCaseInsensitive = true,
-        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-        Converters = {new JsonStringEnumConverter()}
-    };
+    private static readonly JsonSerializerOptions SerializerOptions =
+        new()
+        {
+            PropertyNameCaseInsensitive = true,
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            Converters = { new JsonStringEnumConverter() }
+        };
 
     private string _route;
 
@@ -128,9 +131,11 @@ public abstract class WebApiTestFixture<TEntryPoint> : IntegrationTestFixture<TE
             return;
         }
 
-        if (route.StartsWith("/")) route = route.Substring(1, route.Length - 1);
+        if (route.StartsWith("/"))
+            route = route.Substring(1, route.Length - 1);
 
-        if (route.EndsWith("/")) route = route.Substring(0, route.Length - 1);
+        if (route.EndsWith("/"))
+            route = route.Substring(0, route.Length - 1);
 
         _route = $"{route}/";
     }
@@ -202,7 +207,5 @@ public abstract class WebApiTestFixture<TEntryPoint> : IntegrationTestFixture<TE
         return JsonSerializer.Deserialize<T>(await response.Content.ReadAsStringAsync(), SerializerOptions);
     }
 
-    protected virtual void ConfigureServices(IServiceCollection services)
-    {
-    }
+    protected virtual void ConfigureServices(IServiceCollection services) { }
 }

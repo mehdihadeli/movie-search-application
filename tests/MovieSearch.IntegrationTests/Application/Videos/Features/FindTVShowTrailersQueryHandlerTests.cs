@@ -24,11 +24,7 @@ public class FindTVShowTrailersQueryHandlerTests : IntegrationTestFixture<Progra
     public async Task find_tv_show_trailers_query_should_return_a_valid_video_dto_list()
     {
         // Arrange
-        var query = new FindTVShowTrailersQuery
-        {
-            TVShowId = TvShowMock.Data.Id,
-            PageSize = 20
-        };
+        var query = new FindTVShowTrailersQuery { TVShowId = TvShowMock.Data.Id, PageSize = 20 };
 
         // Act
         var listResult = (await QueryAsync(query, CancellationToken.None)).VideoList;

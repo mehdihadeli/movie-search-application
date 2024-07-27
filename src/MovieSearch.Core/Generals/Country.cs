@@ -25,7 +25,8 @@ public class Country : IEqualityComparer<Country>
 
     public override bool Equals(object obj)
     {
-        if (obj is not Country country) return false;
+        if (obj is not Country country)
+            return false;
 
         return Equals(this, country);
     }
@@ -37,7 +38,8 @@ public class Country : IEqualityComparer<Country>
 
     public override string ToString()
     {
-        if (string.IsNullOrWhiteSpace(Name)) return "n/a";
+        if (string.IsNullOrWhiteSpace(Name))
+            return "n/a";
 
         return $"{Name} ({Iso3166Code})";
     }

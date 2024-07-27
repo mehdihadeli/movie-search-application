@@ -10,6 +10,7 @@ using MovieSearch.Core.Review;
 using MovieSearch.Core.TV;
 
 namespace MovieSearch.Application.Services.Clients;
+
 //https://deviq.com/domain-driven-design/anti-corruption-layer
 //https://docs.microsoft.com/en-us/azure/architecture/patterns/anti-corruption-layer
 //https://www.markhneedham.com/blog/2009/07/07/domain-driven-design-anti-corruption-layer/
@@ -29,8 +30,7 @@ public interface IMovieDbServiceClient
     /// <param name="page"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<ListResultModel<MovieInfo>> GetNowPlayingAsync(int page,
-        CancellationToken cancellationToken = default);
+    Task<ListResultModel<MovieInfo>> GetNowPlayingAsync(int page, CancellationToken cancellationToken = default);
 
     /// <summary>
     ///     Search for movies.
@@ -43,12 +43,14 @@ public interface IMovieDbServiceClient
     /// <param name="primaryReleaseYear"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<ListResultModel<MovieInfo>> SearchMovieAsync(string keyword,
+    Task<ListResultModel<MovieInfo>> SearchMovieAsync(
+        string keyword,
         int page = 1,
         bool includeAdult = false,
         int year = 0,
         int primaryReleaseYear = 0,
-        CancellationToken cancellationToken = default);
+        CancellationToken cancellationToken = default
+    );
 
     /// <summary>
     ///     Get a list of the current popular movies on TMDB. This list updates daily.
@@ -57,8 +59,7 @@ public interface IMovieDbServiceClient
     /// <param name="page"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<ListResultModel<MovieInfo>> GetPopularMoviesAsync(int page,
-        CancellationToken cancellationToken = default);
+    Task<ListResultModel<MovieInfo>> GetPopularMoviesAsync(int page, CancellationToken cancellationToken = default);
 
     /// <summary>
     ///     Get the most newly created movie. This is a live response and will continuously change.
@@ -76,8 +77,7 @@ public interface IMovieDbServiceClient
     /// <param name="page"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<ListResultModel<MovieInfo>> GetUpComingMoviesAsync(int page,
-        CancellationToken cancellationToken = default);
+    Task<ListResultModel<MovieInfo>> GetUpComingMoviesAsync(int page, CancellationToken cancellationToken = default);
 
     /// <summary>
     ///     Get the top rated movies on TMDB.
@@ -86,8 +86,7 @@ public interface IMovieDbServiceClient
     /// <param name="page"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<ListResultModel<MovieInfo>> GetTopRatedMoviesAsync(int page,
-        CancellationToken cancellationToken = default);
+    Task<ListResultModel<MovieInfo>> GetTopRatedMoviesAsync(int page, CancellationToken cancellationToken = default);
 
     /// <summary>
     ///     Get the list of official genres for movies.
@@ -97,11 +96,17 @@ public interface IMovieDbServiceClient
     /// <returns></returns>
     Task<IEnumerable<Genre>> GetMovieGenresAsync(CancellationToken cancellationToken = default);
 
-    Task<ListResultModel<MovieInfo>> FindMoviesByGenreAsync(IReadOnlyList<int> genreIds,
-        int page = 1, CancellationToken cancellationToken = default);
+    Task<ListResultModel<MovieInfo>> FindMoviesByGenreAsync(
+        IReadOnlyList<int> genreIds,
+        int page = 1,
+        CancellationToken cancellationToken = default
+    );
 
-    Task<ListResultModel<TVShowInfo>> FindTvShowsByGenreAsync(IReadOnlyList<int> genreIds,
-        int page = 1, CancellationToken cancellationToken = default);
+    Task<ListResultModel<TVShowInfo>> FindTvShowsByGenreAsync(
+        IReadOnlyList<int> genreIds,
+        int page = 1,
+        CancellationToken cancellationToken = default
+    );
 
     /// <summary>
     ///     Get the list of official genres for TV shows.
@@ -146,8 +151,11 @@ public interface IMovieDbServiceClient
     /// <param name="page"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<ListResultModel<ReviewInfo>> GetMovieReviewsAsync(int movieId, int page = 1,
-        CancellationToken cancellationToken = default);
+    Task<ListResultModel<ReviewInfo>> GetMovieReviewsAsync(
+        int movieId,
+        int page = 1,
+        CancellationToken cancellationToken = default
+    );
 
     /// <summary>
     ///     Get the reviews for a TV show.
@@ -157,8 +165,11 @@ public interface IMovieDbServiceClient
     /// <param name="page"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<ListResultModel<ReviewInfo>> GetTvShowReviewsAsync(int tvShowId, int page = 1,
-        CancellationToken cancellationToken = default);
+    Task<ListResultModel<ReviewInfo>> GetTvShowReviewsAsync(
+        int tvShowId,
+        int page = 1,
+        CancellationToken cancellationToken = default
+    );
 
     /// <summary>
     ///     Retrieve the details of a movie or TV show review.
@@ -185,8 +196,7 @@ public interface IMovieDbServiceClient
     /// <param name="personId"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<PersonMovieCredit> GetPersonMovieCreditsAsync(int personId,
-        CancellationToken cancellationToken = default);
+    Task<PersonMovieCredit> GetPersonMovieCreditsAsync(int personId, CancellationToken cancellationToken = default);
 
     /// <summary>
     ///     Get the TV show credits for a person.
@@ -195,8 +205,7 @@ public interface IMovieDbServiceClient
     /// <param name="personId"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<PersonTVCredit> GetPersonTvShowCreditsAsync(int personId,
-        CancellationToken cancellationToken = default);
+    Task<PersonTVCredit> GetPersonTvShowCreditsAsync(int personId, CancellationToken cancellationToken = default);
 
     /// <summary>
     ///     Get the credits (cast and crew) that have been added to a TV show.
@@ -205,8 +214,7 @@ public interface IMovieDbServiceClient
     /// <param name="tvShowId"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<TVShowCredit> GetTvShowCreditsAsync(int tvShowId,
-        CancellationToken cancellationToken = default);
+    Task<TVShowCredit> GetTvShowCreditsAsync(int tvShowId, CancellationToken cancellationToken = default);
 
     /// <summary>
     ///     Get the images that belong to a movie.
@@ -233,8 +241,10 @@ public interface IMovieDbServiceClient
     /// <param name="movieId"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<(List<Video> Videos, int MovieId)> GetMovieVideosAsync(int movieId,
-        CancellationToken cancellationToken = default);
+    Task<(List<Video> Videos, int MovieId)> GetMovieVideosAsync(
+        int movieId,
+        CancellationToken cancellationToken = default
+    );
 
     /// <summary>
     ///     Get the videos that have been added to a TV show.
@@ -243,8 +253,10 @@ public interface IMovieDbServiceClient
     /// <param name="tvShowId"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<(List<Video> Videos, int TvShowId)> GetTvShowVideosAsync(int tvShowId,
-        CancellationToken cancellationToken = default);
+    Task<(List<Video> Videos, int TvShowId)> GetTvShowVideosAsync(
+        int tvShowId,
+        CancellationToken cancellationToken = default
+    );
 
     /// <summary>
     ///     Get a list of recommended movies for a movie.
@@ -253,8 +265,10 @@ public interface IMovieDbServiceClient
     /// <param name="movieId"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<ListResultModel<MovieInfo>> GetRecommendMoviesAsync(int movieId,
-        CancellationToken cancellationToken = default);
+    Task<ListResultModel<MovieInfo>> GetRecommendMoviesAsync(
+        int movieId,
+        CancellationToken cancellationToken = default
+    );
 
     /// <summary>
     ///     Get the list of TV show recommendations for this item.
@@ -263,8 +277,10 @@ public interface IMovieDbServiceClient
     /// <param name="tvShowId"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<ListResultModel<TVShowInfo>> GetRecommendTvShowAsync(int tvShowId,
-        CancellationToken cancellationToken = default);
+    Task<ListResultModel<TVShowInfo>> GetRecommendTvShowAsync(
+        int tvShowId,
+        CancellationToken cancellationToken = default
+    );
 
     /// <summary>
     ///     Get the primary person details by id.
@@ -282,8 +298,7 @@ public interface IMovieDbServiceClient
     /// <param name="personId"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<PersonExternalIds> GetPersonExternalDataAsync(int personId,
-        CancellationToken cancellationToken = default);
+    Task<PersonExternalIds> GetPersonExternalDataAsync(int personId, CancellationToken cancellationToken = default);
 
     /// <summary>
     ///     Get a list of shows that are currently on the air. This query looks for any TV show that has an episode with an air
@@ -294,8 +309,11 @@ public interface IMovieDbServiceClient
     /// <param name="timeZone"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<ListResultModel<TVShowInfo>> GetTvShowOnTheAirAsync(int page = 1, string timeZone = null,
-        CancellationToken cancellationToken = default);
+    Task<ListResultModel<TVShowInfo>> GetTvShowOnTheAirAsync(
+        int page = 1,
+        string timeZone = null,
+        CancellationToken cancellationToken = default
+    );
 
     /// <summary>
     ///     Get a list of TV shows that are airing today. This query is purely day based as we do not currently support airing
@@ -306,8 +324,11 @@ public interface IMovieDbServiceClient
     /// <param name="timeZone"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<ListResultModel<TVShowInfo>> GetTvShowAiringTodayAsync(int page = 1,
-        string timeZone = null, CancellationToken cancellationToken = default);
+    Task<ListResultModel<TVShowInfo>> GetTvShowAiringTodayAsync(
+        int page = 1,
+        string timeZone = null,
+        CancellationToken cancellationToken = default
+    );
 
     /// <summary>
     ///     Get a list of the current popular TV shows on TMDB. This list updates daily.
@@ -316,8 +337,10 @@ public interface IMovieDbServiceClient
     /// <param name="page"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<ListResultModel<TVShowInfo>> GetPopularTvShowAsync(int page = 1,
-        CancellationToken cancellationToken = default);
+    Task<ListResultModel<TVShowInfo>> GetPopularTvShowAsync(
+        int page = 1,
+        CancellationToken cancellationToken = default
+    );
 
     /// <summary>
     ///     Get a list of the top rated TV shows on TMDB.
@@ -326,8 +349,10 @@ public interface IMovieDbServiceClient
     /// <param name="page"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<ListResultModel<TVShowInfo>> GetTvShowTopRatedAsync(int page = 1,
-        CancellationToken cancellationToken = default);
+    Task<ListResultModel<TVShowInfo>> GetTvShowTopRatedAsync(
+        int page = 1,
+        CancellationToken cancellationToken = default
+    );
 
     /// <summary>
     ///     Search for a TV show.
@@ -339,11 +364,13 @@ public interface IMovieDbServiceClient
     /// <param name="firstAirDateYear"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<ListResultModel<TVShowInfo>> SearchTvShowAsync(string keyword,
+    Task<ListResultModel<TVShowInfo>> SearchTvShowAsync(
+        string keyword,
         int page = 1,
         bool includeAdult = false,
         int firstAirDateYear = 0,
-        CancellationToken cancellationToken = default);
+        CancellationToken cancellationToken = default
+    );
 
     /// <summary>
     ///     Search multiple models in a single request. Multi search currently supports searching for movies, tv shows and
@@ -356,8 +383,11 @@ public interface IMovieDbServiceClient
     /// <param name="year"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<ListResultModel<dynamic>> SearchMultiAsync(string keyword, int page = 1,
+    Task<ListResultModel<dynamic>> SearchMultiAsync(
+        string keyword,
+        int page = 1,
         bool includeAdult = false,
         int year = 0,
-        CancellationToken cancellationToken = default);
+        CancellationToken cancellationToken = default
+    );
 }

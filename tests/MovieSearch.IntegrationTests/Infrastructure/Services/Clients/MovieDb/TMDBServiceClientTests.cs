@@ -30,9 +30,11 @@ public class TMDBServiceClientTests : IntegrationTestFixture<Program>
         //setup the swaps for our tests
         RegisterTestServices(services => { });
 
-        _sut = new TMDBServiceClient(ServiceProvider.GetRequiredService<IOptions<TMDBOptions>>(),
+        _sut = new TMDBServiceClient(
+            ServiceProvider.GetRequiredService<IOptions<TMDBOptions>>(),
             ServiceProvider.GetRequiredService<IMapper>(),
-            ServiceProvider.GetRequiredService<IOptions<PolicyConfig>>());
+            ServiceProvider.GetRequiredService<IOptions<PolicyConfig>>()
+        );
     }
 
     [Fact]

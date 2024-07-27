@@ -39,20 +39,30 @@ public static class Extensions
     public static WebApplicationBuilder AddInfrastructure(this WebApplicationBuilder builder)
     {
         // https://www.talkingdotnet.com/disable-automatic-model-state-validation-in-asp-net-core-2-1/
-        builder.Services.Configure<ApiBehaviorOptions>(options => { options.SuppressModelStateInvalidFilter = true; });
+        builder.Services.Configure<ApiBehaviorOptions>(options =>
+        {
+            options.SuppressModelStateInvalidFilter = true;
+        });
 
         var appOptions = builder.Configuration.GetSection(nameof(AppOptions)).Get<AppOptions>();
-        builder.Services.AddOptions<AppOptions>().Bind(builder.Configuration.GetSection(nameof(AppOptions)))
+        builder
+            .Services.AddOptions<AppOptions>()
+            .Bind(builder.Configuration.GetSection(nameof(AppOptions)))
             .ValidateDataAnnotations();
 
-        builder.Services.AddOptions<TMDBOptions>().Bind(builder.Configuration.GetSection(nameof(TMDBOptions)))
+        builder
+            .Services.AddOptions<TMDBOptions>()
+            .Bind(builder.Configuration.GetSection(nameof(TMDBOptions)))
             .ValidateDataAnnotations();
 
-        builder.Services.AddOptions<YoutubeVideoOptions>()
+        builder
+            .Services.AddOptions<YoutubeVideoOptions>()
             .Bind(builder.Configuration.GetSection(nameof(YoutubeVideoOptions)))
             .ValidateDataAnnotations();
 
-        builder.Services.AddOptions<PolicyConfig>().Bind(builder.Configuration.GetSection(nameof(PolicyConfig)))
+        builder
+            .Services.AddOptions<PolicyConfig>()
+            .Bind(builder.Configuration.GetSection(nameof(PolicyConfig)))
             .ValidateDataAnnotations();
 
         builder.Services.AddHttpContextAccessor();
@@ -72,18 +82,19 @@ public static class Extensions
 
         builder.Services.AddAutoMapper(typeof(ApplicationRoot).Assembly, typeof(InfrastructureRoot).Assembly);
 
-        builder.Services.AddMediatR(typeof(ApplicationRoot).Assembly)
+        builder
+            .Services.AddMediatR(c => c.RegisterServicesFromAssembly(typeof(ApplicationRoot).Assembly))
             .AddScoped(typeof(IPipelineBehavior<,>), typeof(RequestValidationBehavior<,>))
             .AddScoped(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>))
             .AddScoped(typeof(IPipelineBehavior<,>), typeof(CachingBehavior<,>))
             .AddScoped(typeof(IPipelineBehavior<,>), typeof(InvalidateCachingBehavior<,>));
 
-        builder.Services.AddCachingRequestPolicies(new List<Assembly>
-        {
-            typeof(ApplicationRoot).Assembly
-        });
+        builder.Services.AddCachingRequestPolicies(new List<Assembly> { typeof(ApplicationRoot).Assembly });
 
-        builder.Services.AddEasyCaching(options => { options.UseInMemory(builder.Configuration, "mem"); });
+        builder.Services.AddEasyCaching(options =>
+        {
+            options.UseInMemory(builder.Configuration, "mem");
+        });
 
         AddCustomProblemDetails(builder);
 
@@ -99,7 +110,7 @@ public static class Extensions
         app.UseCustomHealthCheck();
     }
 
-        private static void AddCustomProblemDetails(WebApplicationBuilder builder)
+    private static void AddCustomProblemDetails(WebApplicationBuilder builder)
     {
         builder.Services.AddProblemDetails(x =>
         {
@@ -172,25 +183,34 @@ public static class Extensions
         });
     }
 
-    public static IServiceCollection AddCustomHttpClients(this IServiceCollection services,
-        IConfiguration configuration, string movieDbSectionName = "TMDBOptions",
-        string pollySectionName = "PolicyConfig")
+    public static IServiceCollection AddCustomHttpClients(
+        this IServiceCollection services,
+        IConfiguration configuration,
+        string movieDbSectionName = "TMDBOptions",
+        string pollySectionName = "PolicyConfig"
+    )
     {
         var movieDbOptions = configuration.GetSection(movieDbSectionName).Get<TMDBOptions>();
 
-        services.AddHttpClient(nameof(TMDBServiceClient), config =>
-        {
-            config.BaseAddress = new Uri(movieDbOptions.BaseApiAddress);
-            config.Timeout = new TimeSpan(0, 0, 30);
-            config.DefaultRequestHeaders.Clear();
-        }).AddCustomPolicyHandlers(configuration, pollySectionName);
+        services
+            .AddHttpClient(
+                nameof(TMDBServiceClient),
+                config =>
+                {
+                    config.BaseAddress = new Uri(movieDbOptions.BaseApiAddress);
+                    config.Timeout = new TimeSpan(0, 0, 30);
+                    config.DefaultRequestHeaders.Clear();
+                }
+            )
+            .AddCustomPolicyHandlers(configuration, pollySectionName);
 
         return services;
     }
 
     public static IServiceCollection AddCustomApiKeyAuthentication(this IServiceCollection services)
     {
-        services.AddAuthentication(options =>
+        services
+            .AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = ApiKeyAuthenticationOptions.DefaultScheme;
                 options.DefaultChallengeScheme = ApiKeyAuthenticationOptions.DefaultScheme;
@@ -199,13 +219,16 @@ public static class Extensions
 
         services.AddAuthorization(options =>
         {
-            options.AddPolicy(Policies.OnlyCustomers,
-                policy => policy.Requirements.Add(new OnlyCustomersRequirement()));
+            options.AddPolicy(
+                Policies.OnlyCustomers,
+                policy => policy.Requirements.Add(new OnlyCustomersRequirement())
+            );
             options.AddPolicy(Policies.OnlyAdmins, policy => policy.Requirements.Add(new OnlyAdminsRequirement()));
-            options.AddPolicy(Policies.OnlyThirdParties,
-                policy => policy.Requirements.Add(new OnlyThirdPartiesRequirement()));
+            options.AddPolicy(
+                Policies.OnlyThirdParties,
+                policy => policy.Requirements.Add(new OnlyThirdPartiesRequirement())
+            );
         });
-
 
         services.AddSingleton<IAuthorizationHandler, OnlyCustomersAuthorizationHandler>();
         services.AddSingleton<IAuthorizationHandler, OnlyAdminsAuthorizationHandler>();

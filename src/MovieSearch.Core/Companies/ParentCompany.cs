@@ -8,7 +8,8 @@ public class ParentCompany
 
     public override string ToString()
     {
-        if (string.IsNullOrWhiteSpace(Name)) return "n/a";
+        if (string.IsNullOrWhiteSpace(Name))
+            return "n/a";
 
         return $"{Name} ({Id})";
     }

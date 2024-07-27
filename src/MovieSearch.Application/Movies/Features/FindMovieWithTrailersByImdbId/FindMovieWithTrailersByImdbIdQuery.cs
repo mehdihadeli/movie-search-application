@@ -15,15 +15,17 @@ public class FindMovieWithTrailersByImdbIdQuery : IQuery<FindMovieWithTrailersBy
     public string ImdbId { get; }
     public int TrailersCount { get; }
 
-    public class
-        CachePolicy : ICachePolicy<FindMovieWithTrailersByImdbIdQuery, FindMovieWithTrailersByImdbIdQueryResult>
+    public class CachePolicy
+        : ICachePolicy<FindMovieWithTrailersByImdbIdQuery, FindMovieWithTrailersByImdbIdQueryResult>
     {
         public DateTime? AbsoluteExpirationRelativeToNow => DateTime.Now.AddMinutes(15);
 
         public string GetCacheKey(FindMovieWithTrailersByImdbIdQuery query)
         {
-            return CacheKey.With(query.GetType(),
-                $"{nameof(ImdbId)}_{query.ImdbId}_{nameof(TrailersCount)}_{query.TrailersCount}");
+            return CacheKey.With(
+                query.GetType(),
+                $"{nameof(ImdbId)}_{query.ImdbId}_{nameof(TrailersCount)}_{query.TrailersCount}"
+            );
         }
     }
 }

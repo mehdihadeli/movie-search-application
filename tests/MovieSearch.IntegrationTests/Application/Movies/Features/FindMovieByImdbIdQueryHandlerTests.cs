@@ -22,7 +22,7 @@ public class FindMovieByImdbIdQueryHandlerTests : IntegrationTestFixture<Program
     public async Task find_movie_by_imdbid_query_should_return_a_valid_movie_dto()
     {
         // Arrange
-        var query = new FindMovieByImdbIdQuery {ImdbId = MovieMocks.Data.ImdbId};
+        var query = new FindMovieByImdbIdQuery { ImdbId = MovieMocks.Data.ImdbId };
 
         // Act
         var movie = (await QueryAsync(query, CancellationToken.None)).Movie;

@@ -16,18 +16,22 @@ public class InvalidateCachingBehavior<TRequest, TResponse> : IPipelineBehavior<
     private readonly IEnumerable<IInvalidateCachePolicy<TRequest, TResponse>> _invalidateCachePolicies;
     private readonly ILogger<InvalidateCachingBehavior<TRequest, TResponse>> _logger;
 
-
-    public InvalidateCachingBehavior(IEasyCachingProviderFactory cachingFactory,
+    public InvalidateCachingBehavior(
+        IEasyCachingProviderFactory cachingFactory,
         ILogger<InvalidateCachingBehavior<TRequest, TResponse>> logger,
-        IEnumerable<IInvalidateCachePolicy<TRequest, TResponse>> invalidateCachingPolicies)
+        IEnumerable<IInvalidateCachePolicy<TRequest, TResponse>> invalidateCachingPolicies
+    )
     {
         _logger = logger;
         _cachingProvider = cachingFactory.GetCachingProvider("mem");
         _invalidateCachePolicies = invalidateCachingPolicies;
     }
 
-    public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken
-        cancellationToken)
+    public async Task<TResponse> Handle(
+        TRequest request,
+        RequestHandlerDelegate<TResponse> next,
+        CancellationToken cancellationToken
+    )
     {
         var cachePolicy = _invalidateCachePolicies.FirstOrDefault();
         if (cachePolicy == null)

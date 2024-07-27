@@ -1,5 +1,3 @@
 namespace BuildingBlocks.Domain;
 
-public interface ITxRequest
-{
-}
+public interface ITxRequest { }

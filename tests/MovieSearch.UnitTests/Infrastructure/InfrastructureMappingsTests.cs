@@ -31,46 +31,27 @@ public class InfrastructureMappingsTests : IClassFixture<MappingFixture>
             yield return new object[]
             {
                 // these types will instantiate with reflection in the future
-                typeof(SearchMovie), typeof(MovieInfo)
+                typeof(SearchMovie),
+                typeof(MovieInfo)
             };
-            yield return new object[]
-            {
-                typeof(SearchTv), typeof(TVShowInfo)
-            };
-            yield return new object[]
-            {
-                typeof(SearchTv), typeof(TVShowInfo)
-            };
-            yield return new object[]
-            {
-                typeof(SearchCompany), typeof(CompanyInfo)
-            };
-            yield return new object[]
-            {
-                typeof(Genre), typeof(Core.Genres.Genre)
-            };
-            yield return new object[]
-            {
-                typeof(Movie), typeof(Core.Movies.Movie)
-            };
-            yield return new object[]
-            {
-                typeof(TvShow), typeof(TVShow)
-            };
+            yield return new object[] { typeof(SearchTv), typeof(TVShowInfo) };
+            yield return new object[] { typeof(SearchTv), typeof(TVShowInfo) };
+            yield return new object[] { typeof(SearchCompany), typeof(CompanyInfo) };
+            yield return new object[] { typeof(Genre), typeof(Core.Genres.Genre) };
+            yield return new object[] { typeof(Movie), typeof(Core.Movies.Movie) };
+            yield return new object[] { typeof(TvShow), typeof(TVShow) };
         }
     }
 
     [Fact]
     public void ShouldHaveValidConfiguration()
     {
-        _mapper.ConfigurationProvider
-            .AssertConfigurationIsValid();
+        _mapper.ConfigurationProvider.AssertConfigurationIsValid();
     }
 
     [Theory]
     [MemberData(nameof(Data))]
-    public void ShouldSupportMappingFromSourceToDestination(Type source, Type destination,
-        params object[] parameters)
+    public void ShouldSupportMappingFromSourceToDestination(Type source, Type destination, params object[] parameters)
     {
         var instance = Activator.CreateInstance(source, parameters);
 

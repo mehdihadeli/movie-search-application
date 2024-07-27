@@ -81,12 +81,14 @@ public class IntegrationTestFixture<TEntryPoint, TDbContext> : IntegrationTestFi
         return ExecuteScopeAsync(sp => action(sp.GetService<TDbContext>(), sp.GetService<IMediator>()));
     }
 
-    public Task InsertAsync<T>(params T[] entities) where T : class, IAggregate
+    public Task InsertAsync<T>(params T[] entities)
+        where T : class, IAggregate
     {
         return ExecuteDbContextAsync(db => db.GetCollection<T>().InsertManyAsync(entities));
     }
 
-    public Task InsertAsync<TEntity>(TEntity entity) where TEntity : class, IAggregate
+    public Task InsertAsync<TEntity>(TEntity entity)
+        where TEntity : class, IAggregate
     {
         return ExecuteDbContextAsync(db => db.GetCollection<TEntity>().InsertOneAsync(entity));
     }
@@ -117,8 +119,12 @@ public class IntegrationTestFixture<TEntryPoint, TDbContext> : IntegrationTestFi
         });
     }
 
-    public Task InsertAsync<TEntity, TEntity2, TEntity3, TEntity4>(TEntity entity, TEntity2 entity2,
-        TEntity3 entity3, TEntity4 entity4)
+    public Task InsertAsync<TEntity, TEntity2, TEntity3, TEntity4>(
+        TEntity entity,
+        TEntity2 entity2,
+        TEntity3 entity3,
+        TEntity4 entity4
+    )
         where TEntity : class, IAggregate
         where TEntity2 : class, IAggregate
         where TEntity3 : class, IAggregate
@@ -134,10 +140,10 @@ public class IntegrationTestFixture<TEntryPoint, TDbContext> : IntegrationTestFi
         });
     }
 
-    public Task<T> FindAsync<T>(int id) where T : class, IAggregate<int>
+    public Task<T> FindAsync<T>(int id)
+        where T : class, IAggregate<int>
     {
-        return ExecuteDbContextAsync(db =>
-            db.GetCollection<T>().AsQueryable().SingleOrDefaultAsync(x => x.Id == id));
+        return ExecuteDbContextAsync(db => db.GetCollection<T>().AsQueryable().SingleOrDefaultAsync(x => x.Id == id));
     }
 
     public override Task InitializeAsync()
@@ -161,16 +167,14 @@ public class IntegrationTestFixture<TEntryPoint> : IAsyncLifetime
     {
         Factory = new CustomApplicationFactory<TEntryPoint>();
     }
+
     // protected readonly LaunchSettingsFixture LaunchSettings;
 
     protected HttpClient Client => Factory.CreateClient();
 
+    public IHttpClientFactory HttpClientFactory => ServiceProvider.GetRequiredService<IHttpClientFactory>();
 
-    public IHttpClientFactory HttpClientFactory =>
-        ServiceProvider.GetRequiredService<IHttpClientFactory>();
-
-    public IHttpContextAccessor HttpContextAccessor =>
-        ServiceProvider.GetRequiredService<IHttpContextAccessor>();
+    public IHttpContextAccessor HttpContextAccessor => ServiceProvider.GetRequiredService<IHttpContextAccessor>();
 
     public IServiceProvider ServiceProvider => Factory.Services;
     public IConfiguration Configuration => Factory.Configuration;
@@ -234,7 +238,8 @@ public class IntegrationTestFixture<TEntryPoint> : IAsyncLifetime
         });
     }
 
-    public Task SendAsync<T>(T request, CancellationToken cancellationToken) where T : class, ICommand
+    public Task SendAsync<T>(T request, CancellationToken cancellationToken)
+        where T : class, ICommand
     {
         return ExecuteScopeAsync(sp =>
         {

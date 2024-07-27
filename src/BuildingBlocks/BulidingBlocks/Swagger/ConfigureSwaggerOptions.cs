@@ -9,7 +9,6 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace BuildingBlocks.Swagger;
 
-
 public class ConfigureSwaggerOptions : IConfigureOptions<SwaggerGenOptions>
 {
     private readonly IApiVersionDescriptionProvider provider;
@@ -44,8 +43,8 @@ public class ConfigureSwaggerOptions : IConfigureOptions<SwaggerGenOptions>
             Version = description.ApiVersion.ToString(),
             Title = _options?.Title ?? "APIs",
             Description = "An application with Swagger, Swashbuckle, and API versioning.",
-            Contact = new OpenApiContact {Name = "", Email = ""},
-            License = new OpenApiLicense {Name = "MIT", Url = new Uri("https://opensource.org/licenses/MIT")}
+            Contact = new OpenApiContact { Name = "", Email = "" },
+            License = new OpenApiLicense { Name = "MIT", Url = new Uri("https://opensource.org/licenses/MIT") }
         };
 
         if (description.IsDeprecated)
@@ -57,9 +56,7 @@ public class ConfigureSwaggerOptions : IConfigureOptions<SwaggerGenOptions>
         {
             if (policy.Date is DateTimeOffset when)
             {
-                text.Append(" The API will be sunset on ")
-                    .Append(when.Date.ToShortDateString())
-                    .Append('.');
+                text.Append(" The API will be sunset on ").Append(when.Date.ToShortDateString()).Append('.');
             }
 
             if (policy.HasLinks)

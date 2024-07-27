@@ -23,12 +23,16 @@ public class SearchTVShowQueryHandler : IRequestHandler<SearchTVShowQuery, Searc
     {
         Guard.Against.Null(query, nameof(SearchTVShowQuery));
 
-        var tvShows = await _movieDbServiceClient.SearchTvShowAsync(query.SearchKeywords,
-            query.Page, query.IncludeAdult, query.FirstAirDateYear,
-            cancellationToken);
+        var tvShows = await _movieDbServiceClient.SearchTvShowAsync(
+            query.SearchKeywords,
+            query.Page,
+            query.IncludeAdult,
+            query.FirstAirDateYear,
+            cancellationToken
+        );
 
         var result = tvShows.Map(x => _mapper.Map<TVShowInfoDto>(x));
 
-        return new SearchTVShowQueryResult {TVShowList = result};
+        return new SearchTVShowQueryResult { TVShowList = result };
     }
 }

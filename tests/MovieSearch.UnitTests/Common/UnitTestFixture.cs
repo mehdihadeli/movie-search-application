@@ -12,6 +12,7 @@ public class UnitTestFixture : IDisposable
     }
 
     public IMapper Mapper { get; }
+
     // public ApplicationDbContext Context { get; }
 
     public void Dispose()

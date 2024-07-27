@@ -8,8 +8,10 @@ namespace BuildingBlocks.Web;
 
 public static class ServiceCollectionExtensions
 {
-    public static void AddCustomVersioning(this IServiceCollection services,
-        Action<ApiVersioningOptions> configurator = null)
+    public static void AddCustomVersioning(
+        this IServiceCollection services,
+        Action<ApiVersioningOptions> configurator = null
+    )
     {
         // https://www.meziantou.net/versioning-an-asp-net-core-api.htm
         // https://dotnetthoughts.net/aspnetcore-api-versioning-with-net-6-minimal-apis/
@@ -18,7 +20,8 @@ public static class ServiceCollectionExtensions
         // https://www.nuget.org/packages/Asp.Versioning.Http
 
         // Support versioning in minimal apis with (Asp.Versioning.Http) dll
-        services.AddApiVersioning(options =>
+        services
+            .AddApiVersioning(options =>
             {
                 // Add the headers "api-supported-versions" and "api-deprecated-versions"
                 // This is better for discoverability
@@ -35,30 +38,31 @@ public static class ServiceCollectionExtensions
                 options.ApiVersionReader = ApiVersionReader.Combine(
                     new HeaderApiVersionReader("api-version"),
                     new QueryStringApiVersionReader(),
-                    new UrlSegmentApiVersionReader());
+                    new UrlSegmentApiVersionReader()
+                );
 
                 configurator?.Invoke(options);
             })
-            .AddApiExplorer(
-                options =>
-                {
-                    // add the versioned api explorer, which also adds IApiVersionDescriptionProvider service
-                    // note: the specified format code will format the version as "'v'major[.minor][-status]"
-                    options.GroupNameFormat = "'v'VVV";
+            .AddApiExplorer(options =>
+            {
+                // add the versioned api explorer, which also adds IApiVersionDescriptionProvider service
+                // note: the specified format code will format the version as "'v'major[.minor][-status]"
+                options.GroupNameFormat = "'v'VVV";
 
-                    // note1: this option is only necessary when versioning by url segment.
-                    // note2:if we set it to true version will infer automatically in swagger based on mapped versions to api (swagger infer api versions in different tab in header Swagger UI),
-                    // but if we set it to false we should put version for api endpoint manually.
-                    // https://github.com/dotnet/aspnet-api-versioning/issues/909
-                    options.SubstituteApiVersionInUrl = true;
-                })
-
+                // note1: this option is only necessary when versioning by url segment.
+                // note2:if we set it to true version will infer automatically in swagger based on mapped versions to api (swagger infer api versions in different tab in header Swagger UI),
+                // but if we set it to false we should put version for api endpoint manually.
+                // https://github.com/dotnet/aspnet-api-versioning/issues/909
+                options.SubstituteApiVersionInUrl = true;
+            })
             // Support versioning in mvc with with (Asp.Versioning.Mvc.ApiExplorer) dll
             .AddMvc(); // https://www.nuget.org/packages/Asp.Versioning.Mvc.ApiExplorer
     }
 
-    public static IServiceCollection AddCustomHealthCheck(this IServiceCollection services,
-        Action<IHealthChecksBuilder> configurator = null)
+    public static IServiceCollection AddCustomHealthCheck(
+        this IServiceCollection services,
+        Action<IHealthChecksBuilder> configurator = null
+    )
     {
         var healCheckBuilder = services.AddHealthChecks();
         configurator?.Invoke(healCheckBuilder);
@@ -73,15 +77,13 @@ public static class ServiceCollectionExtensions
         return services;
     }
 
-
     public static void Unregister<TService>(this IServiceCollection services)
     {
         var descriptor = services.FirstOrDefault(d => d.ServiceType == typeof(TService));
         services.Remove(descriptor);
     }
 
-    public static void Replace<TService, TImplementation>(this IServiceCollection services,
-        ServiceLifetime lifetime)
+    public static void Replace<TService, TImplementation>(this IServiceCollection services, ServiceLifetime lifetime)
     {
         services.Unregister<TService>();
         services.Add(new ServiceDescriptor(typeof(TService), typeof(TImplementation), lifetime));
@@ -95,10 +97,14 @@ public static class ServiceCollectionExtensions
     /// <param name="services">The service collection</param>
     /// <param name="serviceType">Service type</param>
     /// <param name="implementationType">Implementation type</param>
-    private static void TryAddTransientExact(this IServiceCollection services, Type serviceType,
-        Type implementationType)
+    private static void TryAddTransientExact(
+        this IServiceCollection services,
+        Type serviceType,
+        Type implementationType
+    )
     {
-        if (services.Any(reg => reg.ServiceType == serviceType && reg.ImplementationType == implementationType)) return;
+        if (services.Any(reg => reg.ServiceType == serviceType && reg.ImplementationType == implementationType))
+            return;
 
         services.AddTransient(serviceType, implementationType);
     }
@@ -111,10 +117,10 @@ public static class ServiceCollectionExtensions
     /// <param name="services">The service collection</param>
     /// <param name="serviceType">Service type</param>
     /// <param name="implementationType">Implementation type</param>
-    private static void TryAddScopeExact(this IServiceCollection services, Type serviceType,
-        Type implementationType)
+    private static void TryAddScopeExact(this IServiceCollection services, Type serviceType, Type implementationType)
     {
-        if (services.Any(reg => reg.ServiceType == serviceType && reg.ImplementationType == implementationType)) return;
+        if (services.Any(reg => reg.ServiceType == serviceType && reg.ImplementationType == implementationType))
+            return;
 
         services.AddScoped(serviceType, implementationType);
     }
@@ -127,10 +133,14 @@ public static class ServiceCollectionExtensions
     /// <param name="services">The service collection</param>
     /// <param name="serviceType">Service type</param>
     /// <param name="implementationType">Implementation type</param>
-    private static void TryAddSingletonExact(this IServiceCollection services, Type serviceType,
-        Type implementationType)
+    private static void TryAddSingletonExact(
+        this IServiceCollection services,
+        Type serviceType,
+        Type implementationType
+    )
     {
-        if (services.Any(reg => reg.ServiceType == serviceType && reg.ImplementationType == implementationType)) return;
+        if (services.Any(reg => reg.ServiceType == serviceType && reg.ImplementationType == implementationType))
+            return;
 
         services.AddSingleton(serviceType, implementationType);
     }
@@ -143,8 +153,10 @@ public static class ServiceCollectionExtensions
         services.AddScoped<TService, TImplementation>();
     }
 
-    public static void ReplaceScoped<TService>(this IServiceCollection services,
-        Func<IServiceProvider, TService> implementationFactory)
+    public static void ReplaceScoped<TService>(
+        this IServiceCollection services,
+        Func<IServiceProvider, TService> implementationFactory
+    )
         where TService : class
     {
         services.Unregister<TService>();
@@ -159,8 +171,10 @@ public static class ServiceCollectionExtensions
         services.AddTransient<TService, TImplementation>();
     }
 
-    public static void ReplaceTransient<TService>(this IServiceCollection services,
-        Func<IServiceProvider, TService> implementationFactory)
+    public static void ReplaceTransient<TService>(
+        this IServiceCollection services,
+        Func<IServiceProvider, TService> implementationFactory
+    )
         where TService : class
     {
         services.Unregister<TService>();
@@ -175,8 +189,10 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<TService, TImplementation>();
     }
 
-    public static void ReplaceSingleton<TService>(this IServiceCollection services,
-        Func<IServiceProvider, TService> implementationFactory)
+    public static void ReplaceSingleton<TService>(
+        this IServiceCollection services,
+        Func<IServiceProvider, TService> implementationFactory
+    )
         where TService : class
     {
         services.Unregister<TService>();
@@ -192,8 +208,12 @@ public static class ServiceCollectionExtensions
         services.AddSingleton(options);
     }
 
-    public static void RegisterOptions<TOptions>(this IServiceCollection services, IConfiguration configuration,
-        string name) where TOptions : class, new()
+    public static void RegisterOptions<TOptions>(
+        this IServiceCollection services,
+        IConfiguration configuration,
+        string name
+    )
+        where TOptions : class, new()
     {
         var options = new TOptions();
         configuration.Bind(name, options);

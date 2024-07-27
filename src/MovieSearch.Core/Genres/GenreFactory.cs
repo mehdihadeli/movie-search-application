@@ -7,19 +7,19 @@ namespace MovieSearch.Core.Genres;
 
 public static class GenreFactory
 {
-    private static readonly Lazy<IReadOnlyList<Genre>> LazyAll = new(() =>
-    {
-        var all = typeof(GenreFactory)
-            .GetTypeInfo()
-            .DeclaredMethods
-            .Where(x => x.IsStatic)
-            .Where(x => x.IsPublic)
-            .Where(x => x.ReturnType == typeof(Genre))
-            .Select(x => (Genre) x.Invoke(null, null))
-            .ToList();
+    private static readonly Lazy<IReadOnlyList<Genre>> LazyAll =
+        new(() =>
+        {
+            var all = typeof(GenreFactory)
+                .GetTypeInfo()
+                .DeclaredMethods.Where(x => x.IsStatic)
+                .Where(x => x.IsPublic)
+                .Where(x => x.ReturnType == typeof(Genre))
+                .Select(x => (Genre)x.Invoke(null, null))
+                .ToList();
 
-        return all.AsReadOnly();
-    });
+            return all.AsReadOnly();
+        });
 
     public static Genre Action()
     {

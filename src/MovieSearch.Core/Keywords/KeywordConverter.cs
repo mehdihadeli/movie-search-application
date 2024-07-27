@@ -29,7 +29,7 @@ internal class KeywordConverter : JsonConverter
     {
         var obj = JToken.Load(reader);
 
-        var arr = (JArray) obj[_key];
+        var arr = (JArray)obj[_key];
 
         var keywords = arr.ToObject<IReadOnlyList<Keyword>>();
 

@@ -20,9 +20,11 @@ public class FindMovieWithTrailersByIdTests : WebApiTestFixture<Program>
         var httpRequestMessage = new HttpRequestMessage
         {
             Method = HttpMethod.Get,
-            RequestUri = new Uri($"api/v1/movies/{movieId}/with-trailers?trailersCount={trailersCount}",
-                UriKind.RelativeOrAbsolute),
-            Headers = {{ApiKeyConstants.HeaderName, "C5BFF7F0-B4DF-475E-A331-F737424F013C"}}
+            RequestUri = new Uri(
+                $"api/v1/movies/{movieId}/with-trailers?trailersCount={trailersCount}",
+                UriKind.RelativeOrAbsolute
+            ),
+            Headers = { { ApiKeyConstants.HeaderName, "C5BFF7F0-B4DF-475E-A331-F737424F013C" } }
         };
         return Client.SendAsync(httpRequestMessage);
     }
@@ -60,9 +62,9 @@ public class FindMovieWithTrailersByIdTests : WebApiTestFixture<Program>
     [Fact]
     public async Task find_movie_with_trailers_by_id_endpoint_should_return_unauthorized_without_an_api_key()
     {
-        var response =
-            await Client.GetAsync(
-                $"api/v1/movies/{MovieMocks.Data.Id.ToString()}/with-trailers?trailersCount={20}");
+        var response = await Client.GetAsync(
+            $"api/v1/movies/{MovieMocks.Data.Id.ToString()}/with-trailers?trailersCount={20}"
+        );
 
         response.IsSuccessStatusCode.Should().Be(false);
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);

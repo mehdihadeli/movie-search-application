@@ -61,13 +61,17 @@ public class MongoDbContext : IMongoDbContext
 
     private static void RegisterConventions()
     {
-        ConventionRegistry.Register("conventions", new ConventionPack
-        {
-            new CamelCaseElementNameConvention(),
-            new IgnoreExtraElementsConvention(true),
-            new EnumRepresentationConvention(BsonType.String),
-            new IgnoreIfDefaultConvention(true),
-            new ImmutablePocoConvention()
-        }, _ => true);
+        ConventionRegistry.Register(
+            "conventions",
+            new ConventionPack
+            {
+                new CamelCaseElementNameConvention(),
+                new IgnoreExtraElementsConvention(true),
+                new EnumRepresentationConvention(BsonType.String),
+                new IgnoreIfDefaultConvention(true),
+                new ImmutablePocoConvention()
+            },
+            _ => true
+        );
     }
 }

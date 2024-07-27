@@ -36,17 +36,14 @@ public abstract class DesignTimeDbContextFactoryBase<TContext> : IDesignTimeDbCo
         var connstr = config.GetConnectionString("DefaultConnection");
 
         if (string.IsNullOrWhiteSpace(connstr))
-            throw new InvalidOperationException(
-                "Could not find a connection string named 'Default'.");
+            throw new InvalidOperationException("Could not find a connection string named 'Default'.");
         return Create(connstr);
     }
 
     private TContext Create(string connectionString)
     {
         if (string.IsNullOrEmpty(connectionString))
-            throw new ArgumentException(
-                $"{nameof(connectionString)} is null or empty.",
-                nameof(connectionString));
+            throw new ArgumentException($"{nameof(connectionString)} is null or empty.", nameof(connectionString));
 
         var optionsBuilder = new DbContextOptionsBuilder<TContext>();
 

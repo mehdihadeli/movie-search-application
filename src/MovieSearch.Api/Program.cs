@@ -16,30 +16,41 @@ using MovieSearch.Core;
 using MovieSearch.Infrastructure;
 using Serilog;
 
-
 // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis
 // https://benfoster.io/blog/mvc-to-minimal-apis-aspnet-6/
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Host.UseDefaultServiceProvider((env, c) =>
-{
-    // Handling Captive Dependency Problem
-    // https://ankitvijay.net/2020/03/17/net-core-and-di-beware-of-captive-dependency/
-    // https://levelup.gitconnected.com/top-misconceptions-about-dependency-injection-in-asp-net-core-c6a7afd14eb4
-    // https://blog.ploeh.dk/2014/06/02/captive-dependency/
-    if (env.HostingEnvironment.IsDevelopment() || env.HostingEnvironment.IsEnvironment("tests") ||
-        env.HostingEnvironment.IsStaging())
-        c.ValidateScopes = true;
-});
+builder.Host.UseDefaultServiceProvider(
+    (env, c) =>
+    {
+        // Handling Captive Dependency Problem
+        // https://ankitvijay.net/2020/03/17/net-core-and-di-beware-of-captive-dependency/
+        // https://levelup.gitconnected.com/top-misconceptions-about-dependency-injection-in-asp-net-core-c6a7afd14eb4
+        // https://blog.ploeh.dk/2014/06/02/captive-dependency/
+        if (
+            env.HostingEnvironment.IsDevelopment()
+            || env.HostingEnvironment.IsEnvironment("tests")
+            || env.HostingEnvironment.IsStaging()
+        )
+            c.ValidateScopes = true;
+    }
+);
 
 builder.AddCustomSerilog();
 
 builder.Services.AddControllers(options =>
-    options.Conventions.Add(new RouteTokenTransformerConvention(new SlugifyParameterTransformer())));
+    options.Conventions.Add(new RouteTokenTransformerConvention(new SlugifyParameterTransformer()))
+);
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("api", policy => { policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod(); });
+    options.AddPolicy(
+        "api",
+        policy =>
+        {
+            policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+        }
+    );
 });
 
 builder.Services.AddApplication();
@@ -65,6 +76,4 @@ if (app.Environment.IsDevelopment())
 
 await app.RunAsync();
 
-public partial class Program
-{
-}
+public partial class Program { }

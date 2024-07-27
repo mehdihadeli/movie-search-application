@@ -15,8 +15,10 @@ public class SearchMovieByTitleQuery : IQuery<SearchMovieByTitleQueryResult>
 
         public string GetCacheKey(SearchMovieByTitleQuery query)
         {
-            return CacheKey.With(query.GetType(),
-                $"SearchKeywords_{query.SearchKeywords?.ToLower().Trim()}_Page_{query.Page}");
+            return CacheKey.With(
+                query.GetType(),
+                $"SearchKeywords_{query.SearchKeywords?.ToLower().Trim()}_Page_{query.Page}"
+            );
         }
     }
 }

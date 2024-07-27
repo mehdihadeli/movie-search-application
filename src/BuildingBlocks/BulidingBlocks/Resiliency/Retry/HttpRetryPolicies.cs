@@ -9,29 +9,44 @@ namespace BuildingBlocks.Resiliency;
 
 public static class HttpRetryPolicies
 {
-    public static AsyncRetryPolicy<HttpResponseMessage> GetHttpRetryPolicy(ILogger logger,
-        IRetryPolicyConfig retryPolicyConfig)
+    public static AsyncRetryPolicy<HttpResponseMessage> GetHttpRetryPolicy(
+        ILogger logger,
+        IRetryPolicyConfig retryPolicyConfig
+    )
     {
-        return HttpPolicyBuilders.GetBaseBuilder()
-            .WaitAndRetryAsync(retryPolicyConfig.RetryCount,
+        return HttpPolicyBuilders
+            .GetBaseBuilder()
+            .WaitAndRetryAsync(
+                retryPolicyConfig.RetryCount,
                 ComputeDuration,
                 (result, timeSpan, retryCount, context) =>
                 {
                     OnHttpRetry(result, timeSpan, retryCount, context, logger);
-                });
+                }
+            );
     }
 
-    private static void OnHttpRetry(DelegateResult<HttpResponseMessage> result, TimeSpan timeSpan, int
-        retryCount, Context context, ILogger logger)
+    private static void OnHttpRetry(
+        DelegateResult<HttpResponseMessage> result,
+        TimeSpan timeSpan,
+        int retryCount,
+        Context context,
+        ILogger logger
+    )
     {
         if (result.Result != null)
             logger.LogWarning(
                 "Request failed with {StatusCode}. Waiting {timeSpan} before next retry. Retry attempt {retryCount}",
-                result.Result.StatusCode, timeSpan, retryCount);
+                result.Result.StatusCode,
+                timeSpan,
+                retryCount
+            );
         else
             logger.LogWarning(
                 "Request failed because network failure. Waiting {timeSpan} before next retry. Retry attempt {retryCount}",
-                timeSpan, retryCount);
+                timeSpan,
+                retryCount
+            );
     }
 
     private static TimeSpan ComputeDuration(int input)

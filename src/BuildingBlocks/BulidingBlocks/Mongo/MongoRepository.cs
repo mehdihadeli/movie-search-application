@@ -33,7 +33,6 @@ public class MongoRepository<TEntity> : IRepository<TEntity>
         return DbSet.Find(predicate).SingleOrDefaultAsync();
     }
 
-
     public async Task<IReadOnlyList<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate)
     {
         return await DbSet.Find(predicate).ToListAsync();
@@ -44,8 +43,8 @@ public class MongoRepository<TEntity> : IRepository<TEntity>
         return DbSet.AsQueryable().ToAsyncEnumerable();
     }
 
-    public Task<ListResultModel<TEntity>> BrowseAsync<TQuery>(Expression<Func<TEntity, bool>> predicate,
-        TQuery query) where TQuery : IPageList
+    public Task<ListResultModel<TEntity>> BrowseAsync<TQuery>(Expression<Func<TEntity, bool>> predicate, TQuery query)
+        where TQuery : IPageList
     {
         return DbSet.AsQueryable().Where(predicate).PaginateAsync(query);
     }

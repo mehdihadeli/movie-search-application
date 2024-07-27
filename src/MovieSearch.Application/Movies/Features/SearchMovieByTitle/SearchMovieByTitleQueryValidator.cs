@@ -8,7 +8,9 @@ public class SearchMovieByTitleQueryValidator : AbstractValidator<SearchMovieByT
     public SearchMovieByTitleQueryValidator()
     {
         RuleFor(query => query.Page).GreaterThan(0).WithMessage("page number should be greater than zero.");
-        RuleFor(query => query.SearchKeywords).NotEmpty().NotNull()
+        RuleFor(query => query.SearchKeywords)
+            .NotEmpty()
+            .NotNull()
             .WithMessage("search value should not be null or empty.");
     }
 }

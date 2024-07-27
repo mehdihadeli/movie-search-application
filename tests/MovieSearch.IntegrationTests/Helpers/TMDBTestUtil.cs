@@ -31,9 +31,7 @@ internal static class TMDBTestUtil
     {
         Assert.IsTrue(path.StartsWith("/"), $"Actual: {path}");
 
-        Assert.IsTrue(
-            path.EndsWith(".jpg") || path.EndsWith(".png"),
-            $"Actual: {path}");
+        Assert.IsTrue(path.EndsWith(".jpg") || path.EndsWith(".png"), $"Actual: {path}");
     }
 
     private static void AssertPersonInfoStructure(IEnumerable<PersonInfo> people)
@@ -78,7 +76,8 @@ internal static class TMDBTestUtil
     {
         var enumerable = movies as Movie[] ?? movies.ToArray();
         Assert.IsTrue(enumerable.Any());
-        foreach (var movie in enumerable) AssertMovieStructure(movie);
+        foreach (var movie in enumerable)
+            AssertMovieStructure(movie);
     }
 
     public static void AssertMovieStructure(Movie movie)
@@ -116,7 +115,8 @@ internal static class TMDBTestUtil
         var movieInfos = movies.ToList();
         Assert.IsTrue(movieInfos.Any());
 
-        foreach (var movie in movieInfos) AssertMovieInformationStructure(movie);
+        foreach (var movie in movieInfos)
+            AssertMovieInformationStructure(movie);
     }
 
     public static void AssertMovieInformationDtoStructure(IEnumerable<MovieInfoDto> movies)
@@ -124,7 +124,8 @@ internal static class TMDBTestUtil
         var movieInfos = movies.ToList();
         Assert.IsTrue(movieInfos.Any());
 
-        foreach (var movie in movieInfos) AssertMovieInformationDtoStructure(movie);
+        foreach (var movie in movieInfos)
+            AssertMovieInformationDtoStructure(movie);
     }
 
     public static void AssertMovieInformationStructure(MovieInfo movie)
@@ -147,14 +148,16 @@ internal static class TMDBTestUtil
     {
         Assert.IsTrue(tvShows.Any());
 
-        foreach (var tvShow in tvShows) AssertTvShowInformationStructure(tvShow);
+        foreach (var tvShow in tvShows)
+            AssertTvShowInformationStructure(tvShow);
     }
 
     public static void AssertTvShowInformationDtoStructure(IEnumerable<TVShowInfoDto> tvShows)
     {
         Assert.IsTrue(tvShows.Any());
 
-        foreach (var tvShow in tvShows) AssertTvShowInformationDtoStructure(tvShow);
+        foreach (var tvShow in tvShows)
+            AssertTvShowInformationDtoStructure(tvShow);
     }
 
     public static void AssertTvShowInformationDtoStructure(TVShowInfoDto tvShow)

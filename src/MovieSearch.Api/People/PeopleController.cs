@@ -27,8 +27,10 @@ public class PeopleController : BaseController
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [SwaggerOperation(Summary = "Get the primary person details by id.",
-        Description = "Get the primary person details by id.")]
+    [SwaggerOperation(
+        Summary = "Get the primary person details by id.",
+        Description = "Get the primary person details by id."
+    )]
     public async Task<ActionResult> GetByIdAsync([FromRoute] int personId, CancellationToken cancellationToken)
     {
         var query = new FindPersonByIdQuery(personId);
@@ -47,10 +49,11 @@ public class PeopleController : BaseController
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [SwaggerOperation(Summary = "Get the movie credits for a person.",
-        Description = "Get the movie credits for a person.")]
-    public async Task<ActionResult> GetPersonMovieCreditsAsync([FromRoute] int id,
-        CancellationToken cancellationToken)
+    [SwaggerOperation(
+        Summary = "Get the movie credits for a person.",
+        Description = "Get the movie credits for a person."
+    )]
+    public async Task<ActionResult> GetPersonMovieCreditsAsync([FromRoute] int id, CancellationToken cancellationToken)
     {
         var query = new FindPersonMovieCreditsQuery(id);
         var result = await Mediator.Send(query, cancellationToken);
@@ -68,10 +71,11 @@ public class PeopleController : BaseController
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [SwaggerOperation(Summary = "Get the tv-show credits for a person.",
-        Description = "Get the tv-show credits for a person.")]
-    public async Task<ActionResult> GetPersonTvShowCreditsAsync([FromRoute] int id,
-        CancellationToken cancellationToken)
+    [SwaggerOperation(
+        Summary = "Get the tv-show credits for a person.",
+        Description = "Get the tv-show credits for a person."
+    )]
+    public async Task<ActionResult> GetPersonTvShowCreditsAsync([FromRoute] int id, CancellationToken cancellationToken)
     {
         var query = new FindPersonTVShowCreditsQuery(id);
         var result = await Mediator.Send(query, cancellationToken);

@@ -26,8 +26,7 @@ public class SearchMovieByTitleQueryHandlerTests : UnitTestFixture
         _handler = new SearchMovieByTitleQueryHandler(_movieDbServiceClient, Mapper);
     }
 
-    private Task<SearchMovieByTitleQueryResult> Act(SearchMovieByTitleQuery query, CancellationToken
-        cancellationToken)
+    private Task<SearchMovieByTitleQueryResult> Act(SearchMovieByTitleQuery query, CancellationToken cancellationToken)
     {
         return _handler.Handle(query, cancellationToken);
     }
@@ -36,24 +35,25 @@ public class SearchMovieByTitleQueryHandlerTests : UnitTestFixture
     public async Task handle_with_valid_search_movie_by_title_query_should_return_correct_movie_info_list_dto()
     {
         // Arrange
-        var query = new SearchMovieByTitleQuery
-        {
-            Page = 1,
-            SearchKeywords = MovieMocks.Data.Title
-        };
+        var query = new SearchMovieByTitleQuery { Page = 1, SearchKeywords = MovieMocks.Data.Title };
 
-        var movieInfoList = new ListResultModel<MovieInfo>(new List<MovieInfo>
-        {
-            new()
+        var movieInfoList = new ListResultModel<MovieInfo>(
+            new List<MovieInfo>
             {
-                Adult = true,
-                Id = MovieMocks.Data.Id,
-                Title = MovieMocks.Data.Title
-            }
-        }, 1, query.Page, 20);
+                new()
+                {
+                    Adult = true,
+                    Id = MovieMocks.Data.Id,
+                    Title = MovieMocks.Data.Title
+                }
+            },
+            1,
+            query.Page,
+            20
+        );
 
-        _movieDbServiceClient.SearchMovieAsync(query.SearchKeywords, query.Page, false, 0, 0,
-                Arg.Any<CancellationToken>())
+        _movieDbServiceClient
+            .SearchMovieAsync(query.SearchKeywords, query.Page, false, 0, 0, Arg.Any<CancellationToken>())
             .Returns(movieInfoList);
 
         // Act

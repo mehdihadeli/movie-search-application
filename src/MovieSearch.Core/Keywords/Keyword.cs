@@ -38,7 +38,8 @@ public class Keyword : IEqualityComparer<Keyword>
 
     public override bool Equals(object obj)
     {
-        if (obj is not Keyword genre) return false;
+        if (obj is not Keyword genre)
+            return false;
 
         return Equals(this, genre);
     }

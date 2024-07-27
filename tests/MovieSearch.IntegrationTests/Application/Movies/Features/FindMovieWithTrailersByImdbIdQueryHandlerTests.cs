@@ -28,7 +28,6 @@ public class FindMovieWithTrailersByImdbIdQueryHandlerTests : IntegrationTestFix
         // Act
         var movieWithTrailers = (await QueryAsync(query, CancellationToken.None)).MovieWithTrailers;
 
-
         // Assert
         movieWithTrailers.Movie.Should().NotBeNull();
         movieWithTrailers.Trailers.Should().NotBeNull();

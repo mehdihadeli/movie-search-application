@@ -11,8 +11,12 @@ public class ProductionCompany : IEqualityComparer<ProductionCompany>
 
     public bool Equals(ProductionCompany x, ProductionCompany y)
     {
-        return x != null && y != null && x.Id == y.Id && x.Name == y.Name && x.LogoPath == y.LogoPath &&
-               x.OriginCountry == y.OriginCountry;
+        return x != null
+            && y != null
+            && x.Id == y.Id
+            && x.Name == y.Name
+            && x.LogoPath == y.LogoPath
+            && x.OriginCountry == y.OriginCountry;
     }
 
     public int GetHashCode(ProductionCompany obj)
@@ -28,7 +32,8 @@ public class ProductionCompany : IEqualityComparer<ProductionCompany>
 
     public override bool Equals(object obj)
     {
-        if (obj is not ProductionCompany info) return false;
+        if (obj is not ProductionCompany info)
+            return false;
 
         return Equals(this, info);
     }

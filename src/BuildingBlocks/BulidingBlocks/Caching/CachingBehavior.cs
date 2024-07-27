@@ -18,18 +18,22 @@ public class CachingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, 
     private readonly ILogger<CachingBehavior<TRequest, TResponse>> _logger;
     private readonly int defaultCacheExpirationInHours = 1;
 
-
-    public CachingBehavior(IEasyCachingProviderFactory cachingFactory,
+    public CachingBehavior(
+        IEasyCachingProviderFactory cachingFactory,
         ILogger<CachingBehavior<TRequest, TResponse>> logger,
-        IEnumerable<ICachePolicy<TRequest, TResponse>> cachePolicies)
+        IEnumerable<ICachePolicy<TRequest, TResponse>> cachePolicies
+    )
     {
         _logger = logger;
         _cachingProvider = cachingFactory.GetCachingProvider("mem");
         _cachePolicies = cachePolicies;
     }
 
-    public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken
-        cancellationToken)
+    public async Task<TResponse> Handle(
+        TRequest request,
+        RequestHandlerDelegate<TResponse> next,
+        CancellationToken cancellationToken
+    )
     {
         var cachePolicy = _cachePolicies.FirstOrDefault();
         if (cachePolicy == null)
@@ -40,19 +44,24 @@ public class CachingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, 
         var cachedResponse = await _cachingProvider.GetAsync<TResponse>(cacheKey);
         if (cachedResponse.Value != null)
         {
-            _logger.LogDebug("Response retrieved {TRequest} from cache. CacheKey: {CacheKey}",
-                typeof(TRequest).FullName, cacheKey);
+            _logger.LogDebug(
+                "Response retrieved {TRequest} from cache. CacheKey: {CacheKey}",
+                typeof(TRequest).FullName,
+                cacheKey
+            );
             return cachedResponse.Value;
         }
 
         var response = await next();
 
-        var time = cachePolicy.AbsoluteExpirationRelativeToNow ??
-                   DateTime.Now.AddHours(defaultCacheExpirationInHours);
+        var time = cachePolicy.AbsoluteExpirationRelativeToNow ?? DateTime.Now.AddHours(defaultCacheExpirationInHours);
         await _cachingProvider.SetAsync(cacheKey, response, time.TimeOfDay);
 
-        _logger.LogDebug("Caching response for {TRequest} with cache key: {CacheKey}", typeof(TRequest).FullName,
-            cacheKey);
+        _logger.LogDebug(
+            "Caching response for {TRequest} with cache key: {CacheKey}",
+            typeof(TRequest).FullName,
+            cacheKey
+        );
 
         return response;
     }

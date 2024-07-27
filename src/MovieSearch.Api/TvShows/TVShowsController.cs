@@ -49,10 +49,15 @@ public class TVShowsController : BaseController
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [SwaggerOperation(Summary = "Get specific tv-show by id with its trailers",
-        Description = "Get specific tv-show by id with its trailers")]
-    public async Task<ActionResult> GetWithTrailersByIdAsync([FromRoute] int id, [FromQuery] int trailersCount = 20,
-        CancellationToken cancellationToken = default)
+    [SwaggerOperation(
+        Summary = "Get specific tv-show by id with its trailers",
+        Description = "Get specific tv-show by id with its trailers"
+    )]
+    public async Task<ActionResult> GetWithTrailersByIdAsync(
+        [FromRoute] int id,
+        [FromQuery] int trailersCount = 20,
+        CancellationToken cancellationToken = default
+    )
     {
         var query = new FindTVShowWithTrailersByIdQuery(id, trailersCount);
         var result = await Mediator.Send(query, cancellationToken);
@@ -70,8 +75,10 @@ public class TVShowsController : BaseController
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [SwaggerOperation(Summary = "Search tv-shows by title", Description = "Search tv-shows by title")]
-    public async Task<ActionResult> SearchByTitleAsync([FromQuery] SearchTVShowsByTitleRequest request,
-        CancellationToken cancellationToken)
+    public async Task<ActionResult> SearchByTitleAsync(
+        [FromQuery] SearchTVShowsByTitleRequest request,
+        CancellationToken cancellationToken
+    )
     {
         var query = new SearchTVShowByTitleQuery(request.SearchKeywords, request.Page);
         var result = await Mediator.Send(query, cancellationToken);
@@ -88,13 +95,21 @@ public class TVShowsController : BaseController
     [HttpGet("search")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [SwaggerOperation(Summary = "Search tv-shows by different parameters",
-        Description = "Search tv-shows by different parameters")]
-    public async Task<ActionResult> SearchAsync([FromQuery] SearchTVShowsRequest request,
-        CancellationToken cancellationToken)
+    [SwaggerOperation(
+        Summary = "Search tv-shows by different parameters",
+        Description = "Search tv-shows by different parameters"
+    )]
+    public async Task<ActionResult> SearchAsync(
+        [FromQuery] SearchTVShowsRequest request,
+        CancellationToken cancellationToken
+    )
     {
-        var query = new SearchTVShowQuery(request.SearchKeywords, request.Page, request.FirstAirDateYear,
-            request.IncludeAdult);
+        var query = new SearchTVShowQuery(
+            request.SearchKeywords,
+            request.Page,
+            request.FirstAirDateYear,
+            request.IncludeAdult
+        );
         var result = await Mediator.Send(query, cancellationToken);
 
         return Ok(result);

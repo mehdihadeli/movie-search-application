@@ -6,8 +6,7 @@ namespace MovieSearch.Application.TvShows.Features.SearchTVShow;
 
 public class SearchTVShowQuery : IQuery<SearchTVShowQueryResult>
 {
-    public SearchTVShowQuery(string searchKeywords, int page = 1, int firstAirDateYear = 0,
-        bool includeAdult = false)
+    public SearchTVShowQuery(string searchKeywords, int page = 1, int firstAirDateYear = 0, bool includeAdult = false)
     {
         SearchKeywords = searchKeywords;
         Page = page;
@@ -26,8 +25,10 @@ public class SearchTVShowQuery : IQuery<SearchTVShowQueryResult>
 
         public string GetCacheKey(SearchTVShowQuery query)
         {
-            return CacheKey.With(query.GetType(),
-                $"SearchKeywords_{query.SearchKeywords?.ToLower().Trim()}_Page_{query.Page}_IncludeAdult_{query.IncludeAdult.ToString()}_FirstAirDateYear_{query.FirstAirDateYear}");
+            return CacheKey.With(
+                query.GetType(),
+                $"SearchKeywords_{query.SearchKeywords?.ToLower().Trim()}_Page_{query.Page}_IncludeAdult_{query.IncludeAdult.ToString()}_FirstAirDateYear_{query.FirstAirDateYear}"
+            );
         }
     }
 }

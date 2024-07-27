@@ -20,8 +20,7 @@ public class FindTvShowByIdQueryHandler : IRequestHandler<FindTvShowByIdQuery, F
         _mapper = mapper;
     }
 
-    public async Task<FindTvShowByIdQueryResult> Handle(FindTvShowByIdQuery query,
-        CancellationToken cancellationToken)
+    public async Task<FindTvShowByIdQueryResult> Handle(FindTvShowByIdQuery query, CancellationToken cancellationToken)
     {
         Guard.Against.Null(query, nameof(FindTvShowByIdQuery));
 
@@ -32,6 +31,6 @@ public class FindTvShowByIdQueryHandler : IRequestHandler<FindTvShowByIdQuery, F
 
         var result = _mapper.Map<TVShowDto>(tvShow);
 
-        return new FindTvShowByIdQueryResult {TvShow = result};
+        return new FindTvShowByIdQueryResult { TvShow = result };
     }
 }

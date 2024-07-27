@@ -28,8 +28,10 @@ public class FindMovieWithTrailersByIdQueryHandlerTests : UnitTestFixture
         _handler = new FindMovieWithTrailersByIdQueryHandler(_movieDbServiceClient, _videoServiceClient, Mapper);
     }
 
-    private Task<FindMovieWithTrailersByIdQueryResult> Act(FindMovieWithTrailersByIdQuery query, CancellationToken
-        cancellationToken)
+    private Task<FindMovieWithTrailersByIdQueryResult> Act(
+        FindMovieWithTrailersByIdQuery query,
+        CancellationToken cancellationToken
+    )
     {
         return _handler.Handle(query, cancellationToken);
     }
@@ -39,26 +41,32 @@ public class FindMovieWithTrailersByIdQueryHandlerTests : UnitTestFixture
     {
         var query = new FindMovieWithTrailersByIdQuery(1);
         //Act && Assert
-        var act = async () => { await Act(query, CancellationToken.None); };
+        var act = async () =>
+        {
+            await Act(query, CancellationToken.None);
+        };
         await act.Should().ThrowAsync<MovieNotFoundException>();
     }
 
     [Fact]
-    public async Task
-        handle_and_valid_movie_with_trailers_by_id_query_should_return_correct_movie_with_trailers_dto()
+    public async Task handle_and_valid_movie_with_trailers_by_id_query_should_return_correct_movie_with_trailers_dto()
     {
         // Arrange
         var query = new FindMovieWithTrailersByIdQuery(MovieMocks.Data.Id);
-        var movieList = new VideoListResultModel<Video>(new List<Video>
-        {
-            new()
+        var movieList = new VideoListResultModel<Video>(
+            new List<Video>
             {
-                Id = "TestId",
-                Key = "TestKey"
-            }
-        }, 1, "", "123", null, query.TrailersCount);
+                new() { Id = "TestId", Key = "TestKey" }
+            },
+            1,
+            "",
+            "123",
+            null,
+            query.TrailersCount
+        );
 
-        _movieDbServiceClient.GetMovieByIdAsync(Arg.Is(query.MovieId), Arg.Any<CancellationToken>())
+        _movieDbServiceClient
+            .GetMovieByIdAsync(Arg.Is(query.MovieId), Arg.Any<CancellationToken>())
             .Returns(MovieMocks.Data);
 
         _videoServiceClient.GetTrailers(Arg.Is(MovieMocks.Data.Title)).Returns(movieList);

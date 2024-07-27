@@ -8,8 +8,7 @@ using MovieSearch.Application.TvShows.Dtos;
 
 namespace MovieSearch.Application.TvShows.Features.SearchTVShowByTitle;
 
-public class
-    SearchTVShowByTitleQueryHandler : IRequestHandler<SearchTVShowByTitleQuery, SearchTVShowByTitleQueryResult>
+public class SearchTVShowByTitleQueryHandler : IRequestHandler<SearchTVShowByTitleQuery, SearchTVShowByTitleQueryResult>
 {
     private readonly IMapper _mapper;
     private readonly IMovieDbServiceClient _movieDbServiceClient;
@@ -20,16 +19,21 @@ public class
         _mapper = mapper;
     }
 
-    public async Task<SearchTVShowByTitleQueryResult> Handle(SearchTVShowByTitleQuery query,
-        CancellationToken cancellationToken)
+    public async Task<SearchTVShowByTitleQueryResult> Handle(
+        SearchTVShowByTitleQuery query,
+        CancellationToken cancellationToken
+    )
     {
         Guard.Against.Null(query, nameof(SearchTVShowByTitleQuery));
 
-        var tvShows = await _movieDbServiceClient.SearchTvShowAsync(query.SearchKeywords, query
-            .Page, cancellationToken: cancellationToken);
+        var tvShows = await _movieDbServiceClient.SearchTvShowAsync(
+            query.SearchKeywords,
+            query.Page,
+            cancellationToken: cancellationToken
+        );
 
         var result = tvShows.Map(x => _mapper.Map<TVShowInfoDto>(x));
 
-        return new SearchTVShowByTitleQueryResult {TVShowList = result};
+        return new SearchTVShowByTitleQueryResult { TVShowList = result };
     }
 }

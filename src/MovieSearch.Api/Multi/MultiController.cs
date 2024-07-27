@@ -27,12 +27,13 @@ public class MultiController : BaseController
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [SwaggerOperation(
-        Summary =
-            "Search multiple models in a single request. Multi search currently supports searching for movies, tv shows and people in a single request.",
-        Description =
-            "Search multiple models in a single request. Multi search currently supports searching for movies, tv shows and people in a single request.")]
-    public async Task<ActionResult> SearchAsync([FromQuery] SearchMultipleModelRequest request,
-        CancellationToken cancellationToken)
+        Summary = "Search multiple models in a single request. Multi search currently supports searching for movies, tv shows and people in a single request.",
+        Description = "Search multiple models in a single request. Multi search currently supports searching for movies, tv shows and people in a single request."
+    )]
+    public async Task<ActionResult> SearchAsync(
+        [FromQuery] SearchMultipleModelRequest request,
+        CancellationToken cancellationToken
+    )
     {
         var query = new SearchMultipleModelQuery
         {

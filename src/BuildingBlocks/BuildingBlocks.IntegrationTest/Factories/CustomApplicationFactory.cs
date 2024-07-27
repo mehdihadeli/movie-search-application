@@ -19,9 +19,8 @@ namespace BuildingBlocks.Test.Factories;
 public class CustomApplicationFactory<TEntryPoint> : WebApplicationFactory<TEntryPoint>
     where TEntryPoint : class
 {
-    public CustomApplicationFactory() : this(null)
-    {
-    }
+    public CustomApplicationFactory()
+        : this(null) { }
 
     public CustomApplicationFactory(Action<IServiceCollection> testRegistrationServices = null)
     {
@@ -38,15 +37,18 @@ public class CustomApplicationFactory<TEntryPoint> : WebApplicationFactory<TEntr
     {
         var builder = base.CreateHostBuilder();
 
-        builder = builder.UseSerilog((_, _, configuration) =>
-        {
-            if (OutputHelper is not null)
-                configuration.WriteTo.Xunit(OutputHelper);
+        builder = builder.UseSerilog(
+            (_, _, configuration) =>
+            {
+                if (OutputHelper is not null)
+                    configuration.WriteTo.Xunit(OutputHelper);
 
-            configuration.MinimumLevel.Is(LogEventLevel.Information)
-                .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
-                .WriteTo.Console();
-        });
+                configuration
+                    .MinimumLevel.Is(LogEventLevel.Information)
+                    .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
+                    .WriteTo.Console();
+            }
+        );
 
         return builder;
     }
@@ -77,16 +79,19 @@ public class CustomApplicationFactory<TEntryPoint> : WebApplicationFactory<TEntr
             using var scope = sp.CreateScope();
             var seeders = scope.ServiceProvider.GetServices<IDataSeeder>();
 
-            foreach (var seeder in seeders) seeder.SeedAllAsync().GetAwaiter().GetResult();
+            foreach (var seeder in seeders)
+                seeder.SeedAllAsync().GetAwaiter().GetResult();
         });
 
-        builder.UseDefaultServiceProvider((env, c) =>
-        {
-            // Handling Captive Dependency Problem
-            // https://ankitvijay.net/2020/03/17/net-core-and-di-beware-of-captive-dependency/
-            // https://blog.ploeh.dk/2014/06/02/captive-dependency/
-            if (env.HostingEnvironment.IsEnvironment("test") || env.HostingEnvironment.IsDevelopment())
-                c.ValidateScopes = true;
-        });
+        builder.UseDefaultServiceProvider(
+            (env, c) =>
+            {
+                // Handling Captive Dependency Problem
+                // https://ankitvijay.net/2020/03/17/net-core-and-di-beware-of-captive-dependency/
+                // https://blog.ploeh.dk/2014/06/02/captive-dependency/
+                if (env.HostingEnvironment.IsEnvironment("test") || env.HostingEnvironment.IsDevelopment())
+                    c.ValidateScopes = true;
+            }
+        );
     }
 }

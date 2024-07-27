@@ -25,11 +25,7 @@ public class SearchMovieByTitleQueryHandlerTests : IntegrationTestFixture<Progra
     public async Task search_movie_by_title_query_should_return_a_valid_movie_info_list_dto()
     {
         // Arrange
-        var query = new SearchMovieByTitleQuery
-        {
-            Page = 1,
-            SearchKeywords = MovieMocks.Data.Title
-        };
+        var query = new SearchMovieByTitleQuery { Page = 1, SearchKeywords = MovieMocks.Data.Title };
 
         // Act
         var listResult = (await QueryAsync(query, CancellationToken.None)).MovieList;

@@ -19,8 +19,10 @@ public class FindPopularMoviesQueryHandler : IRequestHandler<FindPopularMoviesQu
         _mapper = mapper;
     }
 
-    public async Task<FindPopularMoviesQueryResult> Handle(FindPopularMoviesQuery query,
-        CancellationToken cancellationToken)
+    public async Task<FindPopularMoviesQueryResult> Handle(
+        FindPopularMoviesQuery query,
+        CancellationToken cancellationToken
+    )
     {
         Guard.Against.Null(query, nameof(FindPopularMoviesQuery));
 
@@ -28,6 +30,6 @@ public class FindPopularMoviesQueryHandler : IRequestHandler<FindPopularMoviesQu
 
         var result = movies.Map(x => _mapper.Map<MovieInfoDto>(x));
 
-        return new FindPopularMoviesQueryResult {MovieList = result};
+        return new FindPopularMoviesQueryResult { MovieList = result };
     }
 }

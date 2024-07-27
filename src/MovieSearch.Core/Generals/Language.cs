@@ -25,10 +25,10 @@ public class Language : IEqualityComparer<Language>
         }
     }
 
-
     public override bool Equals(object obj)
     {
-        if (obj is not Language language) return false;
+        if (obj is not Language language)
+            return false;
 
         return Equals(this, language);
     }
@@ -40,7 +40,8 @@ public class Language : IEqualityComparer<Language>
 
     public override string ToString()
     {
-        if (string.IsNullOrWhiteSpace(Name)) return "n/a";
+        if (string.IsNullOrWhiteSpace(Name))
+            return "n/a";
 
         return $"{Name} ({Iso639Code})";
     }

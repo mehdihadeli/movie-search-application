@@ -16,9 +16,7 @@ public class ImmutablePocoConvention : ConventionBase, IClassMapConvention
     private readonly BindingFlags _bindingFlags;
 
     public ImmutablePocoConvention()
-        : this(BindingFlags.Instance | BindingFlags.Public)
-    {
-    }
+        : this(BindingFlags.Instance | BindingFlags.Public) { }
 
     public ImmutablePocoConvention(BindingFlags bindingFlags)
     {
@@ -27,7 +25,8 @@ public class ImmutablePocoConvention : ConventionBase, IClassMapConvention
 
     public void Apply(BsonClassMap classMap)
     {
-        var readOnlyProperties = classMap.ClassType.GetTypeInfo()
+        var readOnlyProperties = classMap
+            .ClassType.GetTypeInfo()
             .GetProperties(_bindingFlags)
             .Where(p => IsReadOnlyProperty(classMap, p))
             .ToList();
@@ -48,8 +47,7 @@ public class ImmutablePocoConvention : ConventionBase, IClassMapConvention
         }
     }
 
-    private static List<PropertyInfo> GetMatchingProperties(ConstructorInfo constructor,
-        List<PropertyInfo> properties)
+    private static List<PropertyInfo> GetMatchingProperties(ConstructorInfo constructor, List<PropertyInfo> properties)
     {
         var matchProperties = new List<PropertyInfo>();
 
@@ -66,11 +64,10 @@ public class ImmutablePocoConvention : ConventionBase, IClassMapConvention
         return matchProperties;
     }
 
-
     private static bool ParameterMatchProperty(ParameterInfo parameter, PropertyInfo property)
     {
         return string.Equals(property.Name, parameter.Name, StringComparison.InvariantCultureIgnoreCase)
-               && parameter.ParameterType == property.PropertyType;
+            && parameter.ParameterType == property.PropertyType;
     }
 
     private static bool IsReadOnlyProperty(BsonClassMap classMap, PropertyInfo propertyInfo)

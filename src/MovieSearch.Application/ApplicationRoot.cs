@@ -1,5 +1,3 @@
 namespace MovieSearch.Application;
 
-public class ApplicationRoot
-{
-}
+public class ApplicationRoot { }
