@@ -24,7 +24,8 @@ public class RetryPolicyAttribute : Attribute
         get => _retryCount;
         set
         {
-            if (value < 1) throw new ArgumentException("Retry count must be higher than 1.", nameof(value));
+            if (value < 1)
+                throw new ArgumentException("Retry count must be higher than 1.", nameof(value));
 
             _retryCount = value;
         }
@@ -40,7 +41,8 @@ public class RetryPolicyAttribute : Attribute
         get => _sleepDuration;
         set
         {
-            if (value < 1) throw new ArgumentException("Sleep duration must be higher than 1ms.", nameof(value));
+            if (value < 1)
+                throw new ArgumentException("Sleep duration must be higher than 1ms.", nameof(value));
 
             _sleepDuration = value;
         }

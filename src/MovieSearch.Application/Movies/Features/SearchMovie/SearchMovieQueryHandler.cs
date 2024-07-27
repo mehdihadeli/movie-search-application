@@ -23,12 +23,17 @@ public class SearchMovieQueryHandler : IRequestHandler<SearchMovieQuery, SearchM
     {
         Guard.Against.Null(query, nameof(SearchMovieQuery));
 
-        var movies = await _movieDbServiceClient.SearchMovieAsync(query.SearchKeywords,
-            query.Page, query.IncludeAdult, query.Year, query
-                .PrimaryReleaseYear, cancellationToken);
+        var movies = await _movieDbServiceClient.SearchMovieAsync(
+            query.SearchKeywords,
+            query.Page,
+            query.IncludeAdult,
+            query.Year,
+            query.PrimaryReleaseYear,
+            cancellationToken
+        );
 
         var result = movies.Map(x => _mapper.Map<MovieInfoDto>(x));
 
-        return new SearchMovieQueryResult {MovieList = result};
+        return new SearchMovieQueryResult { MovieList = result };
     }
 }

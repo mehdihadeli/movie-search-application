@@ -24,7 +24,8 @@ public class CompaniesMappingTests : IClassFixture<MappingFixture>
             yield return new object[]
             {
                 // these types will instantiate with reflection in the future
-                typeof(ProductionCompany), typeof(ProductionCompanyDto)
+                typeof(ProductionCompany),
+                typeof(ProductionCompanyDto)
             };
         }
     }
@@ -32,15 +33,12 @@ public class CompaniesMappingTests : IClassFixture<MappingFixture>
     [Fact]
     public void ShouldHaveValidConfiguration()
     {
-        _mapper.ConfigurationProvider
-            .AssertConfigurationIsValid();
+        _mapper.ConfigurationProvider.AssertConfigurationIsValid();
     }
-
 
     [Theory]
     [MemberData(nameof(Data))]
-    public void ShouldSupportMappingFromSourceToDestination(Type source, Type destination,
-        params object[] parameters)
+    public void ShouldSupportMappingFromSourceToDestination(Type source, Type destination, params object[] parameters)
     {
         var instance = Activator.CreateInstance(source, parameters);
 

@@ -10,16 +10,19 @@ using MovieSearch.Application.Videos.Dtos;
 
 namespace MovieSearch.Application.Videos.Features.FindTVShowTrailers;
 
-public class
-    FindTVShowTrailersQueryHandler : IRequestHandler<FindTVShowTrailersQuery, FindTVShowTrailersQueryResult>
+public class FindTVShowTrailersQueryHandler : IRequestHandler<FindTVShowTrailersQuery, FindTVShowTrailersQueryResult>
 {
     private readonly IMapper _mapper;
     private readonly IMediator _mediator;
     private readonly IMovieDbServiceClient _movieDbServiceClient;
     private readonly IVideoServiceClient _videoServiceClient;
 
-    public FindTVShowTrailersQueryHandler(IMovieDbServiceClient movieDbServiceClient,
-        IVideoServiceClient videoServiceClient, IMapper mapper, IMediator mediator)
+    public FindTVShowTrailersQueryHandler(
+        IMovieDbServiceClient movieDbServiceClient,
+        IVideoServiceClient videoServiceClient,
+        IMapper mapper,
+        IMediator mediator
+    )
     {
         _movieDbServiceClient = movieDbServiceClient;
         _videoServiceClient = videoServiceClient;
@@ -27,8 +30,10 @@ public class
         _mediator = mediator;
     }
 
-    public async Task<FindTVShowTrailersQueryResult> Handle(FindTVShowTrailersQuery query,
-        CancellationToken cancellationToken)
+    public async Task<FindTVShowTrailersQueryResult> Handle(
+        FindTVShowTrailersQuery query,
+        CancellationToken cancellationToken
+    )
     {
         Guard.Against.Null(query, nameof(FindTVShowTrailersQuery));
 
@@ -37,11 +42,15 @@ public class
         if (tvShow is null)
             throw new TvShowNotFoundException(query.TVShowId);
 
-        var videos = await _videoServiceClient.GetTrailers(tvShow.Name, query.PageSize, query.PageToken,
-            tvShow.FirstAirDate);
+        var videos = await _videoServiceClient.GetTrailers(
+            tvShow.Name,
+            query.PageSize,
+            query.PageToken,
+            tvShow.FirstAirDate
+        );
 
         var result = videos.Map(x => _mapper.Map<VideoDto>(x));
 
-        return new FindTVShowTrailersQueryResult {VideoList = result};
+        return new FindTVShowTrailersQueryResult { VideoList = result };
     }
 }

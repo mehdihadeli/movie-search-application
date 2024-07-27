@@ -19,15 +19,20 @@ public class FallbackBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest,
     private readonly IEnumerable<IFallbackHandler<TRequest, TResponse>> _fallbackHandlers;
     private readonly ILogger<FallbackBehavior<TRequest, TResponse>> _logger;
 
-    public FallbackBehavior(IEnumerable<IFallbackHandler<TRequest, TResponse>> fallbackHandlers,
-        ILogger<FallbackBehavior<TRequest, TResponse>> logger)
+    public FallbackBehavior(
+        IEnumerable<IFallbackHandler<TRequest, TResponse>> fallbackHandlers,
+        ILogger<FallbackBehavior<TRequest, TResponse>> logger
+    )
     {
         _fallbackHandlers = fallbackHandlers;
         _logger = logger;
     }
 
-    public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken
-        cancellationToken)
+    public async Task<TResponse> Handle(
+        TRequest request,
+        RequestHandlerDelegate<TResponse> next,
+        CancellationToken cancellationToken
+    )
     {
         var fallbackHandler = _fallbackHandlers.FirstOrDefault();
         if (fallbackHandler == null)
@@ -38,10 +43,11 @@ public class FallbackBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest,
             .Handle<System.Exception>()
             .FallbackAsync(async cancellationToken =>
             {
-                _logger.LogDebug("Initial handler failed. Falling back to `{FullName}@HandleFallback`",
-                    fallbackHandler.GetType().FullName);
-                return await fallbackHandler.HandleFallbackAsync(request, cancellationToken)
-                    .ConfigureAwait(false);
+                _logger.LogDebug(
+                    "Initial handler failed. Falling back to `{FullName}@HandleFallback`",
+                    fallbackHandler.GetType().FullName
+                );
+                return await fallbackHandler.HandleFallbackAsync(request, cancellationToken).ConfigureAwait(false);
             });
 
         var response = await fallbackPolicy.ExecuteAsync(async () => await next());

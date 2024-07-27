@@ -23,7 +23,7 @@ public class FindUpcomingMoviesQueryHandlerTests : IntegrationTestFixture<Progra
     public async Task find_upcoming_movies_query_should_return_a_valid_movie_info_list_dto()
     {
         // Arrange
-        var query = new FindUpcomingMoviesQuery {Page = 1};
+        var query = new FindUpcomingMoviesQuery { Page = 1 };
 
         // Act
         var listResult = (await QueryAsync(query, CancellationToken.None)).MovieList;

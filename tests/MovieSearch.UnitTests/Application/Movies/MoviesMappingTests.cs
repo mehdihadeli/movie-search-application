@@ -24,38 +24,25 @@ public class MoviesMappingTests : IClassFixture<MappingFixture>
             yield return new object[]
             {
                 // these types will instantiate with reflection in the future
-                typeof(Movie), typeof(MovieDto)
+                typeof(Movie),
+                typeof(MovieDto)
             };
-            yield return new object[]
-            {
-                typeof(MovieInfo), typeof(MovieInfoDto)
-            };
-            yield return new object[]
-            {
-                typeof(MovieCredit), typeof(MovieCreditDto)
-            };
-            yield return new object[]
-            {
-                typeof(MovieCastMember), typeof(MovieCastMemberDto)
-            };
-            yield return new object[]
-            {
-                typeof(MovieCrewMember), typeof(MovieCrewMemberDto)
-            };
+            yield return new object[] { typeof(MovieInfo), typeof(MovieInfoDto) };
+            yield return new object[] { typeof(MovieCredit), typeof(MovieCreditDto) };
+            yield return new object[] { typeof(MovieCastMember), typeof(MovieCastMemberDto) };
+            yield return new object[] { typeof(MovieCrewMember), typeof(MovieCrewMemberDto) };
         }
     }
 
     [Fact]
     public void ShouldHaveValidConfiguration()
     {
-        _mapper.ConfigurationProvider
-            .AssertConfigurationIsValid();
+        _mapper.ConfigurationProvider.AssertConfigurationIsValid();
     }
 
     [Theory]
     [MemberData(nameof(Data))]
-    public void ShouldSupportMappingFromSourceToDestination(Type source, Type destination,
-        params object[] parameters)
+    public void ShouldSupportMappingFromSourceToDestination(Type source, Type destination, params object[] parameters)
     {
         var instance = Activator.CreateInstance(source, parameters);
 

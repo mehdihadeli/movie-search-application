@@ -9,9 +9,8 @@ using MovieSearch.Application.Services.Clients;
 
 namespace MovieSearch.Application.People.Features.FindPersonMovieCredits;
 
-public class
-    FindPersonMovieCreditsQueryHandler : IRequestHandler<FindPersonMovieCreditsQuery,
-        FindPersonMovieCreditsQueryResult>
+public class FindPersonMovieCreditsQueryHandler
+    : IRequestHandler<FindPersonMovieCreditsQuery, FindPersonMovieCreditsQueryResult>
 {
     private readonly IMapper _mapper;
     private readonly IMovieDbServiceClient _movieDbServiceClient;
@@ -22,13 +21,17 @@ public class
         _mapper = mapper;
     }
 
-    public async Task<FindPersonMovieCreditsQueryResult> Handle(FindPersonMovieCreditsQuery query,
-        CancellationToken cancellationToken)
+    public async Task<FindPersonMovieCreditsQueryResult> Handle(
+        FindPersonMovieCreditsQuery query,
+        CancellationToken cancellationToken
+    )
     {
         Guard.Against.Null(query, nameof(FindPersonMovieCreditsQuery));
 
-        var personMovieCredit =
-            await _movieDbServiceClient.GetPersonMovieCreditsAsync(query.PersonId, cancellationToken);
+        var personMovieCredit = await _movieDbServiceClient.GetPersonMovieCreditsAsync(
+            query.PersonId,
+            cancellationToken
+        );
 
         if (personMovieCredit is null)
             throw new PersonMovieCreditsNotFoundException(query.PersonId);

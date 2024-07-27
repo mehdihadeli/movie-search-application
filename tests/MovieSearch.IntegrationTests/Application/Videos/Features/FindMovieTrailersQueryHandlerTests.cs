@@ -24,11 +24,7 @@ public class FindMovieTrailersQueryHandlerTests : IntegrationTestFixture<Program
     public async Task find_movie_trailers_query_should_return_a_valid_video_dto_list()
     {
         // Arrange
-        var query = new FindMovieTrailersQuery
-        {
-            MovieId = MovieMocks.Data.Id,
-            PageSize = 20
-        };
+        var query = new FindMovieTrailersQuery { MovieId = MovieMocks.Data.Id, PageSize = 20 };
 
         // Act
         var listResult = (await QueryAsync(query, CancellationToken.None)).VideoList;
@@ -49,11 +45,7 @@ public class FindMovieTrailersQueryHandlerTests : IntegrationTestFixture<Program
     public async Task find_movie_trailers_query_with_next_page_should_return_a_valid_video_dto_list()
     {
         // Arrange
-        var query = new FindMovieTrailersQuery
-        {
-            MovieId = MovieMocks.Data.Id,
-            PageSize = 20
-        };
+        var query = new FindMovieTrailersQuery { MovieId = MovieMocks.Data.Id, PageSize = 20 };
 
         // Act
         var listResult = (await QueryAsync(query, CancellationToken.None)).VideoList;

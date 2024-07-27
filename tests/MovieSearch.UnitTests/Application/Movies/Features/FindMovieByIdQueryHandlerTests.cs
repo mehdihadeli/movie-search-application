@@ -32,13 +32,13 @@ public class FindMovieByIdQueryHandlerTests : UnitTestFixture
     [Fact]
     public async Task handle_with_invalid_movie_by_id_query_should_throw_movie_not_found_exception()
     {
-        var query = new FindMovieByIdQuery
-        {
-            Id = 1
-        };
+        var query = new FindMovieByIdQuery { Id = 1 };
 
         //Act && Assert
-        var act = async () => { await Act(query, CancellationToken.None); };
+        var act = async () =>
+        {
+            await Act(query, CancellationToken.None);
+        };
         await act.Should().ThrowAsync<MovieNotFoundException>();
     }
 
@@ -46,12 +46,10 @@ public class FindMovieByIdQueryHandlerTests : UnitTestFixture
     public async Task handle_with_valid_movie_by_id_query_should_return_correct_movie_dto()
     {
         // Arrange
-        var query = new FindMovieByIdQuery
-        {
-            Id = MovieMocks.Data.Id
-        };
+        var query = new FindMovieByIdQuery { Id = MovieMocks.Data.Id };
 
-        _movieDbServiceClient.GetMovieByIdAsync(Arg.Is(query.Id), Arg.Any<CancellationToken>())
+        _movieDbServiceClient
+            .GetMovieByIdAsync(Arg.Is(query.Id), Arg.Any<CancellationToken>())
             .Returns(MovieMocks.Data);
 
         // Act

@@ -18,8 +18,10 @@ public class FindTrailersQuery : IQuery<FindTrailersQueryResult>
 
         public string GetCacheKey(FindTrailersQuery query)
         {
-            return CacheKey.With(query.GetType(),
-                $"{nameof(MovieName)}_{query.MovieName?.ToLower().Trim()}_{nameof(PageSize)}_{query.PageSize}_{nameof(PageToken)}_{query.PageToken}_{nameof(PublishedBefore)}_{query.PublishedBefore}_{nameof(PublishedAfter)}_{query.PublishedAfter}");
+            return CacheKey.With(
+                query.GetType(),
+                $"{nameof(MovieName)}_{query.MovieName?.ToLower().Trim()}_{nameof(PageSize)}_{query.PageSize}_{nameof(PageToken)}_{query.PageToken}_{nameof(PublishedBefore)}_{query.PublishedBefore}_{nameof(PublishedAfter)}_{query.PublishedAfter}"
+            );
         }
     }
 }

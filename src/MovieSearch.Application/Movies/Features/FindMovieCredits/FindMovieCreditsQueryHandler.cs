@@ -20,8 +20,10 @@ public class FindMovieCreditsQueryHandler : IRequestHandler<FindMovieCreditsQuer
         _mapper = mapper;
     }
 
-    public async Task<FindMovieCreditsQueryResult> Handle(FindMovieCreditsQuery query,
-        CancellationToken cancellationToken)
+    public async Task<FindMovieCreditsQueryResult> Handle(
+        FindMovieCreditsQuery query,
+        CancellationToken cancellationToken
+    )
     {
         Guard.Against.Null(query, nameof(FindMovieCreditsQuery));
 
@@ -32,6 +34,6 @@ public class FindMovieCreditsQueryHandler : IRequestHandler<FindMovieCreditsQuer
 
         var result = _mapper.Map<MovieCreditDto>(movieCredit);
 
-        return new FindMovieCreditsQueryResult {MovieCredit = result};
+        return new FindMovieCreditsQueryResult { MovieCredit = result };
     }
 }

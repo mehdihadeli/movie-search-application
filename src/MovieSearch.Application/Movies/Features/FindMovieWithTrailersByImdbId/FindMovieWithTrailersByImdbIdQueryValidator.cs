@@ -8,7 +8,9 @@ public class FindMovieWithTrailersByImdbIdQueryValidator : AbstractValidator<Fin
     public FindMovieWithTrailersByImdbIdQueryValidator()
     {
         RuleFor(query => query.ImdbId).NotNull().NotEmpty().WithMessage("ImdbId should not be null or empty.");
-        RuleFor(query => query.TrailersCount).NotNull().NotEmpty()
+        RuleFor(query => query.TrailersCount)
+            .NotNull()
+            .NotEmpty()
             .WithMessage("trailers-count should not be null or empty.");
     }
 }

@@ -21,8 +21,10 @@ public class FindMovieWithTrailersByIdQuery : IQuery<FindMovieWithTrailersByIdQu
 
         public string GetCacheKey(FindMovieWithTrailersByIdQuery query)
         {
-            return CacheKey.With(query.GetType(),
-                $"{nameof(MovieId)}_{query.MovieId}_{nameof(TrailersCount)}_{query.TrailersCount}");
+            return CacheKey.With(
+                query.GetType(),
+                $"{nameof(MovieId)}_{query.MovieId}_{nameof(TrailersCount)}_{query.TrailersCount}"
+            );
         }
     }
 }

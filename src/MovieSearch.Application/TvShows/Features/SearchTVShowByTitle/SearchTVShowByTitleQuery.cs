@@ -21,8 +21,10 @@ public class SearchTVShowByTitleQuery : IQuery<SearchTVShowByTitleQueryResult>
 
         public string GetCacheKey(SearchTVShowByTitleQuery query)
         {
-            return CacheKey.With(query.GetType(),
-                $"SearchKeywords_{query.SearchKeywords?.ToLower().Trim()}_Page_{query.Page}");
+            return CacheKey.With(
+                query.GetType(),
+                $"SearchKeywords_{query.SearchKeywords?.ToLower().Trim()}_Page_{query.Page}"
+            );
         }
     }
 }

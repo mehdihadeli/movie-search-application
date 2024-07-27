@@ -21,44 +21,24 @@ public class TVShowMappingTests : IClassFixture<MappingFixture>
     {
         get
         {
-            yield return new object[]
-            {
-                typeof(Core.TV.TVShow), typeof(TVShowDto)
-            };
-            yield return new object[]
-            {
-                typeof(TVShowInfo), typeof(TVShowInfoDto)
-            };
-            yield return new object[]
-            {
-                typeof(TVShowCredit), typeof(TVShowCreditDto)
-            };
-            yield return new object[]
-            {
-                typeof(TVShowCastMember), typeof(TVShowCastMemberDto)
-            };
-            yield return new object[]
-            {
-                typeof(TVShowCrewMember), typeof(TVShowCrewMemberDto)
-            };
-            yield return new object[]
-            {
-                typeof(TVShowCreator), typeof(TVShowCreatorDto)
-            };
+            yield return new object[] { typeof(Core.TV.TVShow), typeof(TVShowDto) };
+            yield return new object[] { typeof(TVShowInfo), typeof(TVShowInfoDto) };
+            yield return new object[] { typeof(TVShowCredit), typeof(TVShowCreditDto) };
+            yield return new object[] { typeof(TVShowCastMember), typeof(TVShowCastMemberDto) };
+            yield return new object[] { typeof(TVShowCrewMember), typeof(TVShowCrewMemberDto) };
+            yield return new object[] { typeof(TVShowCreator), typeof(TVShowCreatorDto) };
         }
     }
 
     [Fact]
     public void ShouldHaveValidConfiguration()
     {
-        _mapper.ConfigurationProvider
-            .AssertConfigurationIsValid();
+        _mapper.ConfigurationProvider.AssertConfigurationIsValid();
     }
 
     [Theory]
     [MemberData(nameof(Data))]
-    public void ShouldSupportMappingFromSourceToDestination(Type source, Type destination,
-        params object[] parameters)
+    public void ShouldSupportMappingFromSourceToDestination(Type source, Type destination, params object[] parameters)
     {
         var instance = Activator.CreateInstance(source, parameters);
 

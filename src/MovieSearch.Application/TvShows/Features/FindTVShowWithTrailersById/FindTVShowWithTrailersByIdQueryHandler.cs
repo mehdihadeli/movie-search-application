@@ -11,23 +11,28 @@ using MovieSearch.Application.Videos.Dtos;
 
 namespace MovieSearch.Application.TvShows.Features.FindTVShowWithTrailersById;
 
-public class FindTVShowWithTrailersByIdQueryHandler : IRequestHandler<FindTVShowWithTrailersByIdQuery,
-    FindTVShowWithTrailersByIdQueryResult>
+public class FindTVShowWithTrailersByIdQueryHandler
+    : IRequestHandler<FindTVShowWithTrailersByIdQuery, FindTVShowWithTrailersByIdQueryResult>
 {
     private readonly IMapper _mapper;
     private readonly IMovieDbServiceClient _movieDbServiceClient;
     private readonly IVideoServiceClient _videoServiceClient;
 
-    public FindTVShowWithTrailersByIdQueryHandler(IMovieDbServiceClient movieDbServiceClient, IVideoServiceClient
-        videoServiceClient, IMapper mapper)
+    public FindTVShowWithTrailersByIdQueryHandler(
+        IMovieDbServiceClient movieDbServiceClient,
+        IVideoServiceClient videoServiceClient,
+        IMapper mapper
+    )
     {
         _movieDbServiceClient = movieDbServiceClient;
         _videoServiceClient = videoServiceClient;
         _mapper = mapper;
     }
 
-    public async Task<FindTVShowWithTrailersByIdQueryResult> Handle(FindTVShowWithTrailersByIdQuery query,
-        CancellationToken cancellationToken)
+    public async Task<FindTVShowWithTrailersByIdQueryResult> Handle(
+        FindTVShowWithTrailersByIdQuery query,
+        CancellationToken cancellationToken
+    )
     {
         Guard.Against.Null(query, nameof(FindTVShowWithTrailersByIdQuery));
 
@@ -43,11 +48,7 @@ public class FindTVShowWithTrailersByIdQueryHandler : IRequestHandler<FindTVShow
 
         return new FindTVShowWithTrailersByIdQueryResult
         {
-            TVShowWithTrailers = new TVShowWithTrailersDto
-            {
-                TVShow = tvShowDto,
-                Trailers = trailersDto
-            }
+            TVShowWithTrailers = new TVShowWithTrailersDto { TVShow = tvShowDto, Trailers = trailersDto }
         };
     }
 }

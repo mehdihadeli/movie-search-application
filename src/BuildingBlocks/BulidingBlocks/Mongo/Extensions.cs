@@ -9,16 +9,22 @@ public static class Extensions
     private const string SectionName = "Mongo";
 
     public static IServiceCollection AddMongoDbContext<TContext>(
-        this IServiceCollection services, IConfiguration configuration,
-        string sectionName = SectionName, Action<MongoOptions> optionsAction = null)
+        this IServiceCollection services,
+        IConfiguration configuration,
+        string sectionName = SectionName,
+        Action<MongoOptions> optionsAction = null
+    )
         where TContext : MongoDbContext
     {
         return services.AddMongoDbContext<TContext, TContext>(configuration, sectionName, optionsAction);
     }
 
     public static IServiceCollection AddMongoDbContext<TContextService, TContextImplementation>(
-        this IServiceCollection services, IConfiguration configuration,
-        string sectionName = SectionName, Action<MongoOptions> optionsAction = null)
+        this IServiceCollection services,
+        IConfiguration configuration,
+        string sectionName = SectionName,
+        Action<MongoOptions> optionsAction = null
+    )
         where TContextService : IMongoDbContext
         where TContextImplementation : MongoDbContext, TContextService
     {

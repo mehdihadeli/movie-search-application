@@ -20,8 +20,7 @@ public class FindMovieByImdbIdQueryHandler : IRequestHandler<FindMovieByImdbIdQu
         _mapper = mapper;
     }
 
-    public async Task<FindByImdbIdQueryResult> Handle(FindMovieByImdbIdQuery query,
-        CancellationToken cancellationToken)
+    public async Task<FindByImdbIdQueryResult> Handle(FindMovieByImdbIdQuery query, CancellationToken cancellationToken)
     {
         Guard.Against.Null(query, nameof(FindMovieByImdbIdQuery));
 
@@ -32,6 +31,6 @@ public class FindMovieByImdbIdQueryHandler : IRequestHandler<FindMovieByImdbIdQu
 
         var result = _mapper.Map<MovieDto>(movie);
 
-        return new FindByImdbIdQueryResult {Movie = result};
+        return new FindByImdbIdQueryResult { Movie = result };
     }
 }

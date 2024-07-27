@@ -23,17 +23,31 @@ public class TxBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResp
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
-    public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken
-        cancellationToken)
+    public async Task<TResponse> Handle(
+        TRequest request,
+        RequestHandlerDelegate<TResponse> next,
+        CancellationToken cancellationToken
+    )
     {
-        if (request is not ITxRequest) return await next();
+        if (request is not ITxRequest)
+            return await next();
 
-        _logger.LogInformation("{Prefix} Handled command {MediatRRequest}", nameof(TxBehavior<TRequest, TResponse>),
-            typeof(TRequest).FullName);
-        _logger.LogDebug("{Prefix} Handled command {MediatRRequest} with content {RequestContent}",
-            nameof(TxBehavior<TRequest, TResponse>), typeof(TRequest).FullName, JsonSerializer.Serialize(request));
-        _logger.LogInformation("{Prefix} Open the transaction for {MediatRRequest}",
-            nameof(TxBehavior<TRequest, TResponse>), typeof(TRequest).FullName);
+        _logger.LogInformation(
+            "{Prefix} Handled command {MediatRRequest}",
+            nameof(TxBehavior<TRequest, TResponse>),
+            typeof(TRequest).FullName
+        );
+        _logger.LogDebug(
+            "{Prefix} Handled command {MediatRRequest} with content {RequestContent}",
+            nameof(TxBehavior<TRequest, TResponse>),
+            typeof(TRequest).FullName,
+            JsonSerializer.Serialize(request)
+        );
+        _logger.LogInformation(
+            "{Prefix} Open the transaction for {MediatRRequest}",
+            nameof(TxBehavior<TRequest, TResponse>),
+            typeof(TRequest).FullName
+        );
 
         try
         {
@@ -41,8 +55,11 @@ public class TxBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResp
             await _dbContext.BeginTransactionAsync();
 
             var response = await next();
-            _logger.LogInformation("{Prefix} Executed the {MediatRRequest} request",
-                nameof(TxBehavior<TRequest, TResponse>), typeof(TRequest).FullName);
+            _logger.LogInformation(
+                "{Prefix} Executed the {MediatRRequest} request",
+                nameof(TxBehavior<TRequest, TResponse>),
+                typeof(TRequest).FullName
+            );
 
             await _dbContext.CommitTransactionAsync();
 

@@ -29,15 +29,18 @@ public static class ReflectionHelpers
                 {
                     return t.Name;
                 }
-            });
+            }
+        );
     }
 
     private static string PrettyPrintRecursive(Type type, int depth)
     {
-        if (depth > 3) return type.Name;
+        if (depth > 3)
+            return type.Name;
 
         var nameParts = type.Name.Split('`');
-        if (nameParts.Length == 1) return nameParts[0];
+        if (nameParts.Length == 1)
+            return nameParts[0];
 
         var genericArguments = type.GetTypeInfo().GetGenericArguments();
         return !type.IsConstructedGenericType

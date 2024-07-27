@@ -5,36 +5,23 @@ using MediatR;
 
 namespace BuildingBlocks.Domain;
 
-public interface ICommand<out T> : IRequest<T> where T : notnull
-{
-}
+public interface ICommand<out T> : IRequest<T>
+    where T : notnull { }
 
-public interface ICommand : IRequest
-{
-}
+public interface ICommand : IRequest { }
 
 public interface IQuery<out T> : IRequest<T>
-    where T : notnull
-{
-}
+    where T : notnull { }
 
 public interface ICreateCommand<out TResponse> : ICommand<TResponse>, ITxRequest
-    where TResponse : notnull
-{
-}
+    where TResponse : notnull { }
 
-public interface ICreateCommand : ICommand, ITxRequest
-{
-}
+public interface ICreateCommand : ICommand, ITxRequest { }
 
-public interface IUpdateCommand : ICommand, ITxRequest
-{
-}
+public interface IUpdateCommand : ICommand, ITxRequest { }
 
 public interface IUpdateCommand<out TResponse> : ICommand<TResponse>, ITxRequest
-    where TResponse : notnull
-{
-}
+    where TResponse : notnull { }
 
 public interface IDeleteCommand<TId, out TResponse> : ICommand<TResponse>
     where TId : struct
@@ -43,7 +30,8 @@ public interface IDeleteCommand<TId, out TResponse> : ICommand<TResponse>
     public TId Id { get; init; }
 }
 
-public interface IDeleteCommand<TId> : ICommand where TId : struct
+public interface IDeleteCommand<TId> : ICommand
+    where TId : struct
 {
     public TId Id { get; init; }
 }
@@ -58,9 +46,7 @@ public interface IPageList
 }
 
 public interface IListQuery<out TResponse> : IQuery<TResponse>, IPageList
-    where TResponse : notnull
-{
-}
+    where TResponse : notnull { }
 
 public interface IItemQuery<TId, out TResponse> : IQuery<TResponse>
     where TId : struct
@@ -72,19 +58,18 @@ public interface IItemQuery<TId, out TResponse> : IQuery<TResponse>
 
 public record FilterModel(string FieldName, string Comparision, string FieldValue);
 
-public record ListResultModel<T>(List<T> Items, long TotalItems, int Page, int PageSize) where T : notnull
+public record ListResultModel<T>(List<T> Items, long TotalItems, int Page, int PageSize)
+    where T : notnull
 {
     public static ListResultModel<T> Empty => new(Enumerable.Empty<T>().ToList(), 0, 0, 0);
 
-    public static ListResultModel<T> Create(List<T> items, long totalItems = 0, int page = default,
-        int pageSize = 20)
+    public static ListResultModel<T> Create(List<T> items, long totalItems = 0, int page = default, int pageSize = 20)
     {
         return new ListResultModel<T>(items, totalItems, page, pageSize);
     }
 
     public ListResultModel<U> Map<U>(Func<T, U> map)
     {
-        return ListResultModel<U>.Create(
-            Items.Select(map).ToList(), TotalItems, Page, PageSize);
+        return ListResultModel<U>.Create(Items.Select(map).ToList(), TotalItems, Page, PageSize);
     }
 }

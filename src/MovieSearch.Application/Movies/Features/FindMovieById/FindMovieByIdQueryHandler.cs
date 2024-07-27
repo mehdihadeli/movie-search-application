@@ -31,6 +31,6 @@ public class FindMovieByIdQueryHandler : IRequestHandler<FindMovieByIdQuery, Fin
 
         var result = _mapper.Map<MovieDto>(movie);
 
-        return new FindMovieByIdQueryResult {Movie = result};
+        return new FindMovieByIdQueryResult { Movie = result };
     }
 }

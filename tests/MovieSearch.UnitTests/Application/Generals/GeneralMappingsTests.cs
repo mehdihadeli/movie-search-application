@@ -16,7 +16,6 @@ public class GeneralMappingsTests : IClassFixture<MappingFixture>
     [Fact]
     public void ShouldHaveValidConfiguration()
     {
-        _mapper.ConfigurationProvider
-            .AssertConfigurationIsValid();
+        _mapper.ConfigurationProvider.AssertConfigurationIsValid();
     }
 }

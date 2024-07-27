@@ -40,11 +40,17 @@ public class FindTvShowByIdQueryHandlerTests : IntegrationTestFixture<Program>
         tvShow.Languages.Should().NotBeNull().And.Subject.Count().Should().Be(TvShowMock.Data.Languages.Count);
         tvShow.Genres.Should().NotBeNull().And.Subject.Count().Should().Be(TvShowMock.Data.Genres.Count);
         tvShow.Networks.Should().NotBeNull().And.Subject.Count().Should().Be(TvShowMock.Data.Networks.Count);
-        tvShow.OriginCountry.Should().NotBeNull().And.Subject.Count().Should()
-            .Be(TvShowMock.Data.OriginCountry.Count);
-        tvShow.OriginalLanguage.Should().NotBeNull().And.Subject.Length.Should()
+        tvShow.OriginCountry.Should().NotBeNull().And.Subject.Count().Should().Be(TvShowMock.Data.OriginCountry.Count);
+        tvShow
+            .OriginalLanguage.Should()
+            .NotBeNull()
+            .And.Subject.Length.Should()
             .Be(TvShowMock.Data.OriginalLanguage.Length);
-        tvShow.ProductionCompanies.Should().NotBeNull().And.Subject.Count().Should()
+        tvShow
+            .ProductionCompanies.Should()
+            .NotBeNull()
+            .And.Subject.Count()
+            .Should()
             .Be(TvShowMock.Data.ProductionCompanies.Count);
 
         TMDBTestUtil.AssertImagePath(tvShow.BackdropPath);

@@ -13,8 +13,12 @@ public class TVShowCreator : IEqualityComparer<TVShowCreator>
 
     public bool Equals(TVShowCreator x, TVShowCreator y)
     {
-        return x != null && y != null && x.Id == y.Id && x.Name == y.Name
-               && x.Gender == y.Gender && x.CreditId == y.CreditId;
+        return x != null
+            && y != null
+            && x.Id == y.Id
+            && x.Name == y.Name
+            && x.Gender == y.Gender
+            && x.CreditId == y.CreditId;
     }
 
     public int GetHashCode(TVShowCreator obj)
@@ -30,7 +34,8 @@ public class TVShowCreator : IEqualityComparer<TVShowCreator>
 
     public override bool Equals(object obj)
     {
-        if (obj is not TVShowCreator showCreator) return false;
+        if (obj is not TVShowCreator showCreator)
+            return false;
 
         return Equals(this, showCreator);
     }

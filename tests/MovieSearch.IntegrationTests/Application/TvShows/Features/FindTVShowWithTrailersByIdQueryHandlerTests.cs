@@ -41,20 +41,47 @@ public class FindTVShowWithTrailersByIdQueryHandlerTests : IntegrationTestFixtur
         tvShowWithTrailers.TVShow.Homepage.Should().Be(TvShowMock.Data.Homepage);
         tvShowWithTrailers.TVShow.Name.Should().Be(TvShowMock.Data.Name);
 
-        tvShowWithTrailers.TVShow.CreatedBy.Should().NotBeNull().And.Subject.Count().Should()
+        tvShowWithTrailers
+            .TVShow.CreatedBy.Should()
+            .NotBeNull()
+            .And.Subject.Count()
+            .Should()
             .Be(TvShowMock.Data.CreatedBy.Count);
         tvShowWithTrailers.TVShow.EpisodeRunTime.Count.Should().Be(TvShowMock.Data.EpisodeRunTime.Count);
-        tvShowWithTrailers.TVShow.Languages.Should().NotBeNull().And.Subject.Count().Should()
+        tvShowWithTrailers
+            .TVShow.Languages.Should()
+            .NotBeNull()
+            .And.Subject.Count()
+            .Should()
             .Be(TvShowMock.Data.Languages.Count);
-        tvShowWithTrailers.TVShow.Genres.Should().NotBeNull().And.Subject.Count().Should()
+        tvShowWithTrailers
+            .TVShow.Genres.Should()
+            .NotBeNull()
+            .And.Subject.Count()
+            .Should()
             .Be(TvShowMock.Data.Genres.Count);
-        tvShowWithTrailers.TVShow.Networks.Should().NotBeNull().And.Subject.Count().Should()
+        tvShowWithTrailers
+            .TVShow.Networks.Should()
+            .NotBeNull()
+            .And.Subject.Count()
+            .Should()
             .Be(TvShowMock.Data.Networks.Count);
-        tvShowWithTrailers.TVShow.OriginCountry.Should().NotBeNull().And.Subject.Count().Should()
+        tvShowWithTrailers
+            .TVShow.OriginCountry.Should()
+            .NotBeNull()
+            .And.Subject.Count()
+            .Should()
             .Be(TvShowMock.Data.OriginCountry.Count);
-        tvShowWithTrailers.TVShow.OriginalLanguage.Should().NotBeNull().And.Subject.Length.Should()
+        tvShowWithTrailers
+            .TVShow.OriginalLanguage.Should()
+            .NotBeNull()
+            .And.Subject.Length.Should()
             .Be(TvShowMock.Data.OriginalLanguage.Length);
-        tvShowWithTrailers.TVShow.ProductionCompanies.Should().NotBeNull().And.Subject.Count().Should()
+        tvShowWithTrailers
+            .TVShow.ProductionCompanies.Should()
+            .NotBeNull()
+            .And.Subject.Count()
+            .Should()
             .Be(TvShowMock.Data.ProductionCompanies.Count);
 
         TMDBTestUtil.AssertImagePath(tvShowWithTrailers.TVShow.BackdropPath);

@@ -23,22 +23,27 @@ public class FindMovieTrailersQueryHandler : IRequestHandler<FindMovieTrailersQu
         _mediator = mediator;
     }
 
-    public async Task<FindMovieTrailersQueryResult> Handle(FindMovieTrailersQuery query,
-        CancellationToken cancellationToken)
+    public async Task<FindMovieTrailersQueryResult> Handle(
+        FindMovieTrailersQuery query,
+        CancellationToken cancellationToken
+    )
     {
         Guard.Against.Null(query, nameof(FindMovieTrailersQuery));
 
-        var movie = (await _mediator.Send(new FindMovieByIdQuery {Id = query.MovieId}, cancellationToken))
-            .Movie;
+        var movie = (await _mediator.Send(new FindMovieByIdQuery { Id = query.MovieId }, cancellationToken)).Movie;
 
         if (movie is null)
             throw new MovieNotFoundException(query.MovieId);
 
-        var videos = await _videoServiceClient.GetTrailers(movie.Title, query.PageSize, query.PageToken,
-            movie.ReleaseDate);
+        var videos = await _videoServiceClient.GetTrailers(
+            movie.Title,
+            query.PageSize,
+            query.PageToken,
+            movie.ReleaseDate
+        );
 
         var result = videos.Map(x => _mapper.Map<VideoDto>(x));
 
-        return new FindMovieTrailersQueryResult {VideoList = result};
+        return new FindMovieTrailersQueryResult { VideoList = result };
     }
 }

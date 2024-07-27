@@ -16,29 +16,38 @@ public static class ApplicationBuilderExtensions
 {
     public static IApplicationBuilder UseCustomHealthCheck(this IApplicationBuilder app)
     {
-        app.UseHealthChecks("/healthz", new HealthCheckOptions
-            {
-                Predicate = _ => true,
-                ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse,
-                ResultStatusCodes =
+        app.UseHealthChecks(
+                "/healthz",
+                new HealthCheckOptions
                 {
-                    [HealthStatus.Healthy] = StatusCodes.Status200OK,
-                    [HealthStatus.Degraded] = StatusCodes.Status500InternalServerError,
-                    [HealthStatus.Unhealthy] = StatusCodes.Status503ServiceUnavailable
+                    Predicate = _ => true,
+                    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse,
+                    ResultStatusCodes =
+                    {
+                        [HealthStatus.Healthy] = StatusCodes.Status200OK,
+                        [HealthStatus.Degraded] = StatusCodes.Status500InternalServerError,
+                        [HealthStatus.Unhealthy] = StatusCodes.Status503ServiceUnavailable
+                    }
                 }
-            })
-            .UseHealthChecks("/health", new HealthCheckOptions
-            {
-                Predicate = check => !check.Tags.Contains("services"),
-                AllowCachingResponses = false,
-                ResponseWriter = WriteResponseAsync
-            })
-            .UseHealthChecks("/health/ready", new HealthCheckOptions
-            {
-                Predicate = _ => true,
-                AllowCachingResponses = false,
-                ResponseWriter = WriteResponseAsync
-            })
+            )
+            .UseHealthChecks(
+                "/health",
+                new HealthCheckOptions
+                {
+                    Predicate = check => !check.Tags.Contains("services"),
+                    AllowCachingResponses = false,
+                    ResponseWriter = WriteResponseAsync
+                }
+            )
+            .UseHealthChecks(
+                "/health/ready",
+                new HealthCheckOptions
+                {
+                    Predicate = _ => true,
+                    AllowCachingResponses = false,
+                    ResponseWriter = WriteResponseAsync
+                }
+            )
             .UseHealthChecksUI(setup =>
             {
                 setup.ApiPath = "/healthcheck";
@@ -52,10 +61,7 @@ public static class ApplicationBuilderExtensions
     {
         context.Response.ContentType = "application/json; charset=utf-8";
 
-        var options = new JsonWriterOptions
-        {
-            Indented = true
-        };
+        var options = new JsonWriterOptions { Indented = true };
 
         using var stream = new MemoryStream();
         using (var writer = new Utf8JsonWriter(stream, options))

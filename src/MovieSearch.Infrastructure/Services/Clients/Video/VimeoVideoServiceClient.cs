@@ -7,9 +7,13 @@ namespace MovieSearch.Infrastructure.Services.Clients.Video;
 
 public class VimeoVideoServiceClient : IVideoServiceClient
 {
-    public Task<VideoListResultModel<Core.Generals.Video>> GetTrailers(string movieName, int pageSize = 20,
-        string page = "", DateTime? publishedAfter = null,
-        DateTime? publishedBefore = null)
+    public Task<VideoListResultModel<Core.Generals.Video>> GetTrailers(
+        string movieName,
+        int pageSize = 20,
+        string page = "",
+        DateTime? publishedAfter = null,
+        DateTime? publishedBefore = null
+    )
     {
         throw new NotImplementedException();
     }

@@ -23,9 +23,11 @@ public class YoutubeVideoServiceClientTests : IntegrationTestFixture<Program>
         //setup the swaps for our tests
         RegisterTestServices(services => { });
 
-        _sut = new YoutubeVideoServiceClient(ServiceProvider.GetRequiredService<IOptions<YoutubeVideoOptions>>(),
+        _sut = new YoutubeVideoServiceClient(
+            ServiceProvider.GetRequiredService<IOptions<YoutubeVideoOptions>>(),
             ServiceProvider.GetRequiredService<IMapper>(),
-            ServiceProvider.GetRequiredService<IOptions<PolicyConfig>>());
+            ServiceProvider.GetRequiredService<IOptions<PolicyConfig>>()
+        );
     }
 
     [Fact]

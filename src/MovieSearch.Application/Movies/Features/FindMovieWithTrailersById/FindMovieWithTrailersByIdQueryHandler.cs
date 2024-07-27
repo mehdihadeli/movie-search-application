@@ -12,24 +12,28 @@ using MovieSearch.Application.Videos.Dtos;
 namespace MovieSearch.Application.Movies.Features.FindMovieWithTrailersById;
 
 //https://docs.microsoft.com/en-us/azure/architecture/patterns/gateway-aggregation
-public class
-    FindMovieWithTrailersByIdQueryHandler : IRequestHandler<FindMovieWithTrailersByIdQuery,
-        FindMovieWithTrailersByIdQueryResult>
+public class FindMovieWithTrailersByIdQueryHandler
+    : IRequestHandler<FindMovieWithTrailersByIdQuery, FindMovieWithTrailersByIdQueryResult>
 {
     private readonly IMapper _mapper;
     private readonly IMovieDbServiceClient _movieDbServiceClient;
     private readonly IVideoServiceClient _videoServiceClient;
 
-    public FindMovieWithTrailersByIdQueryHandler(IMovieDbServiceClient movieDbServiceClient, IVideoServiceClient
-        videoServiceClient, IMapper mapper)
+    public FindMovieWithTrailersByIdQueryHandler(
+        IMovieDbServiceClient movieDbServiceClient,
+        IVideoServiceClient videoServiceClient,
+        IMapper mapper
+    )
     {
         _movieDbServiceClient = movieDbServiceClient;
         _videoServiceClient = videoServiceClient;
         _mapper = mapper;
     }
 
-    public async Task<FindMovieWithTrailersByIdQueryResult> Handle(FindMovieWithTrailersByIdQuery query,
-        CancellationToken cancellationToken)
+    public async Task<FindMovieWithTrailersByIdQueryResult> Handle(
+        FindMovieWithTrailersByIdQuery query,
+        CancellationToken cancellationToken
+    )
     {
         Guard.Against.Null(query, nameof(FindMovieWithTrailersByIdQuery));
 
@@ -43,10 +47,8 @@ public class
         var trailers = (await _videoServiceClient.GetTrailers(movieDto.Title, query.TrailersCount)).Items;
         var trailersDto = _mapper.Map<List<VideoDto>>(trailers);
 
-        return new FindMovieWithTrailersByIdQueryResult(new MovieWithTrailersDto
-        {
-            Movie = movieDto,
-            Trailers = trailersDto
-        });
+        return new FindMovieWithTrailersByIdQueryResult(
+            new MovieWithTrailersDto { Movie = movieDto, Trailers = trailersDto }
+        );
     }
 }

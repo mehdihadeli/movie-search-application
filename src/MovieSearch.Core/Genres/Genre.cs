@@ -32,7 +32,8 @@ public class Genre : IEqualityComparer<Genre>
 
     public override bool Equals(object obj)
     {
-        if (obj is not Genre genre) return false;
+        if (obj is not Genre genre)
+            return false;
 
         return Equals(this, genre);
     }

@@ -10,18 +10,13 @@ public class OptionsHelper
         settingsFileName ??= "appsettings.test.json";
         var configuration = new TSettings();
 
-        GetConfigurationRoot(settingsFileName)
-            .GetSection(section)
-            .Bind(configuration);
+        GetConfigurationRoot(settingsFileName).GetSection(section).Bind(configuration);
 
         return configuration;
     }
 
     private static IConfigurationRoot GetConfigurationRoot(string settingsFileName)
     {
-        return new ConfigurationBuilder()
-            .AddJsonFile(settingsFileName, true)
-            .AddEnvironmentVariables()
-            .Build();
+        return new ConfigurationBuilder().AddJsonFile(settingsFileName, true).AddEnvironmentVariables().Build();
     }
 }

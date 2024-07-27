@@ -33,7 +33,8 @@ public class CompanyInfo : IEqualityComparer<CompanyInfo>
 
     public override bool Equals(object obj)
     {
-        if (obj is not CompanyInfo info) return false;
+        if (obj is not CompanyInfo info)
+            return false;
 
         return Equals(this, info);
     }
@@ -45,7 +46,8 @@ public class CompanyInfo : IEqualityComparer<CompanyInfo>
 
     public override string ToString()
     {
-        if (string.IsNullOrWhiteSpace(Name)) return "n/a";
+        if (string.IsNullOrWhiteSpace(Name))
+            return "n/a";
 
         return $"{Name} ({Id})";
     }

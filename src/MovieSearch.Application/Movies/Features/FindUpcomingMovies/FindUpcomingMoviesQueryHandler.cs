@@ -8,8 +8,7 @@ using MovieSearch.Application.Services.Clients;
 
 namespace MovieSearch.Application.Movies.Features.FindUpcomingMovies;
 
-public class
-    FindUpcomingMoviesQueryHandler : IRequestHandler<FindUpcomingMoviesQuery, FindUpcomingMoviesQueryResult>
+public class FindUpcomingMoviesQueryHandler : IRequestHandler<FindUpcomingMoviesQuery, FindUpcomingMoviesQueryResult>
 {
     private readonly IMapper _mapper;
     private readonly IMovieDbServiceClient _movieDbServiceClient;
@@ -20,8 +19,10 @@ public class
         _mapper = mapper;
     }
 
-    public async Task<FindUpcomingMoviesQueryResult> Handle(FindUpcomingMoviesQuery query,
-        CancellationToken cancellationToken)
+    public async Task<FindUpcomingMoviesQueryResult> Handle(
+        FindUpcomingMoviesQuery query,
+        CancellationToken cancellationToken
+    )
     {
         Guard.Against.Null(query, nameof(FindUpcomingMoviesQuery));
 
@@ -29,6 +30,6 @@ public class
 
         var result = movies.Map(x => _mapper.Map<MovieInfoDto>(x));
 
-        return new FindUpcomingMoviesQueryResult {MovieList = result};
+        return new FindUpcomingMoviesQueryResult { MovieList = result };
     }
 }

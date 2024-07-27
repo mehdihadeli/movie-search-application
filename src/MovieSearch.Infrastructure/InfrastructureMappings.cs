@@ -44,8 +44,7 @@ public class InfrastructureMappings : Profile
         CreateMap<SearchCompany, CompanyInfo>();
         CreateMap<Genre, Core.Genres.Genre>();
         CreateMap<ProductionCompany, Core.Companies.ProductionCompany>();
-        CreateMap<ProductionCountry, Country>()
-            .ForMember(x => x.Iso3166Code, opt => opt.MapFrom(s => s.Iso_3166_1));
+        CreateMap<ProductionCountry, Country>().ForMember(x => x.Iso3166Code, opt => opt.MapFrom(s => s.Iso_3166_1));
         CreateMap<SpokenLanguage, Language>()
             .ForMember(x => x.Iso639Code, opt => opt.MapFrom(s => s.Iso_639_1))
             .ForMember(x => x.EnglishName, opt => opt.Ignore());
@@ -58,8 +57,7 @@ public class InfrastructureMappings : Profile
             .ForMember(x => x.IsVideo, opt => opt.MapFrom(s => s.Video))
             .ForMember(x => x.Keywords, opt => opt.Ignore());
 
-        CreateMap<TvShow, TVShow>()
-            .ForMember(x => x.Keywords, opt => opt.Ignore());
+        CreateMap<TvShow, TVShow>().ForMember(x => x.Keywords, opt => opt.Ignore());
         CreateMap<SearchTvSeason, Season>();
         CreateMap<NetworkWithLogo, Network>();
         CreateMap<CreatedBy, TVShowCreator>();
@@ -96,8 +94,7 @@ public class InfrastructureMappings : Profile
         CreateMap<ImagesWithId, Images>();
         CreateMap<ImageData, Core.Generals.ImageData>();
 
-        CreateMap<Video, Core.Generals.Video>()
-            .ForMember(x => x.PublishedAt, opt => opt.Ignore());
+        CreateMap<Video, Core.Generals.Video>().ForMember(x => x.PublishedAt, opt => opt.Ignore());
         CreateMap<Person, Core.People.Person>();
 
         CreateMap<SearchBase, MultiInfo>();
@@ -107,26 +104,40 @@ public class InfrastructureMappings : Profile
     }
 }
 
-public class SearchContainerWithDatesToListResultModelConverter<TSource, TDestination> : ITypeConverter<
-    SearchContainerWithDates<TSource>, ListResultModel<TDestination>>
+public class SearchContainerWithDatesToListResultModelConverter<TSource, TDestination>
+    : ITypeConverter<SearchContainerWithDates<TSource>, ListResultModel<TDestination>>
 {
-    public ListResultModel<TDestination> Convert(SearchContainerWithDates<TSource> source,
-        ListResultModel<TDestination> destination, ResolutionContext context)
+    public ListResultModel<TDestination> Convert(
+        SearchContainerWithDates<TSource> source,
+        ListResultModel<TDestination> destination,
+        ResolutionContext context
+    )
     {
         var destinationItems = context.Mapper.Map<IEnumerable<TSource>, IEnumerable<TDestination>>(source.Results);
-        return new ListResultModel<TDestination>(destinationItems?.ToList(), source.TotalResults, source.Page,
-            source.Results.Count);
+        return new ListResultModel<TDestination>(
+            destinationItems?.ToList(),
+            source.TotalResults,
+            source.Page,
+            source.Results.Count
+        );
     }
 }
 
-public class SearchContainerToListResultModelConverter<TSource, TDestination> : ITypeConverter<
-    SearchContainer<TSource>, ListResultModel<TDestination>>
+public class SearchContainerToListResultModelConverter<TSource, TDestination>
+    : ITypeConverter<SearchContainer<TSource>, ListResultModel<TDestination>>
 {
-    public ListResultModel<TDestination> Convert(SearchContainer<TSource> source,
-        ListResultModel<TDestination> destination, ResolutionContext context)
+    public ListResultModel<TDestination> Convert(
+        SearchContainer<TSource> source,
+        ListResultModel<TDestination> destination,
+        ResolutionContext context
+    )
     {
         var destinationItems = context.Mapper.Map<IEnumerable<TSource>, IEnumerable<TDestination>>(source.Results);
-        return new ListResultModel<TDestination>(destinationItems?.ToList(), source.TotalResults, source.Page,
-            source.Results.Count);
+        return new ListResultModel<TDestination>(
+            destinationItems?.ToList(),
+            source.TotalResults,
+            source.Page,
+            source.Results.Count
+        );
     }
 }

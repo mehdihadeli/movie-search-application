@@ -31,7 +31,8 @@ public class Network : IEqualityComparer<Network>
 
     public override bool Equals(object obj)
     {
-        if (obj is not Network network) return false;
+        if (obj is not Network network)
+            return false;
 
         return Equals(this, network);
     }

@@ -20,8 +20,7 @@ public class FindPersonByIdQueryHandler : IRequestHandler<FindPersonByIdQuery, F
         _mapper = mapper;
     }
 
-    public async Task<FindPersonByIdQueryResult> Handle(FindPersonByIdQuery query,
-        CancellationToken cancellationToken)
+    public async Task<FindPersonByIdQueryResult> Handle(FindPersonByIdQuery query, CancellationToken cancellationToken)
     {
         Guard.Against.Null(query, nameof(FindPersonByIdQuery));
 
@@ -32,6 +31,6 @@ public class FindPersonByIdQueryHandler : IRequestHandler<FindPersonByIdQuery, F
 
         var result = _mapper.Map<PersonDto>(person);
 
-        return new FindPersonByIdQueryResult {Person = result};
+        return new FindPersonByIdQueryResult { Person = result };
     }
 }

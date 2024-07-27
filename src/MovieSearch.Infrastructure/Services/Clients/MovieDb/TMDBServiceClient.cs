@@ -47,8 +47,12 @@ public class TMDBServiceClient : IMovieDbServiceClient
 
         _retryPolicy = Policy.Handle<Exception>().RetryAsync(policyOptions.Value.RetryCount);
         _timeoutPolicy = Policy.TimeoutAsync(policyOptions.Value.TimeOutDuration, TimeoutStrategy.Pessimistic);
-        _circuitBreakerPolicy = Policy.Handle<Exception>().CircuitBreakerAsync(policyOptions.Value.RetryCount + 1,
-            TimeSpan.FromSeconds(policyOptions.Value.BreakDuration));
+        _circuitBreakerPolicy = Policy
+            .Handle<Exception>()
+            .CircuitBreakerAsync(
+                policyOptions.Value.RetryCount + 1,
+                TimeSpan.FromSeconds(policyOptions.Value.BreakDuration)
+            );
         //at any given time there will 3 parallel requests execution for specific service call and another 6 requests for other services can be in the queue. So that if the response from customer service is delayed or blocked then we don’t use too many resources
         _bulkheadPolicy = Policy.BulkheadAsync(3, 6);
 
@@ -63,11 +67,17 @@ public class TMDBServiceClient : IMovieDbServiceClient
     /// <param name="page"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task<ListResultModel<MovieInfo>> GetNowPlayingAsync(int page = 1,
-        CancellationToken cancellationToken = default)
+    public async Task<ListResultModel<MovieInfo>> GetNowPlayingAsync(
+        int page = 1,
+        CancellationToken cancellationToken = default
+    )
     {
-        var searchResult = await _client.GetMovieNowPlayingListAsync(_movieDbOptions.Language, page,
-            _movieDbOptions.Region, cancellationToken);
+        var searchResult = await _client.GetMovieNowPlayingListAsync(
+            _movieDbOptions.Language,
+            page,
+            _movieDbOptions.Region,
+            cancellationToken
+        );
 
         return _mapper.Map<ListResultModel<MovieInfo>>(searchResult);
     }
@@ -83,17 +93,27 @@ public class TMDBServiceClient : IMovieDbServiceClient
     /// <param name="primaryReleaseYear"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task<ListResultModel<MovieInfo>> SearchMovieAsync(string keyword,
+    public async Task<ListResultModel<MovieInfo>> SearchMovieAsync(
+        string keyword,
         int page = 1,
         bool includeAdult = false,
         int year = 0,
         int primaryReleaseYear = 0,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default
+    )
     {
-        var searchResult = await _retryPolicy.ExecuteAsync(() => _client.SearchMovieAsync(keyword, page,
-            includeAdult, year,
-            _movieDbOptions.Region,
-            primaryReleaseYear, cancellationToken));
+        var searchResult = await _retryPolicy.ExecuteAsync(
+            () =>
+                _client.SearchMovieAsync(
+                    keyword,
+                    page,
+                    includeAdult,
+                    year,
+                    _movieDbOptions.Region,
+                    primaryReleaseYear,
+                    cancellationToken
+                )
+        );
 
         return _mapper.Map<ListResultModel<MovieInfo>>(searchResult);
     }
@@ -105,13 +125,20 @@ public class TMDBServiceClient : IMovieDbServiceClient
     /// <param name="page"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task<ListResultModel<MovieInfo>> GetPopularMoviesAsync(int page = 1,
-        CancellationToken cancellationToken = default)
+    public async Task<ListResultModel<MovieInfo>> GetPopularMoviesAsync(
+        int page = 1,
+        CancellationToken cancellationToken = default
+    )
     {
-        var searchResult = await _retryPolicy.ExecuteAsync(() => _client.GetMoviePopularListAsync(
-            _movieDbOptions.Language, page,
-            _movieDbOptions.Region,
-            cancellationToken));
+        var searchResult = await _retryPolicy.ExecuteAsync(
+            () =>
+                _client.GetMoviePopularListAsync(
+                    _movieDbOptions.Language,
+                    page,
+                    _movieDbOptions.Region,
+                    cancellationToken
+                )
+        );
 
         return _mapper.Map<ListResultModel<MovieInfo>>(searchResult);
     }
@@ -122,8 +149,7 @@ public class TMDBServiceClient : IMovieDbServiceClient
     /// </summary>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task<Movie> GetLatestMovieAsync(
-        CancellationToken cancellationToken = default)
+    public async Task<Movie> GetLatestMovieAsync(CancellationToken cancellationToken = default)
     {
         var searchResult = await _retryPolicy.ExecuteAsync(() => _client.GetMovieLatestAsync(cancellationToken));
 
@@ -138,13 +164,20 @@ public class TMDBServiceClient : IMovieDbServiceClient
     /// <param name="page"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task<ListResultModel<MovieInfo>> GetUpComingMoviesAsync(int page = 1,
-        CancellationToken cancellationToken = default)
+    public async Task<ListResultModel<MovieInfo>> GetUpComingMoviesAsync(
+        int page = 1,
+        CancellationToken cancellationToken = default
+    )
     {
-        var searchResult = await _retryPolicy.ExecuteAsync(() => _client.GetMovieUpcomingListAsync(
-            _movieDbOptions.Language, page,
-            _movieDbOptions.Region,
-            cancellationToken));
+        var searchResult = await _retryPolicy.ExecuteAsync(
+            () =>
+                _client.GetMovieUpcomingListAsync(
+                    _movieDbOptions.Language,
+                    page,
+                    _movieDbOptions.Region,
+                    cancellationToken
+                )
+        );
 
         return _mapper.Map<ListResultModel<MovieInfo>>(searchResult);
     }
@@ -156,13 +189,20 @@ public class TMDBServiceClient : IMovieDbServiceClient
     /// <param name="page"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task<ListResultModel<MovieInfo>> GetTopRatedMoviesAsync(int page = 1,
-        CancellationToken cancellationToken = default)
+    public async Task<ListResultModel<MovieInfo>> GetTopRatedMoviesAsync(
+        int page = 1,
+        CancellationToken cancellationToken = default
+    )
     {
-        var searchResult = await _retryPolicy.ExecuteAsync(() => _client.GetMovieTopRatedListAsync(
-            _movieDbOptions.Language, page,
-            _movieDbOptions.Region,
-            cancellationToken));
+        var searchResult = await _retryPolicy.ExecuteAsync(
+            () =>
+                _client.GetMovieTopRatedListAsync(
+                    _movieDbOptions.Language,
+                    page,
+                    _movieDbOptions.Region,
+                    cancellationToken
+                )
+        );
 
         return _mapper.Map<ListResultModel<MovieInfo>>(searchResult);
     }
@@ -175,26 +215,35 @@ public class TMDBServiceClient : IMovieDbServiceClient
     /// <returns></returns>
     public async Task<IEnumerable<Genre>> GetMovieGenresAsync(CancellationToken cancellationToken = default)
     {
-        var result = await _retryPolicy.ExecuteAsync(() =>
-            _client.GetMovieGenresAsync(_movieDbOptions.Language, cancellationToken));
+        var result = await _retryPolicy.ExecuteAsync(
+            () => _client.GetMovieGenresAsync(_movieDbOptions.Language, cancellationToken)
+        );
 
         return _mapper.Map<IEnumerable<Genre>>(result);
     }
 
-    public async Task<ListResultModel<MovieInfo>> FindMoviesByGenreAsync(IReadOnlyList<int> genreIds,
-        int page = 1, CancellationToken cancellationToken = default)
+    public async Task<ListResultModel<MovieInfo>> FindMoviesByGenreAsync(
+        IReadOnlyList<int> genreIds,
+        int page = 1,
+        CancellationToken cancellationToken = default
+    )
     {
-        var searchResult = await _retryPolicy.ExecuteAsync(() =>
-            GetDiscoverMovies().IncludeWithAllOfGenre(genreIds).Query(page, cancellationToken));
+        var searchResult = await _retryPolicy.ExecuteAsync(
+            () => GetDiscoverMovies().IncludeWithAllOfGenre(genreIds).Query(page, cancellationToken)
+        );
 
         return _mapper.Map<ListResultModel<MovieInfo>>(searchResult);
     }
 
-    public async Task<ListResultModel<TVShowInfo>> FindTvShowsByGenreAsync(IReadOnlyList<int> genreIds,
-        int page = 1, CancellationToken cancellationToken = default)
+    public async Task<ListResultModel<TVShowInfo>> FindTvShowsByGenreAsync(
+        IReadOnlyList<int> genreIds,
+        int page = 1,
+        CancellationToken cancellationToken = default
+    )
     {
-        var searchResult = await _retryPolicy.ExecuteAsync(() =>
-            GetDiscoverTvShows().WhereGenresInclude(genreIds).Query(page, cancellationToken));
+        var searchResult = await _retryPolicy.ExecuteAsync(
+            () => GetDiscoverTvShows().WhereGenresInclude(genreIds).Query(page, cancellationToken)
+        );
 
         return _mapper.Map<ListResultModel<TVShowInfo>>(searchResult);
     }
@@ -207,8 +256,9 @@ public class TMDBServiceClient : IMovieDbServiceClient
     /// <returns></returns>
     public async Task<IEnumerable<Genre>> GetTvShowGenresAsync(CancellationToken cancellationToken = default)
     {
-        var result = await _retryPolicy.ExecuteAsync(() =>
-            _client.GetTvGenresAsync(_movieDbOptions.Language, cancellationToken));
+        var result = await _retryPolicy.ExecuteAsync(
+            () => _client.GetTvGenresAsync(_movieDbOptions.Language, cancellationToken)
+        );
 
         return _mapper.Map<IEnumerable<Genre>>(result);
     }
@@ -222,9 +272,9 @@ public class TMDBServiceClient : IMovieDbServiceClient
     /// <returns></returns>
     public async Task<Movie> GetMovieByIdAsync(int id, CancellationToken cancellationToken = default)
     {
-        var result = await _retryPolicy.ExecuteAsync(() => _client.GetMovieAsync(id,
-            cancellationToken: cancellationToken,
-            language: _movieDbOptions.Language));
+        var result = await _retryPolicy.ExecuteAsync(
+            () => _client.GetMovieAsync(id, cancellationToken: cancellationToken, language: _movieDbOptions.Language)
+        );
 
         return _mapper.Map<Movie>(result);
     }
@@ -238,9 +288,10 @@ public class TMDBServiceClient : IMovieDbServiceClient
     /// <returns></returns>
     public async Task<Movie> GetMovieByImdbIdAsync(string imdbId, CancellationToken cancellationToken = default)
     {
-        var result = await _retryPolicy.ExecuteAsync(() => _client.GetMovieAsync(imdbId,
-            cancellationToken: cancellationToken,
-            language: _movieDbOptions.Language));
+        var result = await _retryPolicy.ExecuteAsync(
+            () =>
+                _client.GetMovieAsync(imdbId, cancellationToken: cancellationToken, language: _movieDbOptions.Language)
+        );
 
         return _mapper.Map<Movie>(result);
     }
@@ -254,9 +305,9 @@ public class TMDBServiceClient : IMovieDbServiceClient
     /// <returns></returns>
     public async Task<TVShow> GetTvShowByIdAsync(int id, CancellationToken cancellationToken = default)
     {
-        var result = await _retryPolicy.ExecuteAsync(() => _client.GetTvShowAsync(id,
-            cancellationToken: cancellationToken,
-            language: _movieDbOptions.Language));
+        var result = await _retryPolicy.ExecuteAsync(
+            () => _client.GetTvShowAsync(id, cancellationToken: cancellationToken, language: _movieDbOptions.Language)
+        );
 
         return _mapper.Map<TVShow>(result);
     }
@@ -269,12 +320,21 @@ public class TMDBServiceClient : IMovieDbServiceClient
     /// <param name="page"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task<ListResultModel<ReviewInfo>> GetMovieReviewsAsync(int movieId, int page = 1,
-        CancellationToken cancellationToken = default)
+    public async Task<ListResultModel<ReviewInfo>> GetMovieReviewsAsync(
+        int movieId,
+        int page = 1,
+        CancellationToken cancellationToken = default
+    )
     {
-        var result = await _retryPolicy.ExecuteAsync(() => _client.GetMovieReviewsAsync(movieId,
-            cancellationToken: cancellationToken,
-            language: _movieDbOptions.Language, page: page));
+        var result = await _retryPolicy.ExecuteAsync(
+            () =>
+                _client.GetMovieReviewsAsync(
+                    movieId,
+                    cancellationToken: cancellationToken,
+                    language: _movieDbOptions.Language,
+                    page: page
+                )
+        );
 
         return _mapper.Map<ListResultModel<ReviewInfo>>(result);
     }
@@ -287,12 +347,21 @@ public class TMDBServiceClient : IMovieDbServiceClient
     /// <param name="page"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task<ListResultModel<ReviewInfo>> GetTvShowReviewsAsync(int tvShowId, int page = 1,
-        CancellationToken cancellationToken = default)
+    public async Task<ListResultModel<ReviewInfo>> GetTvShowReviewsAsync(
+        int tvShowId,
+        int page = 1,
+        CancellationToken cancellationToken = default
+    )
     {
-        var result = await _retryPolicy.ExecuteAsync(() => _client.GetTvShowReviewsAsync(tvShowId,
-            cancellationToken: cancellationToken,
-            language: _movieDbOptions.Language, page: page));
+        var result = await _retryPolicy.ExecuteAsync(
+            () =>
+                _client.GetTvShowReviewsAsync(
+                    tvShowId,
+                    cancellationToken: cancellationToken,
+                    language: _movieDbOptions.Language,
+                    page: page
+                )
+        );
 
         return _mapper.Map<ListResultModel<ReviewInfo>>(result);
     }
@@ -320,8 +389,7 @@ public class TMDBServiceClient : IMovieDbServiceClient
     /// <returns></returns>
     public async Task<MovieCredit> GetMovieCreditsAsync(int movieId, CancellationToken cancellationToken = default)
     {
-        var result =
-            await _retryPolicy.ExecuteAsync(() => _client.GetMovieCreditsAsync(movieId, cancellationToken));
+        var result = await _retryPolicy.ExecuteAsync(() => _client.GetMovieCreditsAsync(movieId, cancellationToken));
 
         return _mapper.Map<MovieCredit>(result);
     }
@@ -333,11 +401,14 @@ public class TMDBServiceClient : IMovieDbServiceClient
     /// <param name="personId"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task<PersonMovieCredit> GetPersonMovieCreditsAsync(int personId,
-        CancellationToken cancellationToken = default)
+    public async Task<PersonMovieCredit> GetPersonMovieCreditsAsync(
+        int personId,
+        CancellationToken cancellationToken = default
+    )
     {
         var result = await _retryPolicy.ExecuteAsync(
-            () => _client.GetPersonMovieCreditsAsync(personId, _movieDbOptions.Language, cancellationToken));
+            () => _client.GetPersonMovieCreditsAsync(personId, _movieDbOptions.Language, cancellationToken)
+        );
 
         return _mapper.Map<PersonMovieCredit>(result);
     }
@@ -349,11 +420,14 @@ public class TMDBServiceClient : IMovieDbServiceClient
     /// <param name="personId"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task<PersonTVCredit> GetPersonTvShowCreditsAsync(int personId,
-        CancellationToken cancellationToken = default)
+    public async Task<PersonTVCredit> GetPersonTvShowCreditsAsync(
+        int personId,
+        CancellationToken cancellationToken = default
+    )
     {
-        var result = await _retryPolicy.ExecuteAsync(() =>
-            _client.GetPersonTvCreditsAsync(personId, _movieDbOptions.Language, cancellationToken));
+        var result = await _retryPolicy.ExecuteAsync(
+            () => _client.GetPersonTvCreditsAsync(personId, _movieDbOptions.Language, cancellationToken)
+        );
 
         return _mapper.Map<PersonTVCredit>(result);
     }
@@ -365,11 +439,11 @@ public class TMDBServiceClient : IMovieDbServiceClient
     /// <param name="tvShowId"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task<TVShowCredit> GetTvShowCreditsAsync(int tvShowId,
-        CancellationToken cancellationToken = default)
+    public async Task<TVShowCredit> GetTvShowCreditsAsync(int tvShowId, CancellationToken cancellationToken = default)
     {
-        var result = await _retryPolicy.ExecuteAsync(() =>
-            _client.GetTvShowCreditsAsync(tvShowId, _movieDbOptions.Language, cancellationToken));
+        var result = await _retryPolicy.ExecuteAsync(
+            () => _client.GetTvShowCreditsAsync(tvShowId, _movieDbOptions.Language, cancellationToken)
+        );
 
         return _mapper.Map<TVShowCredit>(result);
     }
@@ -397,8 +471,9 @@ public class TMDBServiceClient : IMovieDbServiceClient
     /// <returns></returns>
     public async Task<Images> GetTvShowImagesAsync(int tvShowId, CancellationToken cancellationToken = default)
     {
-        var image = await _retryPolicy.ExecuteAsync(() =>
-            _client.GetTvShowImagesAsync(tvShowId, cancellationToken: cancellationToken));
+        var image = await _retryPolicy.ExecuteAsync(
+            () => _client.GetTvShowImagesAsync(tvShowId, cancellationToken: cancellationToken)
+        );
 
         return _mapper.Map<Images>(image);
     }
@@ -410,11 +485,12 @@ public class TMDBServiceClient : IMovieDbServiceClient
     /// <param name="movieId"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task<(List<Core.Generals.Video> Videos, int MovieId)> GetMovieVideosAsync(int movieId,
-        CancellationToken cancellationToken = default)
+    public async Task<(List<Core.Generals.Video> Videos, int MovieId)> GetMovieVideosAsync(
+        int movieId,
+        CancellationToken cancellationToken = default
+    )
     {
-        var result = await _retryPolicy.ExecuteAsync(() =>
-            _client.GetMovieVideosAsync(movieId, cancellationToken));
+        var result = await _retryPolicy.ExecuteAsync(() => _client.GetMovieVideosAsync(movieId, cancellationToken));
 
         return (Videos: _mapper.Map<List<Core.Generals.Video>>(result.Results), MovieId: result.Id);
     }
@@ -426,11 +502,12 @@ public class TMDBServiceClient : IMovieDbServiceClient
     /// <param name="tvShowId"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task<(List<Core.Generals.Video> Videos, int TvShowId)> GetTvShowVideosAsync(int tvShowId,
-        CancellationToken cancellationToken = default)
+    public async Task<(List<Core.Generals.Video> Videos, int TvShowId)> GetTvShowVideosAsync(
+        int tvShowId,
+        CancellationToken cancellationToken = default
+    )
     {
-        var result = await _retryPolicy.ExecuteAsync(() =>
-            _client.GetTvShowVideosAsync(tvShowId, cancellationToken));
+        var result = await _retryPolicy.ExecuteAsync(() => _client.GetTvShowVideosAsync(tvShowId, cancellationToken));
 
         return (Videos: _mapper.Map<List<Core.Generals.Video>>(result.Results), TvShowId: result.Id);
     }
@@ -442,11 +519,14 @@ public class TMDBServiceClient : IMovieDbServiceClient
     /// <param name="movieId"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task<ListResultModel<MovieInfo>> GetRecommendMoviesAsync(int movieId,
-        CancellationToken cancellationToken = default)
+    public async Task<ListResultModel<MovieInfo>> GetRecommendMoviesAsync(
+        int movieId,
+        CancellationToken cancellationToken = default
+    )
     {
-        var result = await _retryPolicy.ExecuteAsync(() =>
-            _client.GetMovieRecommendationsAsync(movieId, cancellationToken: cancellationToken));
+        var result = await _retryPolicy.ExecuteAsync(
+            () => _client.GetMovieRecommendationsAsync(movieId, cancellationToken: cancellationToken)
+        );
 
         return _mapper.Map<ListResultModel<MovieInfo>>(result);
     }
@@ -458,11 +538,14 @@ public class TMDBServiceClient : IMovieDbServiceClient
     /// <param name="tvShowId"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task<ListResultModel<TVShowInfo>> GetRecommendTvShowAsync(int tvShowId,
-        CancellationToken cancellationToken = default)
+    public async Task<ListResultModel<TVShowInfo>> GetRecommendTvShowAsync(
+        int tvShowId,
+        CancellationToken cancellationToken = default
+    )
     {
-        var result = await _retryPolicy.ExecuteAsync(() =>
-            _client.GetTvShowRecommendationsAsync(tvShowId, cancellationToken: cancellationToken));
+        var result = await _retryPolicy.ExecuteAsync(
+            () => _client.GetTvShowRecommendationsAsync(tvShowId, cancellationToken: cancellationToken)
+        );
 
         return _mapper.Map<ListResultModel<TVShowInfo>>(result);
     }
@@ -476,8 +559,9 @@ public class TMDBServiceClient : IMovieDbServiceClient
     /// <returns></returns>
     public async Task<Person> GetPersonDetailAsync(int personId, CancellationToken cancellationToken = default)
     {
-        var result = await _retryPolicy.ExecuteAsync(() =>
-            _client.GetPersonAsync(personId, cancellationToken: cancellationToken));
+        var result = await _retryPolicy.ExecuteAsync(
+            () => _client.GetPersonAsync(personId, cancellationToken: cancellationToken)
+        );
 
         return _mapper.Map<Person>(result);
     }
@@ -489,11 +573,14 @@ public class TMDBServiceClient : IMovieDbServiceClient
     /// <param name="personId"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task<PersonExternalIds> GetPersonExternalDataAsync(int personId,
-        CancellationToken cancellationToken = default)
+    public async Task<PersonExternalIds> GetPersonExternalDataAsync(
+        int personId,
+        CancellationToken cancellationToken = default
+    )
     {
-        var result = await _retryPolicy.ExecuteAsync(() =>
-            _client.GetPersonExternalIdsAsync(personId, cancellationToken));
+        var result = await _retryPolicy.ExecuteAsync(
+            () => _client.GetPersonExternalIdsAsync(personId, cancellationToken)
+        );
 
         return _mapper.Map<PersonExternalIds>(result);
     }
@@ -507,11 +594,15 @@ public class TMDBServiceClient : IMovieDbServiceClient
     /// <param name="timeZone"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task<ListResultModel<TVShowInfo>> GetTvShowOnTheAirAsync(int page = 1, string timeZone = null,
-        CancellationToken cancellationToken = default)
+    public async Task<ListResultModel<TVShowInfo>> GetTvShowOnTheAirAsync(
+        int page = 1,
+        string timeZone = null,
+        CancellationToken cancellationToken = default
+    )
     {
-        var result = await _retryPolicy.ExecuteAsync(() =>
-            _client.GetTvShowListAsync(TvShowListType.OnTheAir, page, timeZone, cancellationToken));
+        var result = await _retryPolicy.ExecuteAsync(
+            () => _client.GetTvShowListAsync(TvShowListType.OnTheAir, page, timeZone, cancellationToken)
+        );
 
         return _mapper.Map<ListResultModel<TVShowInfo>>(result);
     }
@@ -525,12 +616,15 @@ public class TMDBServiceClient : IMovieDbServiceClient
     /// <param name="timeZone"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task<ListResultModel<TVShowInfo>> GetTvShowAiringTodayAsync(int page = 1,
-        string timeZone = null, CancellationToken cancellationToken = default)
+    public async Task<ListResultModel<TVShowInfo>> GetTvShowAiringTodayAsync(
+        int page = 1,
+        string timeZone = null,
+        CancellationToken cancellationToken = default
+    )
     {
-        var result =
-            await _retryPolicy.ExecuteAsync(() =>
-                _client.GetTvShowListAsync(TvShowListType.AiringToday, page, timeZone, cancellationToken));
+        var result = await _retryPolicy.ExecuteAsync(
+            () => _client.GetTvShowListAsync(TvShowListType.AiringToday, page, timeZone, cancellationToken)
+        );
 
         return _mapper.Map<ListResultModel<TVShowInfo>>(result);
     }
@@ -542,11 +636,14 @@ public class TMDBServiceClient : IMovieDbServiceClient
     /// <param name="page"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task<ListResultModel<TVShowInfo>> GetPopularTvShowAsync(int page = 1,
-        CancellationToken cancellationToken = default)
+    public async Task<ListResultModel<TVShowInfo>> GetPopularTvShowAsync(
+        int page = 1,
+        CancellationToken cancellationToken = default
+    )
     {
-        var result = await _retryPolicy.ExecuteAsync(() =>
-            _client.GetTvShowPopularAsync(page, _movieDbOptions.Language, cancellationToken));
+        var result = await _retryPolicy.ExecuteAsync(
+            () => _client.GetTvShowPopularAsync(page, _movieDbOptions.Language, cancellationToken)
+        );
 
         return _mapper.Map<ListResultModel<TVShowInfo>>(result);
     }
@@ -558,11 +655,14 @@ public class TMDBServiceClient : IMovieDbServiceClient
     /// <param name="page"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task<ListResultModel<TVShowInfo>> GetTvShowTopRatedAsync(int page = 1,
-        CancellationToken cancellationToken = default)
+    public async Task<ListResultModel<TVShowInfo>> GetTvShowTopRatedAsync(
+        int page = 1,
+        CancellationToken cancellationToken = default
+    )
     {
-        var result = await _retryPolicy.ExecuteAsync(() =>
-            _client.GetTvShowTopRatedAsync(page, _movieDbOptions.Language, cancellationToken));
+        var result = await _retryPolicy.ExecuteAsync(
+            () => _client.GetTvShowTopRatedAsync(page, _movieDbOptions.Language, cancellationToken)
+        );
 
         return _mapper.Map<ListResultModel<TVShowInfo>>(result);
     }
@@ -577,16 +677,25 @@ public class TMDBServiceClient : IMovieDbServiceClient
     /// <param name="firstAirDateYear"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task<ListResultModel<TVShowInfo>> SearchTvShowAsync(string keyword,
+    public async Task<ListResultModel<TVShowInfo>> SearchTvShowAsync(
+        string keyword,
         int page = 1,
         bool includeAdult = false,
         int firstAirDateYear = 0,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default
+    )
     {
-        var result = await _retryPolicy.ExecuteAsync(() => _client.SearchTvShowAsync(keyword, page: page,
-            includeAdult: includeAdult,
-            cancellationToken: cancellationToken, language: _movieDbOptions.Language,
-            firstAirDateYear: firstAirDateYear));
+        var result = await _retryPolicy.ExecuteAsync(
+            () =>
+                _client.SearchTvShowAsync(
+                    keyword,
+                    page: page,
+                    includeAdult: includeAdult,
+                    cancellationToken: cancellationToken,
+                    language: _movieDbOptions.Language,
+                    firstAirDateYear: firstAirDateYear
+                )
+        );
 
         return _mapper.Map<ListResultModel<TVShowInfo>>(result);
     }
@@ -602,14 +711,17 @@ public class TMDBServiceClient : IMovieDbServiceClient
     /// <param name="year"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task<ListResultModel<dynamic>> SearchMultiAsync(string keyword, int page = 1,
+    public async Task<ListResultModel<dynamic>> SearchMultiAsync(
+        string keyword,
+        int page = 1,
         bool includeAdult = false,
         int year = 0,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default
+    )
     {
-        var result = await _retryPolicy.ExecuteAsync(() => _client.SearchMultiAsync(keyword, page, includeAdult,
-            year,
-            _movieDbOptions.Region, cancellationToken));
+        var result = await _retryPolicy.ExecuteAsync(
+            () => _client.SearchMultiAsync(keyword, page, includeAdult, year, _movieDbOptions.Region, cancellationToken)
+        );
 
         return _mapper.Map<ListResultModel<dynamic>>(result);
     }

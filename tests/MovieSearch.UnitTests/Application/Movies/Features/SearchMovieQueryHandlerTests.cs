@@ -26,8 +26,7 @@ public class SearchMovieQueryHandlerTests : UnitTestFixture
         _handler = new SearchMovieQueryHandler(_movieDbServiceClient, Mapper);
     }
 
-    private Task<SearchMovieQueryResult> Act(SearchMovieQuery query, CancellationToken
-        cancellationToken)
+    private Task<SearchMovieQueryResult> Act(SearchMovieQuery query, CancellationToken cancellationToken)
     {
         return _handler.Handle(query, cancellationToken);
     }
@@ -37,18 +36,23 @@ public class SearchMovieQueryHandlerTests : UnitTestFixture
     {
         // Arrange
         var query = new SearchMovieQuery(MovieMocks.Data.Title, 1, includeAdult: true);
-        var movieInfoList = new ListResultModel<MovieInfo>(new List<MovieInfo>
-        {
-            new()
+        var movieInfoList = new ListResultModel<MovieInfo>(
+            new List<MovieInfo>
             {
-                Adult = query.IncludeAdult,
-                Id = MovieMocks.Data.Id,
-                Title = MovieMocks.Data.Title
-            }
-        }, 1, query.Page, 20);
+                new()
+                {
+                    Adult = query.IncludeAdult,
+                    Id = MovieMocks.Data.Id,
+                    Title = MovieMocks.Data.Title
+                }
+            },
+            1,
+            query.Page,
+            20
+        );
 
-        _movieDbServiceClient.SearchMovieAsync(query.SearchKeywords, query.Page, query.IncludeAdult, 0, 0,
-                Arg.Any<CancellationToken>())
+        _movieDbServiceClient
+            .SearchMovieAsync(query.SearchKeywords, query.Page, query.IncludeAdult, 0, 0, Arg.Any<CancellationToken>())
             .Returns(movieInfoList);
 
         // Act

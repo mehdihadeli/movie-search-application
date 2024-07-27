@@ -12,23 +12,28 @@ using MovieSearch.Application.Videos.Dtos;
 namespace MovieSearch.Application.Movies.Features.FindMovieWithTrailersByImdbId;
 
 //https://docs.microsoft.com/en-us/azure/architecture/patterns/gateway-aggregation
-public class FindMovieWithTrailersByImdbIdQueryHandler : IRequestHandler<FindMovieWithTrailersByImdbIdQuery,
-    FindMovieWithTrailersByImdbIdQueryResult>
+public class FindMovieWithTrailersByImdbIdQueryHandler
+    : IRequestHandler<FindMovieWithTrailersByImdbIdQuery, FindMovieWithTrailersByImdbIdQueryResult>
 {
     private readonly IMapper _mapper;
     private readonly IMovieDbServiceClient _movieDbServiceClient;
     private readonly IVideoServiceClient _videoServiceClient;
 
-    public FindMovieWithTrailersByImdbIdQueryHandler(IMovieDbServiceClient movieDbServiceClient,
-        IVideoServiceClient videoServiceClient, IMapper mapper)
+    public FindMovieWithTrailersByImdbIdQueryHandler(
+        IMovieDbServiceClient movieDbServiceClient,
+        IVideoServiceClient videoServiceClient,
+        IMapper mapper
+    )
     {
         _movieDbServiceClient = movieDbServiceClient;
         _videoServiceClient = videoServiceClient;
         _mapper = mapper;
     }
 
-    public async Task<FindMovieWithTrailersByImdbIdQueryResult> Handle(FindMovieWithTrailersByImdbIdQuery query,
-        CancellationToken cancellationToken)
+    public async Task<FindMovieWithTrailersByImdbIdQueryResult> Handle(
+        FindMovieWithTrailersByImdbIdQuery query,
+        CancellationToken cancellationToken
+    )
     {
         Guard.Against.Null(query, nameof(FindMovieWithTrailersByImdbIdQuery));
 
@@ -44,11 +49,7 @@ public class FindMovieWithTrailersByImdbIdQueryHandler : IRequestHandler<FindMov
 
         return new FindMovieWithTrailersByImdbIdQueryResult
         {
-            MovieWithTrailers = new MovieWithTrailersDto
-            {
-                Movie = movieDto,
-                Trailers = trailersDto
-            }
+            MovieWithTrailers = new MovieWithTrailersDto { Movie = movieDto, Trailers = trailersDto }
         };
     }
 }

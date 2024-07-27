@@ -26,9 +26,8 @@ public class SearchMovieByTitleTests : WebApiTestFixture<Program>
         var httpRequestMessage = new HttpRequestMessage
         {
             Method = HttpMethod.Get,
-            RequestUri = new Uri($"api/v1/movies/search-by-title?{queryString}",
-                UriKind.RelativeOrAbsolute),
-            Headers = {{ApiKeyConstants.HeaderName, "C5BFF7F0-B4DF-475E-A331-F737424F013C"}}
+            RequestUri = new Uri($"api/v1/movies/search-by-title?{queryString}", UriKind.RelativeOrAbsolute),
+            Headers = { { ApiKeyConstants.HeaderName, "C5BFF7F0-B4DF-475E-A331-F737424F013C" } }
         };
         return Client.SendAsync(httpRequestMessage);
     }
@@ -37,8 +36,7 @@ public class SearchMovieByTitleTests : WebApiTestFixture<Program>
     public async Task search_movie_by_title_endpoint_should_return_http_status_code_ok()
     {
         // Act
-        var response =
-            await Act(new SearchMoviesByTitleRequest {Page = 1, SearchKeywords = MovieMocks.Data.Title});
+        var response = await Act(new SearchMoviesByTitleRequest { Page = 1, SearchKeywords = MovieMocks.Data.Title });
 
         // Assert
         response.IsSuccessStatusCode.Should().Be(true);
@@ -46,13 +44,11 @@ public class SearchMovieByTitleTests : WebApiTestFixture<Program>
         response.StatusCode.Should().Be(HttpStatusCode.OK);
     }
 
-
     [Fact]
     public async Task search_movie_by_title_endpoint_should_return_correctData()
     {
         // Act
-        var response =
-            await Act(new SearchMoviesByTitleRequest {Page = 1, SearchKeywords = MovieMocks.Data.Title});
+        var response = await Act(new SearchMoviesByTitleRequest { Page = 1, SearchKeywords = MovieMocks.Data.Title });
         var result = await response.Content.ReadFromJsonAsync<SearchMovieByTitleQueryResult>();
 
         // Assert
@@ -70,11 +66,10 @@ public class SearchMovieByTitleTests : WebApiTestFixture<Program>
     [Fact]
     public async Task search_movie_by_title_endpoint_should_return_unauthorized_without_an_api_key()
     {
-        var request = new SearchMoviesByTitleRequest {Page = 1, SearchKeywords = MovieMocks.Data.Title};
+        var request = new SearchMoviesByTitleRequest { Page = 1, SearchKeywords = MovieMocks.Data.Title };
         var queryString = request.GetQueryString();
 
-        var response =
-            await Client.GetAsync($"api/v1/movies/search-by-title?{queryString}");
+        var response = await Client.GetAsync($"api/v1/movies/search-by-title?{queryString}");
 
         response.IsSuccessStatusCode.Should().Be(false);
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
