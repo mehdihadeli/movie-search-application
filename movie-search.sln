@@ -29,26 +29,41 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieSearch.UnitTests", "te
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieSearch.EndToEndTests", "tests\MovieSearch.EndToEndTests\MovieSearch.EndToEndTests.csproj", "{13E831B9-FDFB-4873-B0A8-B131CFEB357F}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "solution items", "solution items", "{B2B37F1B-728F-4C54-9BB9-2B75A138D9F6}"
+	ProjectSection(SolutionItems) = preProject
+		.csharpierrc.yaml = .csharpierrc.yaml
+		.dockerignore = .dockerignore
+		.editorconfig = .editorconfig
+		.gitattributes = .gitattributes
+		.gitignore = .gitignore
+		commitlint.config.js = commitlint.config.js
+		global.json = global.json
+		movie-search.sln = movie-search.sln
+		nuget.config = nuget.config
+		package.json = package.json
+		readme.md = readme.md
+		stylecop.json = stylecop.json
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "deployments", "deployments", "{FA998ABA-B0B3-40F9-9941-0C3CBA15EADB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docker-compose", "docker-compose", "{ADF1E782-F7A1-46AF-8620-55CC8A82AEBD}"
+	ProjectSection(SolutionItems) = preProject
+		deployments\docker-compose\docker-compose.yaml = deployments\docker-compose\docker-compose.yaml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "k8s", "k8s", "{C3F744FD-F978-40A4-A884-F79B0C6B0F59}"
+	ProjectSection(SolutionItems) = preProject
+		deployments\k8s\delete-resources.sh = deployments\k8s\delete-resources.sh
+		deployments\k8s\deploy-local.sh = deployments\k8s\deploy-local.sh
+		deployments\k8s\movie-search-api.yaml = deployments\k8s\movie-search-api.yaml
+		deployments\k8s\movie-search-ingress.yaml = deployments\k8s\movie-search-ingress.yaml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{55EED072-1C18-46DA-B491-6971715C3912} = {778BA20A-056F-46DC-AB48-95259206D8BE}
-		{9F808F73-0D9D-4DC6-96CF-2CC9180ABF1E} = {778BA20A-056F-46DC-AB48-95259206D8BE}
-		{B40C04AA-D156-4289-8D7F-9463925BC222} = {9F808F73-0D9D-4DC6-96CF-2CC9180ABF1E}
-		{C0B80C21-9FA9-4C27-A9BB-92497A98307A} = {9F808F73-0D9D-4DC6-96CF-2CC9180ABF1E}
-		{F4F6EE60-D819-46E9-8CA2-69ECAEE04863} = {9F808F73-0D9D-4DC6-96CF-2CC9180ABF1E}
-		{4E3C0119-A28C-4FAC-9A72-170BE69B8F95} = {9F808F73-0D9D-4DC6-96CF-2CC9180ABF1E}
-		{7BC58153-8348-480E-B8BE-4ABFECE38309} = {55EED072-1C18-46DA-B491-6971715C3912}
-		{10EA36EB-5832-4C67-86BC-54CEF4AE5DD0} = {55EED072-1C18-46DA-B491-6971715C3912}
-		{B19EA418-80E2-42F8-8FB8-AB5277BB9E70} = {0A7114DC-EDF4-4E51-A0B3-E34FE66A46F6}
-		{A389E4BB-9E51-4124-8A22-691B12B66C73} = {0A7114DC-EDF4-4E51-A0B3-E34FE66A46F6}
-		{13E831B9-FDFB-4873-B0A8-B131CFEB357F} = {0A7114DC-EDF4-4E51-A0B3-E34FE66A46F6}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{B40C04AA-D156-4289-8D7F-9463925BC222}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -87,5 +102,24 @@ Global
 		{13E831B9-FDFB-4873-B0A8-B131CFEB357F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{13E831B9-FDFB-4873-B0A8-B131CFEB357F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{13E831B9-FDFB-4873-B0A8-B131CFEB357F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{B40C04AA-D156-4289-8D7F-9463925BC222} = {9F808F73-0D9D-4DC6-96CF-2CC9180ABF1E}
+		{C0B80C21-9FA9-4C27-A9BB-92497A98307A} = {9F808F73-0D9D-4DC6-96CF-2CC9180ABF1E}
+		{F4F6EE60-D819-46E9-8CA2-69ECAEE04863} = {9F808F73-0D9D-4DC6-96CF-2CC9180ABF1E}
+		{4E3C0119-A28C-4FAC-9A72-170BE69B8F95} = {9F808F73-0D9D-4DC6-96CF-2CC9180ABF1E}
+		{55EED072-1C18-46DA-B491-6971715C3912} = {778BA20A-056F-46DC-AB48-95259206D8BE}
+		{9F808F73-0D9D-4DC6-96CF-2CC9180ABF1E} = {778BA20A-056F-46DC-AB48-95259206D8BE}
+		{7BC58153-8348-480E-B8BE-4ABFECE38309} = {55EED072-1C18-46DA-B491-6971715C3912}
+		{10EA36EB-5832-4C67-86BC-54CEF4AE5DD0} = {55EED072-1C18-46DA-B491-6971715C3912}
+		{B19EA418-80E2-42F8-8FB8-AB5277BB9E70} = {0A7114DC-EDF4-4E51-A0B3-E34FE66A46F6}
+		{A389E4BB-9E51-4124-8A22-691B12B66C73} = {0A7114DC-EDF4-4E51-A0B3-E34FE66A46F6}
+		{13E831B9-FDFB-4873-B0A8-B131CFEB357F} = {0A7114DC-EDF4-4E51-A0B3-E34FE66A46F6}
+		{FA998ABA-B0B3-40F9-9941-0C3CBA15EADB} = {B2B37F1B-728F-4C54-9BB9-2B75A138D9F6}
+		{ADF1E782-F7A1-46AF-8620-55CC8A82AEBD} = {FA998ABA-B0B3-40F9-9941-0C3CBA15EADB}
+		{C3F744FD-F978-40A4-A884-F79B0C6B0F59} = {FA998ABA-B0B3-40F9-9941-0C3CBA15EADB}
 	EndGlobalSection
 EndGlobal
