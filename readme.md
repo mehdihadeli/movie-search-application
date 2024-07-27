@@ -1,6 +1,6 @@
 # 🎬 Movie Search Application
 
-[![Actions Status](https://github.com/mehdihadeli/movie-search-app/workflows/build-dot-net/badge.svg?branch=main)](https://github.com/mehdihadeli/movie-search-app/actions)
+[![build-dot-net](https://github.com/mehdihadeli/movie-search-application/actions/workflows/build-dot-net.yml/badge.svg)](https://github.com/mehdihadeli/movie-search-application/actions/workflows/build-dot-net.yml)
 
 [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/mehdihadeli/movie-search-application)
 
