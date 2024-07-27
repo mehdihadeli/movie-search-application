@@ -105,6 +105,7 @@
         "IBM.output-colorizer", // Colorize your output/test logs
         "emmanuelbeziat.vscode-great-icons",
         "esbenp.prettier-vscode",
+        "csharpier.csharpier-vscode",
         "vscode-icons-team.vscode-icons",
         "redhat.vscode-yaml"
       ]
