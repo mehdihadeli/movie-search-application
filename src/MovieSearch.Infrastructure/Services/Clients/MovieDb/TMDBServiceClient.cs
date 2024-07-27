@@ -306,7 +306,7 @@ public class TMDBServiceClient : IMovieDbServiceClient
     /// <returns></returns>
     public async Task<Review> GetReviewsAsync(string reviewId, CancellationToken cancellationToken = default)
     {
-        var result = await _retryPolicy.ExecuteAsync(() => _client.GetReviewAsync(reviewId, cancellationToken));
+        var result = await _retryPolicy.ExecuteAsync(() => _client.GetReviewAsync(reviewId, null, cancellationToken));
 
         return _mapper.Map<Review>(result);
     }

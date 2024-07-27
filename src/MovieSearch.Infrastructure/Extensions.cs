@@ -72,7 +72,7 @@ public static class Extensions
 
         builder.Services.AddAutoMapper(typeof(ApplicationRoot).Assembly, typeof(InfrastructureRoot).Assembly);
 
-        builder.Services.AddMediatR(typeof(ApplicationRoot).Assembly)
+        builder.Services.AddMediatR(c => c.RegisterServicesFromAssembly(typeof(ApplicationRoot).Assembly))
             .AddScoped(typeof(IPipelineBehavior<,>), typeof(RequestValidationBehavior<,>))
             .AddScoped(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>))
             .AddScoped(typeof(IPipelineBehavior<,>), typeof(CachingBehavior<,>))

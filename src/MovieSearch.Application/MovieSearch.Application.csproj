@@ -1,12 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="TMDbLib" Version="1.8.1" />
+    <PackageReference Include="TMDbLib" Version="2.2.0" />
     <PackageReference Include="YoutubeSearchApi.Net" Version="2021.8.24" />
   </ItemGroup>
 
