@@ -24,7 +24,7 @@ public static class MapperFactory
             cfg.AddProfile<PeopleMappings>();
             cfg.AddProfile<TvShowMappings>();
             cfg.AddProfile<VideoMappings>();
-        });
+        }, null);
 
         return configurationProvider.CreateMapper();
     }

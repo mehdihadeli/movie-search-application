@@ -71,7 +71,7 @@ public static class Extensions
         builder.Services.AddCustomVersioning();
         builder.Services.AddCustomHealthCheck(healthBuilder => { });
         builder.Services.AddCustomSwagger(builder.Configuration, Assembly.GetExecutingAssembly());
-        builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
+        builder.Services.AddAutoMapper(cfg => { }, Assembly.GetExecutingAssembly());
 
         builder.Services.AddCustomApiKeyAuthentication();
 
@@ -79,8 +79,6 @@ public static class Extensions
         builder.Services.AddSingleton<IVideoServiceClient, YoutubeVideoServiceClient>();
 
         builder.Services.AddCustomValidators(typeof(ApplicationRoot).Assembly);
-
-        builder.Services.AddAutoMapper(typeof(ApplicationRoot).Assembly, typeof(InfrastructureRoot).Assembly);
 
         builder
             .Services.AddMediatR(c => c.RegisterServicesFromAssembly(typeof(ApplicationRoot).Assembly))

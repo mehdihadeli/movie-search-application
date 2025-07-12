@@ -2,7 +2,9 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Conventions;
+using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
 
 namespace BuildingBlocks.Mongo;
@@ -11,11 +13,13 @@ public class MongoDbContext : IMongoDbContext
 {
     private readonly string _databaseName;
 
+    static MongoDbContext()
+    {
+        BsonSerializer.RegisterSerializer(new GuidSerializer(BsonType.String));
+    }
+
     public MongoDbContext(MongoOptions options)
     {
-        // Set Guid to CSharp style (with dash -)
-        BsonDefaults.GuidRepresentation = GuidRepresentation.CSharpLegacy;
-
         RegisterConventions();
 
         MongoClient = new MongoClient(options.ConnectionString);
